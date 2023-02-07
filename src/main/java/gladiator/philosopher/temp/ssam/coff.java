@@ -14,4 +14,6 @@ public class coff {
 
   private String name;
 
+  private String testBb;
+
 }
