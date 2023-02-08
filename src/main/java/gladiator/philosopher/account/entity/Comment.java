@@ -13,7 +13,7 @@ public class Comment extends BaseEntity {
   private Long id;
 
   @Column(nullable = false)
-  private String commentContent;
+  private String content;
 
   /*
   @ManyToOne(fetch = FetchType.LAZY)
@@ -27,8 +27,8 @@ public class Comment extends BaseEntity {
   public Comment(Thread thread, Account account, String requestCommentContent) {
     this.thread = thread;
     this.account = account;
-    this.commentContent = requestCommentContent;
+    this.content = requestContent;
   }
-   */
+  */
 
 }
