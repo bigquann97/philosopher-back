@@ -1,11 +1,16 @@
 package gladiator.philosopher.post.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class PostRequestDto {
 
-  private String title;
-  private String content;
+  private final String title;
+  private final String content;
 
+
+  public PostRequestDto(String title, String content) {
+    this.title = title;
+    this.content = content;
+  }
 }

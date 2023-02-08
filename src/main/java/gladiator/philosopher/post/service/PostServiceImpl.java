@@ -7,7 +7,13 @@ import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.security.members.MemberDetails;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +33,25 @@ public class PostServiceImpl implements PostService {
         .build();
     postRepository.save(post);
     return new PostResponseDto(post);
+  }
+
+  @Override
+  @Transactional
+  public List<PostResponseDto> getPosts(int pageChoice) {
+    Page<Post> posts = postRepository.findAll(pageableSetting(pageChoice));
+    if (posts.isEmpty()) {
+      throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
+    }
+    List<PostResponseDto> PostResponseDtoList = posts.stream().map(PostResponseDto::new).collect(
+        Collectors.toList());
+    return PostResponseDtoList;
+  }
+
+  private Pageable pageableSetting(int pageChoice) {
+    Sort.Direction direction = Sort.Direction.DESC;
+    Sort sort = Sort.by(direction, "id");
+    Pageable pageable = PageRequest.of(pageChoice - 1, 4, sort);
+    return pageable;
   }
 
   @Override

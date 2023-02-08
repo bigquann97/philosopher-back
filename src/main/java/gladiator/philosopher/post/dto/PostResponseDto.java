@@ -1,26 +1,25 @@
 package gladiator.philosopher.post.dto;
 
 import gladiator.philosopher.post.entity.Post;
-import javax.persistence.Column;
-import lombok.Data;
+import java.time.LocalDateTime;
+import lombok.Getter;
 
-@Data
+@Getter
 public class PostResponseDto {
 
-  @Column(nullable = false)
-  private Long postId;
+  private final Long postId;
 
-  @Column(nullable = false)
-  private String title;
+  private final String title;
 
-  @Column(nullable = false)
-  private String nickname;
+  private final String nickname;
 
-  @Column
-  private String image;
+  private final String image;
 
-  @Column(nullable = false)
-  private String content;
+  private final String content;
+
+  private final LocalDateTime createDate;
+
+  private final LocalDateTime modifiedDate;
 
   public PostResponseDto(Post post) {
     this.postId = post.getId();
@@ -28,5 +27,7 @@ public class PostResponseDto {
     this.title = post.getTitle();
     this.image = post.getImage();
     this.content = post.getContent();
+    this.createDate = post.getCreateDate();
+    this.modifiedDate = post.getModDate();
   }
 }

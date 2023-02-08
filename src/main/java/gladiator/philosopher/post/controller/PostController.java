@@ -4,6 +4,7 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.security.members.MemberDetails;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +28,11 @@ public class PostController {
   public ResponseEntity<PostResponseDto> newPost(@RequestBody PostRequestDto postRequestDto,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     return ResponseEntity.status(200).body(postService.newPost(postRequestDto, memberDetails));
+  }
+
+  @GetMapping("/page={pageChoice}")
+  public List<PostResponseDto> getPosts(@PathVariable int pageChoice) {
+    return postService.getPosts(pageChoice);
   }
 
   @GetMapping("/{postId}")
