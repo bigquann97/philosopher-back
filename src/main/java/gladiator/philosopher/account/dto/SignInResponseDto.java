@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-public class LoginResponseDto {
+public class SignInResponseDto {
 
-  private final String nickName;
+  private final String nickname;
   private final String accessToken;
 
-  public LoginResponseDto(String nickName, String accessToken) {
-    this.nickName = nickName;
+  public SignInResponseDto(String nickName, String accessToken) {
+    this.nickname = nickName;
     this.accessToken = accessToken;
   }
 
-  public static LoginResponseDto of(Account account, String accessToken) {
-    return new LoginResponseDto(account.getNickName(), accessToken);
+  public static SignInResponseDto of(Account account, String accessToken) {
+    return new SignInResponseDto(account.getNickname(), accessToken);
   }
 }

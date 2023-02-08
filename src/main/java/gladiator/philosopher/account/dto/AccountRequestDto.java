@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-public class accountRequestDto {
+public class AccountRequestDto {
 
   @Size(min = 4, max = 12, message = "아이디는 4에서 12자 사이 입니다.")
   @Pattern(regexp = "[a-z0-9]*$", message = "아이디 형식이 일치하지 않습니다.")
@@ -25,9 +25,9 @@ public class accountRequestDto {
   private final String password;
 
   @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하 입니다.")
-  private final String nickName;
+  private final String nickname;
 
-  private final Long age;
+  private final int age;
 
   private final String gender;
 
@@ -36,7 +36,7 @@ public class accountRequestDto {
         .email(this.getEmail())
         .password(password)
         .age(this.getAge())
-        .nickName(this.getNickName())
+        .nickname(this.getNickname())
         .gender(genderType)
         .type(UserType.ROLE_USER)
         .status(UserStatus.ACTIVATED).build();

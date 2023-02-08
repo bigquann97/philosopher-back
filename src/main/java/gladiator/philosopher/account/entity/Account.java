@@ -35,10 +35,10 @@ public class Account extends BaseEntity {
   private String password;
 
   @Column(nullable = false)
-  private Long age;
+  private int age;
 
   @Column(nullable = false)
-  private String nickName;
+  private String nickname;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
