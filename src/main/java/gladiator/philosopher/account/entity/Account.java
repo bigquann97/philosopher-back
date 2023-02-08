@@ -8,9 +8,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,6 +64,21 @@ public class Account extends BaseEntity {
     this.gender = gender;
     this.type = type;
     this.status = status;
+  }
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "account_image_id")
+  private AccountImage accountImage = new AccountImage("default_image.jpg");
+
+  public void changeProfile(String nickname, AccountImage accountImage) {
+    this.nickname = nickname;
+    if (!accountImage.getOriginalName().equals("default_image.jpg")) {
+      this.accountImage = accountImage;
+    }
+  }
+
+  public boolean hasDefaultAccountImage() {
+    return this.accountImage.getUniqueName().equals("default_image");
   }
 
 }
