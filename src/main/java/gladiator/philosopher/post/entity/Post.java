@@ -2,6 +2,7 @@ package gladiator.philosopher.post.entity;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.BaseEntity;
+import gladiator.philosopher.post.dto.PostRequestDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,9 +31,6 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @Column(nullable = false)
-  private String nickname;
-
   @Column
   private String image;
 
@@ -40,10 +38,15 @@ public class Post extends BaseEntity {
   private String content;
 
   @Builder
-  public Post(Long id, Account account, String title, String content) {
-    this.id = id;
-    this.nickname = account.getNickName();
+  public Post(Account account, String title, String content) {
+    this.account = account;
     this.title = title;
     this.content = content;
+  }
+
+
+  public void modifyPost(PostRequestDto postRequestDto) {
+    this.title = postRequestDto.getTitle();
+    this.content = postRequestDto.getContent();
   }
 }

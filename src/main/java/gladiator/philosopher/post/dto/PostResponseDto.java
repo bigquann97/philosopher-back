@@ -1,17 +1,14 @@
 package gladiator.philosopher.post.dto;
 
-import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.post.entity.Post;
 import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import lombok.Data;
 
+@Data
 public class PostResponseDto {
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "account_id")
-  private Account account;
+  @Column(nullable = false)
+  private Long postId;
 
   @Column(nullable = false)
   private String title;
@@ -26,8 +23,9 @@ public class PostResponseDto {
   private String content;
 
   public PostResponseDto(Post post) {
+    this.postId = post.getId();
+    this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
-    this.nickname = post.getNickname();
     this.image = post.getImage();
     this.content = post.getContent();
   }
