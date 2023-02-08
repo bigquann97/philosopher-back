@@ -38,5 +38,5 @@ public class ImageServiceImpl implements ImageService {
   public void delete(String filename) {
     new File(location + filename).delete();
   }
-
+  
 }

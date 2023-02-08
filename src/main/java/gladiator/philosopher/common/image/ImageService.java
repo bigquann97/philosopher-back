@@ -7,5 +7,5 @@ public interface ImageService {
   void upload(MultipartFile file, String filename);
 
   void delete(String filename);
-  
+
 }

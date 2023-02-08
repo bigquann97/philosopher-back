@@ -57,8 +57,8 @@ public class AccountServiceImpl implements AccountService {
    */
   private void checkByUserNickNameDuplicated(String nickName) {
     if (accountRepository.existsByNickname(nickName)) {
-      throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
     }
+    throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
   }
 
   /**
