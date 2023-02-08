@@ -4,6 +4,9 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.enumtype.GenderType;
 import gladiator.philosopher.common.enumtype.UserStatus;
 import gladiator.philosopher.common.enumtype.UserType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -14,10 +17,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-public class AccountRequestDto {
+public class SignUpRequestDto {
 
-  @Size(min = 4, max = 12, message = "아이디는 4에서 12자 사이 입니다.")
-  @Pattern(regexp = "[a-z0-9]*$", message = "아이디 형식이 일치하지 않습니다.")
+  @Size(min = 4, max = 30, message = "이메일 형식으로 입력해야합니다.")
+  @Email
   private final String email;
 
   @Size(min = 8, max = 15, message = "비밀번호는 8에서 15자 사이 입니다.")
@@ -27,17 +30,19 @@ public class AccountRequestDto {
   @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하 입니다.")
   private final String nickname;
 
+  @Min(0)
+  @Max(130)
   private final int age;
 
   private final String gender;
 
-  public Account toEntity(String password, GenderType genderType) {
+  public Account toEntity(String password) {
     return Account.builder()
         .email(this.getEmail())
         .password(password)
         .age(this.getAge())
         .nickname(this.getNickname())
-        .gender(genderType)
+        .gender(this.checkGender(this.getNickname()))
         .type(UserType.ROLE_USER)
         .status(UserStatus.ACTIVATED).build();
   }

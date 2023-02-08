@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
 public class Account extends BaseEntity {
 
@@ -55,6 +54,18 @@ public class Account extends BaseEntity {
   @Column(nullable = false)
   private UserStatus status;
 
+  @Builder
+  public Account(String email, String password, int age, String nickname, GenderType gender,
+      UserType type, UserStatus status) {
+    this.email = email;
+    this.password = password;
+    this.age = age;
+    this.nickname = nickname;
+    this.gender = gender;
+    this.type = type;
+    this.status = status;
+  }
+
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_image_id")
   private AccountImage accountImage = new AccountImage("default_image.jpg");
@@ -69,4 +80,5 @@ public class Account extends BaseEntity {
   public boolean hasDefaultAccountImage() {
     return this.accountImage.getUniqueName().equals("default_image");
   }
+
 }

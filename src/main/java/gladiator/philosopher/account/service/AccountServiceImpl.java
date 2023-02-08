@@ -1,11 +1,10 @@
 package gladiator.philosopher.account.service;
 
-import gladiator.philosopher.account.dto.AccountRequestDto;
 import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.dto.SignInResponseDto;
+import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.repository.AccountRepository;
-import gladiator.philosopher.common.enumtype.GenderType;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.ExceptionStatus;
 import gladiator.philosopher.security.JwtTokenProvider;
@@ -29,13 +28,51 @@ public class AccountServiceImpl implements AccountService {
    */
   @Transactional
   @Override
-  public void signUp(AccountRequestDto registerRequestDto) {
+  public void signUp(SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
     String password = passwordEncoder.encode(registerRequestDto.getPassword());
-    GenderType gender = registerRequestDto.checkGender(registerRequestDto.getGender());
-    Account account = registerRequestDto.toEntity(password, gender);
+    Account account = registerRequestDto.toEntity(password);
     accountRepository.save(account);
+  }
+
+  /**
+   * 로그인
+   *
+   * @param signInRequestDto
+   * @return
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
+    Account account = findAccountByEmail(signInRequestDto.getEmail());
+    checkByMemberPassword(signInRequestDto.getPassword(), account);
+    String token = jwtTokenProvider.createToken(account.getEmail(), account.getType());
+    return SignInResponseDto.of(account, token);
+  }
+
+  /**
+   * 로그인 시 비밀번호 확인
+   *
+   * @param password
+   * @param account
+   */
+  private void checkByMemberPassword(String password, Account account) {
+    if (!passwordEncoder.matches(password, account.getPassword())) {
+      throw new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION);
+    }
+  }
+
+  /**
+   * 유저 아이디로 유저 객체 찾기
+   *
+   * @param email
+   * @return
+   */
+  public Account findAccountByEmail(String email) {
+    Account account = accountRepository.findByEmail(email)
+        .orElseThrow(() -> new IllegalArgumentException("사용자 없습니다"));
+    return account;
   }
 
   /**
@@ -59,46 +96,6 @@ public class AccountServiceImpl implements AccountService {
     if (accountRepository.existsByNickname(nickName)) {
     }
     throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
-  }
-
-  /**
-   * 로그인
-   *
-   * @param signInRequestDto
-   * @return
-   */
-  @Override
-  @Transactional
-  public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
-    Account account = findByAccount(signInRequestDto.getEmail());
-    checkByMemberPassword(signInRequestDto.getPassword(), account);
-    return SignInResponseDto.of(account,
-        jwtTokenProvider.createToken(account.getEmail(), account.getType()));
-  }
-
-  /**
-   * 로그인 시 비밀번호 확인
-   *
-   * @param password
-   * @param account
-   */
-  private void checkByMemberPassword(String password, Account account) {
-    if (!passwordEncoder.matches(password, account.getPassword())) {
-      throw new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION);
-    }
-  }
-
-  /**
-   * 유저 아이디로 유저 객체 찾기
-   *
-   * @param email
-   * @return
-   */
-  @Override
-  public Account findByAccount(String email) {
-    Account account = accountRepository.findByEmail(email)
-        .orElseThrow(() -> new IllegalArgumentException("사용자 없습니다"));
-    return account;
   }
 
 }
