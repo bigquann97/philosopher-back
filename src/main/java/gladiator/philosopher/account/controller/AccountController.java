@@ -1,7 +1,7 @@
 package gladiator.philosopher.account.controller;
 
-import gladiator.philosopher.account.dto.accountRequestDto;
-import gladiator.philosopher.account.dto.LoginResponseDto;
+import gladiator.philosopher.account.dto.AccountRequestDto;
+import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.service.AccountService;
 import javax.validation.Valid;
@@ -24,7 +24,7 @@ public class AccountController {
    * 회원가입
    */
   @PostMapping("/sign-up")
-  public HttpStatus signUp(@Valid @RequestBody accountRequestDto accountRequestDto) {
+  public HttpStatus signUp(@Valid @RequestBody AccountRequestDto accountRequestDto) {
     accountService.signUp(accountRequestDto);
     return HttpStatus.CREATED;
   }
@@ -33,7 +33,7 @@ public class AccountController {
    * 로그인
    */
   @PostMapping("/sign-in")
-  public ResponseEntity<LoginResponseDto> login(@RequestBody SignInRequestDto signInRequestDto) {
+  public ResponseEntity<SignInResponseDto> login(@RequestBody SignInRequestDto signInRequestDto) {
     return ResponseEntity.status(200).body(accountService.signIn(signInRequestDto));
   }
 
