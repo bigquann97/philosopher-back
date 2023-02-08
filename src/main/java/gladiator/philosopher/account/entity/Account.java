@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
 public class Account extends BaseEntity {
 
@@ -51,5 +50,17 @@ public class Account extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private UserStatus status;
+
+  @Builder
+  public Account(String email, String password, int age, String nickname, GenderType gender,
+      UserType type, UserStatus status) {
+    this.email = email;
+    this.password = password;
+    this.age = age;
+    this.nickname = nickname;
+    this.gender = gender;
+    this.type = type;
+    this.status = status;
+  }
 
 }

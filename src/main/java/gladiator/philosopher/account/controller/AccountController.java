@@ -1,16 +1,16 @@
 package gladiator.philosopher.account.controller;
 
-import gladiator.philosopher.account.dto.AccountRequestDto;
-import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignInRequestDto;
+import gladiator.philosopher.account.dto.SignInResponseDto;
+import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.service.AccountService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,17 +24,18 @@ public class AccountController {
    * 회원가입
    */
   @PostMapping("/sign-up")
-  public HttpStatus signUp(@Valid @RequestBody AccountRequestDto accountRequestDto) {
-    accountService.signUp(accountRequestDto);
-    return HttpStatus.CREATED;
+  @ResponseStatus(HttpStatus.CREATED)
+  public void signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
+    accountService.signUp(signUpRequestDto);
   }
 
   /**
    * 로그인
    */
   @PostMapping("/sign-in")
-  public ResponseEntity<SignInResponseDto> login(@RequestBody SignInRequestDto signInRequestDto) {
-    return ResponseEntity.status(200).body(accountService.signIn(signInRequestDto));
+  @ResponseStatus(HttpStatus.OK)
+  public SignInResponseDto login(@RequestBody SignInRequestDto signInRequestDto) {
+    return accountService.signIn(signInRequestDto);
   }
 
 }
