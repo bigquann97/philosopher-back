@@ -1,8 +1,8 @@
 package gladiator.philosopher.account.service;
 
 import gladiator.philosopher.account.dto.AccountRequestDto;
-import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignInRequestDto;
+import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.enumtype.GenderType;
@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
    * @param email
    * @throws RuntimeException
    */
-  private void checkByUserEmailDuplicated(String email){
+  private void checkByUserEmailDuplicated(String email) {
     if (accountRepository.existsByEmail(email)) {
       throw new CustomException(ExceptionStatus.ACCOUNT_IS_EXIST);
     }
