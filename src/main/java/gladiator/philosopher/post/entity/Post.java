@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +39,7 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String content;
 
-
+  @Builder
   public Post(Long id, Account account, String title, String content) {
     this.id = id;
     this.nickname = account.getNickName();

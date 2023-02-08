@@ -6,4 +6,5 @@ public interface PostService {
 
   PostResponseDto getPost(Long postId);
 
+
 }

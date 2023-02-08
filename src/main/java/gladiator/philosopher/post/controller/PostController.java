@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/posts/")
+@RequestMapping("/api/posts")
 public class PostController {
 
   private final PostService postService;
 //  @PostMapping
 //  public ResponseEntity<PostResponseDto> newPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal MemberDetails memberDetails){
 //    postService
+//    return ResponseEntity.status(200).body(postService.getPost(postId));
 //  }
 
-  @GetMapping("{postId}")
+  @GetMapping("/{postId}")
   public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
     return ResponseEntity.status(200).body(postService.getPost(postId));
   }
