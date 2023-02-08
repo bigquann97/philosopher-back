@@ -1,7 +1,7 @@
 package gladiator.philosopher.account.service;
 
-import gladiator.philosopher.account.dto.accountRequestDto;
-import gladiator.philosopher.account.dto.LoginResponseDto;
+import gladiator.philosopher.account.dto.AccountRequestDto;
+import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.repository.AccountRepository;
@@ -29,9 +29,9 @@ public class AccountServiceImpl implements AccountService {
    */
   @Transactional
   @Override
-  public void signUp(accountRequestDto registerRequestDto) {
+  public void signUp(AccountRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
-    checkByUserNickNameDuplicated(registerRequestDto.getNickName());
+    checkByUserNickNameDuplicated(registerRequestDto.getNickname());
     String password = passwordEncoder.encode(registerRequestDto.getPassword());
     GenderType gender = registerRequestDto.checkGender(registerRequestDto.getGender());
     Account account = registerRequestDto.toEntity(password, gender);
@@ -44,8 +44,7 @@ public class AccountServiceImpl implements AccountService {
    * @param email
    * @throws RuntimeException
    */
-  @Override
-  public void checkByUserEmailDuplicated(String email) throws RuntimeException {
+  private void checkByUserEmailDuplicated(String email){
     if (accountRepository.existsByEmail(email)) {
       throw new CustomException(ExceptionStatus.ACCOUNT_IS_EXIST);
     }
@@ -56,8 +55,7 @@ public class AccountServiceImpl implements AccountService {
    *
    * @param nickName
    */
-  @Override
-  public void checkByUserNickNameDuplicated(String nickName) {
+  private void checkByUserNickNameDuplicated(String nickName) {
     if (accountRepository.existsByNickName(nickName)) {
       throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
     }
@@ -71,10 +69,10 @@ public class AccountServiceImpl implements AccountService {
    */
   @Override
   @Transactional
-  public LoginResponseDto signIn(SignInRequestDto signInRequestDto) {
+  public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
     Account account = findByAccount(signInRequestDto.getEmail());
     checkByMemberPassword(signInRequestDto.getPassword(), account);
-    return LoginResponseDto.of(account,
+    return SignInResponseDto.of(account,
         jwtTokenProvider.createToken(account.getEmail(), account.getType()));
   }
 
@@ -84,8 +82,7 @@ public class AccountServiceImpl implements AccountService {
    * @param password
    * @param account
    */
-  @Override
-  public void checkByMemberPassword(String password, Account account) {
+  private void checkByMemberPassword(String password, Account account) {
     if (!passwordEncoder.matches(password, account.getPassword())) {
       throw new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION);
     }
@@ -103,4 +100,5 @@ public class AccountServiceImpl implements AccountService {
         .orElseThrow(() -> new IllegalArgumentException("사용자 없습니다"));
     return account;
   }
+
 }
