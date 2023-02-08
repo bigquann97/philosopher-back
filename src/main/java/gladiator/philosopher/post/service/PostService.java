@@ -1,8 +1,9 @@
 package gladiator.philosopher.post.service;
 
-import org.springframework.stereotype.Service;
+import gladiator.philosopher.post.dto.PostResponseDto;
 
-@Service
-public class PostService {
+public interface PostService {
+
+  PostResponseDto getPost(Long postId);
 
 }
