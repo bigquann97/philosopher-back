@@ -2,6 +2,7 @@ package gladiator.philosopher.thread.service;
 
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.service.RecommendService;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
@@ -22,6 +23,7 @@ public class ThreadServiceImpl implements ThreadService {
 
   private final ThreadRepository threadRepository;
   private final RecommendService recommendService;
+  private final NotificationService notificationService;
 
   @Override
   @Transactional
@@ -35,6 +37,8 @@ public class ThreadServiceImpl implements ThreadService {
         .endTime(LocalDateTime.now().plusDays(1L))
         .build();
 
+    notificationService.notifyToRecommendersThatThreadHasStarted(post);
+    
     return threadRepository.save(thread);
   }
 

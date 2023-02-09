@@ -1,6 +1,9 @@
 package gladiator.philosopher.recommend.service;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.recommend.entity.Recommend;
+import java.util.List;
 
 public interface RecommendService {
 
@@ -12,4 +15,5 @@ public interface RecommendService {
   void modifyRecommendComment(Long commentId, Account account);
 */
 
+  List<Recommend> getPostRecommends(Post post);
 }
