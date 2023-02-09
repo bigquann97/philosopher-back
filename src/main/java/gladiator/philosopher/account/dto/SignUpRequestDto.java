@@ -1,6 +1,7 @@
 package gladiator.philosopher.account.dto;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.common.enumtype.GenderType;
 import gladiator.philosopher.common.enumtype.UserStatus;
 import gladiator.philosopher.common.enumtype.UserType;
@@ -36,13 +37,14 @@ public class SignUpRequestDto {
 
   private final String gender;
 
-  public Account toEntity(String password) {
+  public Account toEntity(String password, AccountImage accountImage) {
     return Account.builder()
         .email(this.getEmail())
         .password(password)
         .age(this.getAge())
         .nickname(this.getNickname())
         .gender(this.checkGender(this.getNickname()))
+        .accountImage(accountImage)
         .type(UserType.ROLE_USER)
         .status(UserStatus.ACTIVATED).build();
   }

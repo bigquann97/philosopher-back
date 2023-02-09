@@ -11,6 +11,7 @@ import gladiator.philosopher.common.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +23,15 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Override
   @Transactional
-  public void editProfile(final EditProfileRequestDto req, final Account member) {
+  public void editProfile(
+      final MultipartFile multipartFile,
+      final EditProfileRequestDto req,
+      final Account member) {
     Account account = accountRepository.findByEmail(member.getEmail()).orElseThrow(
         () -> new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION)
     );
 
-    AccountImage afterImage = new AccountImage(req.getAccountImage().getOriginalFilename());
+    AccountImage afterImage = new AccountImage(multipartFile.getOriginalFilename());
 
     validateNickname(req.getNickname());
 
@@ -44,7 +48,7 @@ public class ProfileServiceImpl implements ProfileService {
       accountImageRepository.delete(beforeImage);
       accountImageRepository.save(afterImage);
     }
-    imageService.upload(req.getAccountImage(), afterImage.getUniqueName());
+    imageService.upload(multipartFile, afterImage.getUniqueName());
   }
 
   private void validateNickname(final String nickName) {

@@ -56,7 +56,7 @@ public class Account extends BaseEntity {
 
   @Builder
   public Account(String email, String password, int age, String nickname, GenderType gender,
-      UserType type, UserStatus status) {
+      UserType type, UserStatus status, AccountImage accountImage) {
     this.email = email;
     this.password = password;
     this.age = age;
@@ -64,11 +64,12 @@ public class Account extends BaseEntity {
     this.gender = gender;
     this.type = type;
     this.status = status;
+    this.accountImage = accountImage;
   }
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_image_id")
-  private AccountImage accountImage = new AccountImage("default_image.jpg");
+  private AccountImage accountImage;
 
   public void changeProfile(String nickname, AccountImage accountImage) {
     this.nickname = nickname;
@@ -78,7 +79,7 @@ public class Account extends BaseEntity {
   }
 
   public boolean hasDefaultAccountImage() {
-    return this.accountImage.getUniqueName().equals("default_image");
+    return this.accountImage.getUniqueName().equals("default_image.jpg");
   }
 
 }
