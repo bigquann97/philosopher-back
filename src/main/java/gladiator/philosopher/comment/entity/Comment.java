@@ -49,4 +49,7 @@ public class Comment extends BaseEntity {
     this.content = commentRequestDto.getContent();
   }
 
+  public void blind() {
+
+  }
 }
