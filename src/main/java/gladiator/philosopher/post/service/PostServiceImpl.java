@@ -102,4 +102,12 @@ public class PostServiceImpl implements PostService {
     );
     postRepository.delete(post);
   }
+
+  @Override
+  @Transactional
+  public Post getPostEntity(Long postId) {
+    return postRepository.findById(postId).orElseThrow(
+        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
+    );
+  }
 }
