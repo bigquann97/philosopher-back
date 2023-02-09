@@ -32,28 +32,25 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public PostResponseDto createPost(
-      List<MultipartFile> multipartFiles,
-      PostRequestDto postRequestDto,
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
       MemberDetails memberDetails
   ) {
     List<PostImage> postImages = new ArrayList<>();
-
-    for (MultipartFile multipartFile : multipartFiles) {
-      PostImage postImage = new PostImage(multipartFile.getOriginalFilename());
-      imageService.upload(multipartFile, postImage.getUniqueName());
-      postImageRepository.save(postImage);
-      postImages.add(postImage);
-    }
 
     Post post = Post.builder()
         .account(memberDetails.getMember())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
-        .images(postImages)
         .build();
+
+    for (MultipartFile multipartFile : multipartFiles) {
+      PostImage postImage = new PostImage(multipartFile.getOriginalFilename(), post);
+      imageService.upload(multipartFile, postImage.getUniqueName());
+      postImageRepository.save(postImage);
+      postImages.add(postImage);
+    }
+
     postRepository.save(post);
-    return new PostResponseDto(post);
   }
 
   @Override

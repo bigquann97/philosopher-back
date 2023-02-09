@@ -36,9 +36,10 @@ public class PostImage {
   private final static String supportedExtension[] = {"jpg", "jpeg", "bmp", "png"};
 
   @Builder
-  public PostImage(String originalName) {
+  public PostImage(String originalName, Post post) {
     this.originalName = originalName;
     this.uniqueName = generateUniqueName(extractExtension(originalName));
+    this.post = post;
   }
 
   private String generateUniqueName(String extension) {

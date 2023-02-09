@@ -12,7 +12,7 @@ public interface PostService {
 
   List<PostResponseDto> getPosts(int pageChoice);
 
-  PostResponseDto createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
+  void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
       MemberDetails memberDetails);
 
   PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
