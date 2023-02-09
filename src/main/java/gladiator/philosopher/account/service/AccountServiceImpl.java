@@ -4,6 +4,8 @@ import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.entity.AccountImage;
+import gladiator.philosopher.account.repository.AccountImageRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.ExceptionStatus;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountServiceImpl implements AccountService {
 
   private final AccountRepository accountRepository;
+  private final AccountImageRepository accountImageRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -31,8 +34,10 @@ public class AccountServiceImpl implements AccountService {
   public void signUp(SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
+    AccountImage image = new AccountImage("default_image.jpg");
     String password = passwordEncoder.encode(registerRequestDto.getPassword());
-    Account account = registerRequestDto.toEntity(password);
+    Account account = registerRequestDto.toEntity(password, image);
+    accountImageRepository.save(image);
     accountRepository.save(account);
   }
 
@@ -94,8 +99,8 @@ public class AccountServiceImpl implements AccountService {
    */
   private void checkByUserNickNameDuplicated(String nickName) {
     if (accountRepository.existsByNickname(nickName)) {
+      throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
     }
-    throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
   }
 
 }
