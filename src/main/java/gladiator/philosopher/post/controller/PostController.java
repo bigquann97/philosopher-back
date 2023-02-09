@@ -63,10 +63,9 @@ public class PostController {
 
   @DeleteMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
-  public String deletePost(@PathVariable Long postId,
+  public void deletePost(@PathVariable Long postId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     postService.deletePost(postId, memberDetails);
-    return "삭제 완료";
   }
 }
 
