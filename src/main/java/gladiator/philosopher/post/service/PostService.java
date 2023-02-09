@@ -23,4 +23,6 @@ public interface PostService {
 
   Post getPostEntity(Long postId);
 
+
+  void deletePostByAdmin(Long id);
 }

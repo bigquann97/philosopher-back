@@ -7,4 +7,6 @@ public interface AdminService {
 
   List<UserInfoResponseDto> getUsersInfoList();
 
+
+
 }

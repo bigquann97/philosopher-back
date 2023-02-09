@@ -10,5 +10,5 @@ public interface ReportService {
   void reportComment(Long id, ReportRequestDto dto, Account member);
 
   void reportThread(Long id, ReportRequestDto dto, Account member);
-  
+
 }

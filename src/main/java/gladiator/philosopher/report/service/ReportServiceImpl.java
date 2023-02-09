@@ -1,12 +1,5 @@
 package gladiator.philosopher.report.service;
 
-import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.comment.service.CommentService;
-import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.post.service.PostService;
-import gladiator.philosopher.report.dto.ReportRequestDto;
-import gladiator.philosopher.report.entity.Report;
 import gladiator.philosopher.report.repository.ReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
