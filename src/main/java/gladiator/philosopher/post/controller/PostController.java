@@ -7,7 +7,6 @@ import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,29 +40,32 @@ public class PostController {
 
   // /api/posts?page=1
   @GetMapping
+  @ResponseStatus(HttpStatus.OK)
   public List<PostResponseDto> getPosts(@RequestParam int page) {
     return postService.getPosts(page);
   }
 
   // /api/posts/1
   @GetMapping("/{postId}")
-  public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
-    return ResponseEntity.status(200).body(postService.getPost(postId));
+  @ResponseStatus(HttpStatus.OK)
+  public PostResponseDto getPost(@PathVariable Long postId) {
+    return postService.getPost(postId);
   }
 
   @PutMapping("/{postId}")
-  public ResponseEntity<PostResponseDto> modifyPost(@PathVariable Long postId,
+  @ResponseStatus(HttpStatus.OK)
+  public PostResponseDto modifyPost(@PathVariable Long postId,
       @RequestBody PostRequestDto postRequestDto,
       @AuthenticationPrincipal MemberDetails memberDetails) {
-    return ResponseEntity.status(200)
-        .body(postService.modifyPost(postId, postRequestDto, memberDetails));
+    return postService.modifyPost(postId, postRequestDto, memberDetails);
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> deletePost(@PathVariable Long postId,
+  @ResponseStatus(HttpStatus.OK)
+  public String deletePost(@PathVariable Long postId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     postService.deletePost(postId, memberDetails);
-    return ResponseEntity.status(200).body("삭제 완료");
+    return "삭제 완료";
   }
 }
 
