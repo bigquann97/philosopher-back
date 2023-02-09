@@ -1,7 +1,10 @@
 package gladiator.philosopher.post.dto;
 
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.entity.PostImage;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
@@ -13,7 +16,7 @@ public class PostResponseDto {
 
   private final String nickname;
 
-  private final String image;
+  private final List<String> images;
 
   private final String content;
 
@@ -25,7 +28,8 @@ public class PostResponseDto {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
-    this.image = post.getImage();
+    this.images = post.getImages().stream().map(PostImage::getUniqueName)
+        .collect(Collectors.toList());
     this.content = post.getContent();
     this.createDate = post.getCreateDate();
     this.modifiedDate = post.getModDate();

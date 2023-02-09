@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PostImages {
+public class PostImage {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,13 +36,10 @@ public class PostImages {
   private final static String supportedExtension[] = {"jpg", "jpeg", "bmp", "png"};
 
   @Builder
-  public PostImages(String originalName) {
+  public PostImage(String originalName, Post post) {
     this.originalName = originalName;
-    if (originalName.equals("default_image.jpg")) {
-      this.uniqueName = "default_image.jpg";
-    } else {
-      this.uniqueName = generateUniqueName(extractExtension(originalName));
-    }
+    this.uniqueName = generateUniqueName(extractExtension(originalName));
+    this.post = post;
   }
 
   private String generateUniqueName(String extension) {
