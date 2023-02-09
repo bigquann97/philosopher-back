@@ -2,11 +2,15 @@ package gladiator.philosopher.post.service;
 
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.common.image.ImageService;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.security.members.MemberDetails;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -16,20 +20,37 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
+  private final ImageService imageService;
+  private final PostImageRepository postImageRepository;
 
   @Override
   @Transactional
-  public PostResponseDto newPost(PostRequestDto postRequestDto, MemberDetails memberDetails) {
+  public PostResponseDto createPost(
+      List<MultipartFile> multipartFiles,
+      PostRequestDto postRequestDto,
+      MemberDetails memberDetails
+  ) {
+    List<PostImage> postImages = new ArrayList<>();
+
+    for (MultipartFile multipartFile : multipartFiles) {
+      PostImage postImage = new PostImage(multipartFile.getOriginalFilename());
+      imageService.upload(multipartFile, postImage.getUniqueName());
+      postImageRepository.save(postImage);
+      postImages.add(postImage);
+    }
+
     Post post = Post.builder()
         .account(memberDetails.getMember())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
+        .images(postImages)
         .build();
     postRepository.save(post);
     return new PostResponseDto(post);

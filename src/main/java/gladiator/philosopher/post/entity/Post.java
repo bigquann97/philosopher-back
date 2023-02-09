@@ -3,6 +3,8 @@ package gladiator.philosopher.post.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.BaseEntity;
 import gladiator.philosopher.post.dto.PostRequestDto;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,19 +34,18 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  //  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<PostImages> images;
-  @Column
-  private String image;
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<PostImage> images;
 
   @Column(nullable = false)
   private String content;
 
   @Builder
-  public Post(Account account, String title, String content) {
+  public Post(Account account, String title, String content, List<PostImage> images) {
     this.account = account;
     this.title = title;
     this.content = content;
+    this.images = images;
   }
 
   public void modifyPost(PostRequestDto postRequestDto) {
