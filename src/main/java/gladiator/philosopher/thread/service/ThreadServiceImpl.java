@@ -45,6 +45,13 @@ public class ThreadServiceImpl implements ThreadService {
     return threadRepository.save(archivedThread);
   }
 
+  @Override
+  @Transactional
+  public Thread getThreadEntity(Long id) {
+    return threadRepository.findById(id)
+        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
+  }
+
 
   @Override
   @Transactional

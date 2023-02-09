@@ -23,4 +23,6 @@ public interface ThreadService {
 
   @Transactional
   Thread finishThread(final Thread thread);
+
+  Thread getThreadEntity(Long id);
 }

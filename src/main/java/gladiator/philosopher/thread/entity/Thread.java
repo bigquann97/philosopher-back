@@ -64,4 +64,8 @@ public class Thread extends BaseEntity {
     this.status = ThreadStatus.ARCHIVED;
     return this;
   }
+
+  public void blind() {
+    
+  }
 }
