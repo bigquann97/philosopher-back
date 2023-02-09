@@ -2,6 +2,7 @@ package gladiator.philosopher.post.controller;
 
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
@@ -41,7 +42,7 @@ public class PostController {
   // /api/posts?page=1
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<PostResponseDto> getPosts(@RequestParam int page) {
+  public List<PostsResponseDto> getPosts(@RequestParam int page) {
     return postService.getPosts(page);
   }
 
