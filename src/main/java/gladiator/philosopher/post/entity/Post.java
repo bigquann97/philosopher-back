@@ -52,4 +52,8 @@ public class Post extends BaseEntity {
     this.title = postRequestDto.getTitle();
     this.content = postRequestDto.getContent();
   }
+
+  public void blind() {
+
+  }
 }

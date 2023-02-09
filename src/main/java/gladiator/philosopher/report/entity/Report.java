@@ -1,6 +1,7 @@
 package gladiator.philosopher.report.entity;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.entity.Thread;
 import javax.persistence.Column;
@@ -30,11 +31,11 @@ public class Report {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "report_account_id", nullable = false)
-  private Account reportAccount;
+  private Account reporter;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "reported_account_id", nullable = false)
-  private Account reportedAccount;
+  private Account reported;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -48,17 +49,31 @@ public class Report {
   @JoinColumn(name = "thread_id")
   private Thread thread;
 
-//  @ManyToOne(fetch = FetchType.LAZY)
-//  @JoinColumn(name = "comment_id")
-//  private Comment comment;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "comment_id")
+  private Comment comment;
 
-  @Builder
-  public Report(Account reportAccount, Account reportedAccount, ReportCategory category, Post post,
-      Thread thread) {
-    this.reportAccount = reportAccount;
-    this.reportedAccount = reportedAccount;
-    this.category = category;
+  @Builder(builderMethodName = "postReport")
+  public Report(Account reporter, Account reported, ReportCategory category,
+      Post post) {
+    this.reporter = reporter;
+    this.reported = reported;
     this.post = post;
+  }
+
+  @Builder(builderMethodName = "commentReport")
+  public Report(Account reporter, Account reported, ReportCategory category,
+      Comment comment) {
+    this.reporter = reporter;
+    this.reported = reported;
+    this.comment = comment;
+  }
+
+  @Builder(builderMethodName = "threadReport")
+  public Report(Account reporter, Account reported, ReportCategory category,
+      Thread thread) {
+    this.reporter = reporter;
+    this.reported = reported;
     this.thread = thread;
   }
 
