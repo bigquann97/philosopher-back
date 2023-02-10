@@ -23,16 +23,16 @@ public class CommentController {
   private final CommentService commentService;
 
   /*
-   * postId 로 전체 comment 조회
+   * postId, threadId 로 전체 comment 조회
    *
    * @param postId
-   * @param memberDetails
+   * @param threadId
    * @return
    */
-  @GetMapping("/api/posts/{postId}/comment")
+  @GetMapping("/api/posts/{postId}/{threadId}/comment")
   public List<CommentResponseDto> getComments(@PathVariable Long postId,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    return commentService.getComments(postId, memberDetails);
+      @PathVariable Long threadId) {
+    return commentService.getComments(postId, threadId);
   }
 
   /*
@@ -40,46 +40,53 @@ public class CommentController {
    *
    * @param commentRequestDto
    * @param postId
+   * @param threadId
    * @param memberDetails
    * @return
    */
-  @PostMapping("/api/posts/{postId}/comment")
+  @PostMapping("/api/posts/{postId}/{threadId}/comment")
   public ResponseEntity<CommentResponseDto> createComment(
       @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId,
+      @PathVariable Long threadId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     return ResponseEntity.status(200)
-        .body(commentService.createComment(commentRequestDto, postId, memberDetails));
+        .body(commentService.createComment(commentRequestDto, postId, threadId, memberDetails));
   }
 
   /*
    * postId, commentId 로 comment 수정
    *
    * @param commentRequestDto
-   * @param commentId
    * @param postId
+   * @param threadId
+   * @param commentId
    * @param memberDetails
    * @return
    */
-  @PutMapping("/api/posts/{postId}/comment/{commentId}")
+  @PutMapping("/api/posts/{postId}/{threadId}/comment/{commentId}")
   public ResponseEntity<CommentResponseDto> modifyComment(
-      @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long commentId,
-      @PathVariable Long postId, @AuthenticationPrincipal MemberDetails memberDetails) {
+      @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId,
+      @PathVariable Long threadId,
+      @PathVariable Long commentId, @AuthenticationPrincipal MemberDetails memberDetails) {
     return ResponseEntity.status(200)
-        .body(commentService.modifyComment(commentRequestDto, commentId, postId, memberDetails));
+        .body(commentService.modifyComment(commentRequestDto, postId, threadId, commentId,
+            memberDetails));
   }
 
   /*
    * postId, commentId 로 comment 삭제
    *
    * @param postId
+   * @param threadId
    * @param commentId
    * @param memberDetails
    * @return
    */
-  @DeleteMapping("/api/posts/{postId}/comment/{commentId}")
+  @DeleteMapping("/api/posts/{postId}/{threadId}/comment/{commentId}")
   public ResponseEntity<String> deleteComment(@PathVariable Long postId,
+      @PathVariable Long threadId,
       @PathVariable Long commentId, @AuthenticationPrincipal MemberDetails memberDetails) {
-    commentService.deleteComment(postId, commentId, memberDetails);
+    commentService.deleteComment(postId, threadId, commentId, memberDetails);
     return ResponseEntity.status(200).body("삭제 완료");
   }
 }

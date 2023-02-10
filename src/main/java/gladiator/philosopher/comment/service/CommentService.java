@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface CommentService {
 
-  List<CommentResponseDto> getComments(Long postId, MemberDetails memberDetails);
+  List<CommentResponseDto> getComments(Long postId, Long threadId);
 
-  CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long postId,
+  CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long postId, Long threadId,
       MemberDetails memberDetails);
 
-  CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long commentId, Long postId,
-      MemberDetails memberDetails);
+  CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long postId, Long threadId,
+      Long commentId, MemberDetails memberDetails);
 
-  void deleteComment(Long postId, Long commentId, MemberDetails memberDetails);
+  void deleteComment(Long postId, Long threadId, Long commentId, MemberDetails memberDetails);
 
   Comment getCommentEntity(Long id);
 }
