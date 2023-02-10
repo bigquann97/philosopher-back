@@ -6,7 +6,6 @@ import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.ExceptionStatus;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.security.members.MemberDetails;
 import gladiator.philosopher.thread.entity.Thread;
@@ -28,32 +27,23 @@ public class CommentServiceImpl implements CommentService {
   private final ThreadRepository threadRepository;
 
   @Override
-  public List<CommentResponseDto> getComments(Long postId, Long threadId) {
-
-    Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
+  public List<CommentResponseDto> getComments(Long threadId) {
     Thread thread = threadRepository.findById(threadId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
 
-    List<Comment> comments = commentRepository.findAllByPostAndThread(post, thread);
+    List<Comment> comments = commentRepository.findAllByThread(thread);
     return comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
   }
 
   @Override
   @Transactional
-  public CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long postId,
-      Long threadId,
+  public CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
       MemberDetails memberDetails) {
-    Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
     Thread thread = threadRepository.findById(threadId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
 
     Comment comment = Comment.builder()
         .account(memberDetails.getMember())
-        .post(post)
         .thread(thread)
         .content(commentRequestDto.getContent())
         .build();
@@ -64,11 +54,8 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long postId,
-      Long threadId, Long commentId, MemberDetails memberDetails) {
-    Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
+  public CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long threadId,
+      Long commentId, MemberDetails memberDetails) {
     Thread thread = threadRepository.findById(threadId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
 
@@ -78,7 +65,6 @@ public class CommentServiceImpl implements CommentService {
     Comment modifyComment = Comment.builder()
         .id(comment.getId())
         .account(memberDetails.getMember())
-        .post(post)
         .thread(thread)
         .content(commentRequestDto.getContent())
         .build();
@@ -89,8 +75,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public void deleteComment(Long postId, Long threadId, Long commentId,
-      MemberDetails memberDetails) {
+  public void deleteComment(Long threadId, Long commentId, MemberDetails memberDetails) {
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     commentRepository.delete(comment);
