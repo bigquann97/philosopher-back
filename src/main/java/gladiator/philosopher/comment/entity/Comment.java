@@ -30,10 +30,6 @@ public class Comment extends BaseEntity {
   private Account account;
 
   @ManyToOne
-  @JoinColumn(name = "post_Id")
-  private Post post;
-
-  @ManyToOne
   @JoinColumn(name = "thread_Id")
   private Thread thread;
 
@@ -41,10 +37,9 @@ public class Comment extends BaseEntity {
   private String content;
 
   @Builder
-  public Comment(Long id, Account account, Post post, Thread thread, String content) {
+  public Comment(Long id, Account account, Thread thread, String content) {
     this.id = id;
     this.account = account;
-    this.post = post;
     this.thread = thread;
     this.content = content;
   }
@@ -56,5 +51,4 @@ public class Comment extends BaseEntity {
   public void blind() {
 
   }
-
 }
