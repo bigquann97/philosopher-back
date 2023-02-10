@@ -4,6 +4,7 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.common.BaseEntity;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.thread.entity.Thread;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,13 +32,21 @@ public class Comment extends BaseEntity {
   @JoinColumn(name = "post_Id")
   private Post post;
 
+<<<<<<< HEAD
+=======
+  @ManyToOne
+  @JoinColumn(name = "thread_Id")
+  private Thread thread;
+
+>>>>>>> 52151cc35356d0308cd0d1a087f92ca0043d2107
   @Column(nullable = false)
   private String content;
   @Builder
-  public Comment(Long id, Account account, Post post, String content) {
+  public Comment(Long id, Account account, Post post, Thread thread, String content) {
     this.id = id;
     this.account = account;
     this.post = post;
+    this.thread = thread;
     this.content = content;
   }
   public void modifyComment(CommentRequestDto commentRequestDto) {
