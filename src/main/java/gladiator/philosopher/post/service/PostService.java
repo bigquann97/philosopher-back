@@ -24,4 +24,7 @@ public interface PostService {
 
   Post getPostEntity(Long postId);
 
+
+  void deletePostByAdmin(Long id);
+  void modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
 }

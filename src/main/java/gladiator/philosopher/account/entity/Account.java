@@ -82,4 +82,16 @@ public class Account extends BaseEntity {
     return this.accountImage.getUniqueName().equals("default_image.jpg");
   }
 
+  // testcode
+  public Account(String email, String password, int age, String nickname,
+      GenderType gender, UserType type, UserStatus status) {
+    this.email = email;
+    this.password = password;
+    this.age = age;
+    this.nickname = nickname;
+    this.gender = gender;
+    this.type = type;
+    this.status = status;
+  }
+
 }

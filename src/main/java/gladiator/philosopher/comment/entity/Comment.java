@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Comment extends BaseEntity {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -33,13 +32,15 @@ public class Comment extends BaseEntity {
   @JoinColumn(name = "post_Id")
   private Post post;
 
+<<<<<<< HEAD
+=======
   @ManyToOne
   @JoinColumn(name = "thread_Id")
   private Thread thread;
 
+>>>>>>> 52151cc35356d0308cd0d1a087f92ca0043d2107
   @Column(nullable = false)
   private String content;
-
   @Builder
   public Comment(Long id, Account account, Post post, Thread thread, String content) {
     this.id = id;
@@ -48,11 +49,9 @@ public class Comment extends BaseEntity {
     this.thread = thread;
     this.content = content;
   }
-
   public void modifyComment(CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();
   }
-
   public void blind() {
 
   }

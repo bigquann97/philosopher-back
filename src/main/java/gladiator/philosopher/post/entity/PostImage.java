@@ -4,6 +4,7 @@ import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.ExceptionStatus;
 import java.util.Arrays;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,12 +25,10 @@ public class PostImage {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private String originalName;
-
   private String uniqueName;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "post_id")
   private Post post;
 

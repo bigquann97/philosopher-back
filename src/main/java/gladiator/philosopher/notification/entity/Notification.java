@@ -34,4 +34,5 @@ public class Notification extends BaseEntity {
     this.account = account;
     this.content = content;
   }
+
 }
