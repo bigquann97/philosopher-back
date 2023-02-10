@@ -11,12 +11,12 @@ public interface CommentService {
   List<CommentResponseDto> getComments(Long threadId);
 
   CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
-      MemberDetails memberDetails);
+      AccountDetails accountDetails);
 
   CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long threadId,
-      Long commentId, MemberDetails memberDetails);
+      Long commentId, AccountDetails accountDetails);
 
-  void deleteComment(Long threadId, Long commentId, MemberDetails memberDetails);
+  void deleteComment(Long threadId, Long commentId, AccountDetails accountDetails);
 
   Comment getCommentEntity(Long id);
 }
