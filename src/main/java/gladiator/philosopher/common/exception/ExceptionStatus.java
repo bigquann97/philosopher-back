@@ -11,6 +11,7 @@ public enum ExceptionStatus {
   NOT_MATCH_INFORMATION(400, " 회원정보가 일치하지 않습니다. 다시 확인해주세요."),
   IMAGE_UPLOAD_FAILED(400, "이미지 정상 업로드 실패"),
   UNSUPPORTED_IMAGE_TYPE(400, "지원하지 않는 이미지 형식"),
+  UNMATCHED_USER(400, "게시물 작성자가 아닙니다."),
   // 404 ->  NOT _ FOUND : 잘못된 리소스 접근 (ex. 존재하지 않는 값)
   POST_IS_NOT_EXIST(404, "존재하지 않는 게시물입니다."),
   // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)

@@ -32,6 +32,9 @@ public class Post extends BaseEntity {
   private Account account;
 
   @Column(nullable = false)
+  private int recommendCount;
+
+  @Column(nullable = false)
   private String title;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,6 +49,7 @@ public class Post extends BaseEntity {
     this.title = title;
     this.content = content;
     this.images = images;
+    this.recommendCount = 0;
   }
 
   public Post(Account account, String title, String content) {
@@ -60,6 +64,10 @@ public class Post extends BaseEntity {
   }
 
   public void blind() {
+
+  }
+
+  public void deletePost() {
 
   }
 }
