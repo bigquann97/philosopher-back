@@ -7,6 +7,7 @@ import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.recommend.repository.RecommendRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class RecommendServiceImpl implements RecommendService{
+public class RecommendServiceImpl implements RecommendService {
 
   private final RecommendRepository recommendRepository;
   private final PostRepository postRepository;
@@ -46,4 +47,9 @@ public class RecommendServiceImpl implements RecommendService{
     }
   }
   */
+
+  @Override
+  public List<Recommend> getPostRecommends(Post post) {
+    return recommendRepository.findByPost(post);
+  }
 }
