@@ -33,7 +33,8 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, MemberDetails memberDetails
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
+      MemberDetails memberDetails
   ) {
     List<PostImage> postImages = new ArrayList<>();
 
@@ -51,6 +52,7 @@ public class PostServiceImpl implements PostService {
     }
     postRepository.save(post);
   }
+
   @Override
   @Transactional
   public List<PostsResponseDto> getPosts(int pageChoice) {
@@ -86,7 +88,7 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+    if (!post.isWriter(memberDetails)) {
       throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
     post.modifyPost(postRequestDto);
@@ -100,7 +102,7 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+    if (!post.isWriter(memberDetails)) {
       throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
     postRepository.delete(post);
@@ -110,7 +112,8 @@ public class PostServiceImpl implements PostService {
   public void deletePostByAdmin(Long id) {
     Post post = postRepository.findById(id).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    postRepository.delete(post);}
+    postRepository.delete(post);
+  }
 
   @Override
   public Post getPostEntity(Long postId) {

@@ -3,6 +3,7 @@ package gladiator.philosopher.post.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.BaseEntity;
 import gladiator.philosopher.post.dto.PostRequestDto;
+import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,7 +68,11 @@ public class Post extends BaseEntity {
 
   }
 
-  public void deletePost() {
-
+  public boolean isWriter(MemberDetails memberDetails) {
+    if (this.account.getEmail().equals(memberDetails.getUsername())) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
