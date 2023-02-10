@@ -89,6 +89,9 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
+    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
     return new PostResponseDto(post);
@@ -100,6 +103,9 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
+    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
     postRepository.delete(post);
   }
 
