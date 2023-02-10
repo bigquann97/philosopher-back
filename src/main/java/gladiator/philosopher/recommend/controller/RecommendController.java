@@ -5,6 +5,7 @@ import gladiator.philosopher.recommend.service.RecommendService;
 import gladiator.philosopher.security.members.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,17 +19,44 @@ public class RecommendController {
   private final RecommendService recommendService;
 
   @PostMapping("/post/{postId}")
-  public RecommendResponseDto modifyRecommendPost(@PathVariable Long postId,
+  public RecommendResponseDto createRecommendPost(@PathVariable Long postId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
-    recommendService.modifyRecommendPost(postId, memberDetails.getMember());
+    recommendService.createRecommendPost(postId, memberDetails.getMember());
     return new RecommendResponseDto("좋아요");
   }
-  /*
-  @PostMapping("/post/{commentId}")
-  public RecommendResponseDto modifyRecommendComment(@PathVariable Long commentId,
+
+  @DeleteMapping("/post/{postId}")
+  public RecommendResponseDto deleteRecommendPost(@PathVariable Long postId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
-    recommendService.modifyRecommendComment(commentId, memberDetails.getMember());
+    recommendService.deleteRecommendPost(postId, memberDetails.getMember());
+    return new RecommendResponseDto("좋아요 취소");
+  }
+
+  @PostMapping("/thread/{threadId}")
+  public RecommendResponseDto createRecommendThread(@PathVariable Long threadId,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    recommendService.createRecommendThread(threadId, memberDetails.getMember());
     return new RecommendResponseDto("좋아요");
   }
-*/
+
+  @DeleteMapping("/thread/{threadId}")
+  public RecommendResponseDto deleteRecommendThread(@PathVariable Long threadId,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    recommendService.deleteRecommendThread(threadId, memberDetails.getMember());
+    return new RecommendResponseDto("좋아요 취소");
+  }
+
+  @PostMapping("/comment/{commentId}")
+  public RecommendResponseDto createRecommendComment(@PathVariable Long commentId,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    recommendService.createRecommendComment(commentId, memberDetails.getMember());
+    return new RecommendResponseDto("좋아요");
+  }
+
+  @DeleteMapping("/comment/{commentId}")
+  public RecommendResponseDto deleteRecommendComment(@PathVariable Long commentId,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    recommendService.deleteRecommendComment(commentId, memberDetails.getMember());
+    return new RecommendResponseDto("좋아요 취소");
+  }
 }

@@ -7,13 +7,17 @@ import java.util.List;
 
 public interface RecommendService {
 
-  void modifyRecommendPost(Long postId, Account account);
+  void createRecommendPost(Long postId, Account account);
 
-/*
-  void modifyRecommendThread(Long threadId, Account account);
+  void deleteRecommendPost(Long postId, Account account);
 
-  void modifyRecommendComment(Long commentId, Account account);
-*/
+  void createRecommendThread(Long threadId, Account account);
+
+  void deleteRecommendThread(Long threadId, Account account);
+
+  void createRecommendComment(Long commentId, Account account);
+
+  void deleteRecommendComment(Long commentId, Account account);
 
   List<Recommend> getPostRecommends(Post post);
 }
