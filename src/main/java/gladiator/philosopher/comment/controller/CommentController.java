@@ -44,9 +44,9 @@ public class CommentController {
   @PostMapping("/api/{threadId}/comment")
   public ResponseEntity<CommentResponseDto> createComment(
       @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long threadId,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
+      @AuthenticationPrincipal AccountDetails accountDetails) {
     return ResponseEntity.status(200)
-        .body(commentService.createComment(commentRequestDto, threadId, memberDetails));
+        .body(commentService.createComment(commentRequestDto, threadId, accountDetails));
   }
 
   /*
@@ -61,9 +61,9 @@ public class CommentController {
   @PutMapping("/api/{threadId}/comment/{commentId}")
   public ResponseEntity<CommentResponseDto> modifyComment(
       @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long threadId,
-      @PathVariable Long commentId, @AuthenticationPrincipal MemberDetails memberDetails) {
+      @PathVariable Long commentId, @AuthenticationPrincipal AccountDetails accountDetails) {
     return ResponseEntity.status(200)
-        .body(commentService.modifyComment(commentRequestDto, threadId, commentId, memberDetails));
+        .body(commentService.modifyComment(commentRequestDto, threadId, commentId, accountDetails));
   }
 
   /*
@@ -76,8 +76,8 @@ public class CommentController {
    */
   @DeleteMapping("/api/{threadId}/comment/{commentId}")
   public ResponseEntity<String> deleteComment(@PathVariable Long threadId,
-      @PathVariable Long commentId, @AuthenticationPrincipal MemberDetails memberDetails) {
-    commentService.deleteComment(threadId, commentId, memberDetails);
+      @PathVariable Long commentId, @AuthenticationPrincipal AccountDetails accountDetails) {
+    commentService.deleteComment(threadId, commentId, accountDetails);
     return ResponseEntity.status(200).body("삭제 완료");
   }
 }
