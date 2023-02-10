@@ -5,6 +5,7 @@ import gladiator.philosopher.common.exception.ExceptionStatus;
 import gladiator.philosopher.common.image.ImageService;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
@@ -52,12 +53,12 @@ public class PostServiceImpl implements PostService {
   }
   @Override
   @Transactional
-  public List<PostResponseDto> getPosts(int pageChoice) {
+  public List<PostsResponseDto> getPosts(int pageChoice) {
     Page<Post> posts = postRepository.findAll(pageableSetting(pageChoice));
     if (posts.isEmpty()) {
       throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
     }
-    List<PostResponseDto> PostResponseDtoList = posts.stream().map(PostResponseDto::new).collect(
+    List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
         Collectors.toList());
     return PostResponseDtoList;
   }
@@ -85,6 +86,9 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
+    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
     return new PostResponseDto(post);
@@ -96,6 +100,9 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
+    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
     postRepository.delete(post);
   }
 

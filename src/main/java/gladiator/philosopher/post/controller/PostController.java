@@ -2,6 +2,7 @@ package gladiator.philosopher.post.controller;
 
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
 
   private final PostService postService;
+
   // /api/posts
   @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.OK)
@@ -41,29 +43,31 @@ public class PostController {
 
   // /api/posts?page=1
   @GetMapping
-  public List<PostResponseDto> getPosts(@RequestParam int page) {
+  @ResponseStatus(HttpStatus.OK)
+  public List<PostsResponseDto> getPosts(@RequestParam int page) {
     return postService.getPosts(page);
   }
 
   // /api/posts/1
   @GetMapping("/{postId}")
-  public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
-    return ResponseEntity.status(200).body(postService.getPost(postId));
+  @ResponseStatus(HttpStatus.OK)
+  public PostResponseDto getPost(@PathVariable Long postId) {
+    return postService.getPost(postId);
   }
 
   @PutMapping("/{postId}")
-  public ResponseEntity<PostResponseDto> modifyPost(@PathVariable Long postId,
+  @ResponseStatus(HttpStatus.OK)
+  public PostResponseDto modifyPost(@PathVariable Long postId,
       @RequestBody PostRequestDto postRequestDto,
       @AuthenticationPrincipal MemberDetails memberDetails) {
-    return ResponseEntity.status(200)
-        .body(postService.modifyPost(postId, postRequestDto, memberDetails));
+    return postService.modifyPost(postId, postRequestDto, memberDetails);
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> deletePost(@PathVariable Long postId,
+  @ResponseStatus(HttpStatus.OK)
+  public void deletePost(@PathVariable Long postId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     postService.deletePost(postId, memberDetails);
-    return ResponseEntity.status(200).body("삭제 완료");
   }
 
 }
