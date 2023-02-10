@@ -1,7 +1,7 @@
 package gladiator.philosopher.thread.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.BaseEntity;
+import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.entity.PostImage;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -66,6 +66,6 @@ public class Thread extends BaseEntity {
   }
 
   public void blind() {
-    
+
   }
 }

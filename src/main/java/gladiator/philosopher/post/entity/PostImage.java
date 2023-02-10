@@ -1,7 +1,7 @@
 package gladiator.philosopher.post.entity;
 
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.persistence.CascadeType;

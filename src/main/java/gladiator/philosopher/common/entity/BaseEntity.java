@@ -1,4 +1,4 @@
-package gladiator.philosopher.common;
+package gladiator.philosopher.common.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -16,9 +16,9 @@ public abstract class BaseEntity {
 
   @CreatedDate
   @Column(updatable = false)
-  private LocalDateTime createDate;
+  private LocalDateTime createdDate;
 
   @LastModifiedDate
-  private LocalDateTime modDate;
+  private LocalDateTime modifiedDate;
 
 }

@@ -4,7 +4,7 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.entity.Recommend;

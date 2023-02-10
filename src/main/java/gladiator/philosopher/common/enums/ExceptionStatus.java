@@ -1,4 +1,4 @@
-package gladiator.philosopher.common.exception;
+package gladiator.philosopher.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

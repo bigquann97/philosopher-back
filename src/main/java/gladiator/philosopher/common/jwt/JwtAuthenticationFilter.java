@@ -1,6 +1,7 @@
-package gladiator.philosopher.security;
+package gladiator.philosopher.common.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gladiator.philosopher.common.exception.dto.ErrorDto;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import javax.servlet.FilterChain;
