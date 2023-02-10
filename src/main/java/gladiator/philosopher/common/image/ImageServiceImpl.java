@@ -24,11 +24,11 @@ public class ImageServiceImpl implements ImageService {
       dir.mkdir();
     }
   }
-
   @Override
   public void upload(MultipartFile file, String filename) {
     try {
       file.transferTo(new File(location + filename));
+      System.out.println("data is : "+(location + filename));
     } catch (IOException e) {
       throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
@@ -38,5 +38,4 @@ public class ImageServiceImpl implements ImageService {
   public void delete(String filename) {
     new File(location + filename).delete();
   }
-  
 }

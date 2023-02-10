@@ -48,6 +48,12 @@ public class Post extends BaseEntity {
     this.images = images;
   }
 
+  public Post(Account account, String title, String content) {
+    this.account = account;
+    this.title = title;
+    this.content = content;
+  }
+
   public void modifyPost(PostRequestDto postRequestDto) {
     this.title = postRequestDto.getTitle();
     this.content = postRequestDto.getContent();

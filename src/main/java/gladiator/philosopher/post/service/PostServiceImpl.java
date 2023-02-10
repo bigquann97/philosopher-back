@@ -32,8 +32,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
-      MemberDetails memberDetails
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, MemberDetails memberDetails
   ) {
     List<PostImage> postImages = new ArrayList<>();
 
@@ -49,10 +48,8 @@ public class PostServiceImpl implements PostService {
       postImageRepository.save(postImage);
       postImages.add(postImage);
     }
-
     postRepository.save(post);
   }
-
   @Override
   @Transactional
   public List<PostResponseDto> getPosts(int pageChoice) {
@@ -102,19 +99,26 @@ public class PostServiceImpl implements PostService {
     postRepository.delete(post);
   }
 
-  @Override
+  @Override // 여기서 필요한 작업은 -> 해당 DB단말고 파일 데이터도 지워야 함
   public void deletePostByAdmin(Long id) {
     Post post = postRepository.findById(id).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
-    );
-    postRepository.delete(post);
-  }
+        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
+    postRepository.delete(post);}
 
   @Override
-  @Transactional
   public Post getPostEntity(Long postId) {
     return postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
+  }
+
+  @Override
+  @Transactional
+  public void modifyPostByAdmin(Long id, PostRequestDto postRequestDto) {
+    Post post = postRepository.findById(id).orElseThrow(
+        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
+    );
+    post.modifyPost(postRequestDto);
+    postRepository.save(post);
   }
 }

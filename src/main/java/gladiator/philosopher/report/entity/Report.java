@@ -31,20 +31,21 @@ public class Report {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "report_account_id", nullable = false)
-  private Account reporter;
+  private Account reporter; // 널이면 안되고
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "reported_account_id", nullable = false)
-  private Account reported;
+  private Account reported; // 이친구도 널이면 안되고
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private ReportCategory category;
+  private ReportCategory category; // 널이면 안되고
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id")
-  private Post post;
+  private Post post; // 널이어도 되고
 
+  private String content;
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "thread_id")
   private Thread thread;
@@ -55,26 +56,32 @@ public class Report {
 
   @Builder(builderMethodName = "postReport")
   public Report(Account reporter, Account reported, ReportCategory category,
-      Post post) {
+      Post post, String content) {
     this.reporter = reporter;
     this.reported = reported;
+    this.category = category;
+    this.content = content;
     this.post = post;
   }
 
   @Builder(builderMethodName = "commentReport")
   public Report(Account reporter, Account reported, ReportCategory category,
-      Comment comment) {
+      Comment comment, String content) {
     this.reporter = reporter;
     this.reported = reported;
+    this.category = category;
     this.comment = comment;
+    this.content = content;
   }
 
   @Builder(builderMethodName = "threadReport")
   public Report(Account reporter, Account reported, ReportCategory category,
-      Thread thread) {
+      Thread thread, String content) {
     this.reporter = reporter;
     this.reported = reported;
+    this.category = category;
     this.thread = thread;
+    this.content = content;
   }
 
 }

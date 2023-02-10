@@ -7,6 +7,7 @@ import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
 
   private final PostService postService;
-
   // /api/posts
-  @PostMapping
+  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.OK)
   public void createPost(
       @RequestPart("image") List<MultipartFile> multipartFiles,
@@ -65,5 +65,6 @@ public class PostController {
     postService.deletePost(postId, memberDetails);
     return ResponseEntity.status(200).body("삭제 완료");
   }
+
 }
 

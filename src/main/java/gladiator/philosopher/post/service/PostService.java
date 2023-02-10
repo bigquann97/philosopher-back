@@ -25,4 +25,5 @@ public interface PostService {
 
 
   void deletePostByAdmin(Long id);
+  void modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
 }
