@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/interests")
+@RequestMapping("/api/recommendations")
 public class RecommendController {
 
   private final RecommendService recommendService;
