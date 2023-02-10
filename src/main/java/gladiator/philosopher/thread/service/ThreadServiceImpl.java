@@ -1,7 +1,7 @@
 package gladiator.philosopher.thread.service;
 
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.service.RecommendService;
@@ -38,7 +38,7 @@ public class ThreadServiceImpl implements ThreadService {
         .build();
 
     notificationService.notifyToRecommendersThatThreadHasStarted(post);
-    
+
     return threadRepository.save(thread);
   }
 

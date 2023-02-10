@@ -23,8 +23,8 @@ public class CommentResponseDto {
     this.commentId = comment.getId();
     this.nickname = comment.getAccount().getNickname();
     this.content = comment.getContent();
-    this.createDate = comment.getCreateDate();
-    this.modifiedDate = comment.getModDate();
+    this.createDate = comment.getCreatedDate();
+    this.modifiedDate = comment.getModifiedDate();
   }
 
 }

@@ -1,8 +1,9 @@
 package gladiator.philosopher.post.service;
 
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.ExceptionStatus;
 import gladiator.philosopher.common.image.ImageService;
+import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
@@ -10,7 +11,6 @@ import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostRepository;
-import gladiator.philosopher.security.members.MemberDetails;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,12 +33,13 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, MemberDetails memberDetails
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
+      AccountDetails accountDetails
   ) {
     List<PostImage> postImages = new ArrayList<>();
 
     Post post = Post.builder()
-        .account(memberDetails.getMember())
+        .account(accountDetails.getAccount())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
         .build();
@@ -51,6 +52,7 @@ public class PostServiceImpl implements PostService {
     }
     postRepository.save(post);
   }
+
   @Override
   @Transactional
   public List<PostsResponseDto> getPosts(int pageChoice) {
@@ -82,11 +84,11 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional
   public PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
-      MemberDetails memberDetails) {
+      AccountDetails accountDetails) {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+    if (!accountDetails.getAccount().getEmail().equals(post.getAccount().getEmail())) {
       throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
     post.modifyPost(postRequestDto);
@@ -96,11 +98,11 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void deletePost(Long postId, MemberDetails memberDetails) {
+  public void deletePost(Long postId, AccountDetails accountDetails) {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    if (!memberDetails.getMember().getEmail().equals(post.getAccount().getEmail())) {
+    if (!accountDetails.getAccount().getEmail().equals(post.getAccount().getEmail())) {
       throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
     postRepository.delete(post);
@@ -110,7 +112,8 @@ public class PostServiceImpl implements PostService {
   public void deletePostByAdmin(Long id) {
     Post post = postRepository.findById(id).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    postRepository.delete(post);}
+    postRepository.delete(post);
+  }
 
   @Override
   public Post getPostEntity(Long postId) {

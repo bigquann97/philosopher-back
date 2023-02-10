@@ -1,7 +1,9 @@
-package gladiator.philosopher.security;
+package gladiator.philosopher.common.config;
 
-import gladiator.philosopher.security.exception.CustomAccessDeniedHandler;
-import gladiator.philosopher.security.exception.CustomAuthenticationEntryPoint;
+import gladiator.philosopher.common.jwt.JwtAuthenticationFilter;
+import gladiator.philosopher.common.jwt.JwtTokenProvider;
+import gladiator.philosopher.common.security.CustomAccessDeniedHandler;
+import gladiator.philosopher.common.security.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

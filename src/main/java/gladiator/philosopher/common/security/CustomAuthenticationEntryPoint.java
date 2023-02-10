@@ -1,4 +1,4 @@
-package gladiator.philosopher.security.exception;
+package gladiator.philosopher.common.security;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

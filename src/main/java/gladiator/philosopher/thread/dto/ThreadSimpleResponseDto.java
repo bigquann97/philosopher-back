@@ -25,7 +25,7 @@ public class ThreadSimpleResponseDto {
     this.title = thread.getTitle();
     this.recommend = 1L;
     this.nickname = thread.getAccount().getNickname();
-    this.createdAt = thread.getCreateDate();
+    this.createdAt = thread.getCreatedDate();
   }
 
 }

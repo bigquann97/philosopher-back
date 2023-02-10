@@ -1,8 +1,8 @@
 package gladiator.philosopher.notification.controller;
 
+import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.report.dto.NotificationResponseDto;
-import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,8 +20,8 @@ public class NotificationController {
   // 나에게 온 모든 알림 조회
   @GetMapping
   public List<NotificationResponseDto> getMyNotifications(
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    return notificationService.getMyNotifications(memberDetails.getMember());
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    return notificationService.getMyNotifications(accountDetails.getAccount());
   }
 
 }

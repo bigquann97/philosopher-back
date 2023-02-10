@@ -6,7 +6,7 @@ import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountImageRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

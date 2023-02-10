@@ -31,7 +31,7 @@ public class PostResponseDto {
     this.images = post.getImages().stream().map(PostImage::getUniqueName)
         .collect(Collectors.toList());
     this.content = post.getContent();
-    this.createDate = post.getCreateDate();
-    this.modifiedDate = post.getModDate();
+    this.createDate = post.getCreatedDate();
+    this.modifiedDate = post.getModifiedDate();
   }
 }

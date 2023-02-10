@@ -2,9 +2,9 @@ package gladiator.philosopher.account.dto;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
-import gladiator.philosopher.common.enumtype.GenderType;
-import gladiator.philosopher.common.enumtype.UserStatus;
-import gladiator.philosopher.common.enumtype.UserType;
+import gladiator.philosopher.common.enums.Gender;
+import gladiator.philosopher.common.enums.UserStatus;
+import gladiator.philosopher.common.enums.UserRole;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -45,15 +45,15 @@ public class SignUpRequestDto {
         .nickname(this.getNickname())
         .gender(this.checkGender(this.getNickname()))
         .accountImage(accountImage)
-        .type(UserType.ROLE_USER)
+        .type(UserRole.ROLE_USER)
         .status(UserStatus.ACTIVATED).build();
   }
 
-  public GenderType checkGender(String gender) {
+  public Gender checkGender(String gender) {
     if (gender.equals("MALE")) {
-      return GenderType.MALE;
+      return Gender.MALE;
     } else {
-      return GenderType.FEMALE;
+      return Gender.FEMALE;
     }
   }
 

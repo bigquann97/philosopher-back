@@ -2,7 +2,7 @@ package gladiator.philosopher.comment.entity;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
-import gladiator.philosopher.common.BaseEntity;
+import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.entity.Thread;
 import javax.persistence.Column;

@@ -3,7 +3,7 @@ package gladiator.philosopher.comment.controller;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.service.CommentService;
-import gladiator.philosopher.security.members.MemberDetails;
+import gladiator.philosopher.common.security.AccountDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +48,9 @@ public class CommentController {
   public ResponseEntity<CommentResponseDto> createComment(
       @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId,
       @PathVariable Long threadId,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
+      @AuthenticationPrincipal AccountDetails accountDetails) {
     return ResponseEntity.status(200)
-        .body(commentService.createComment(commentRequestDto, postId, threadId, memberDetails));
+        .body(commentService.createComment(commentRequestDto, postId, threadId, accountDetails));
   }
 
   /*
@@ -67,10 +67,10 @@ public class CommentController {
   public ResponseEntity<CommentResponseDto> modifyComment(
       @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId,
       @PathVariable Long threadId,
-      @PathVariable Long commentId, @AuthenticationPrincipal MemberDetails memberDetails) {
+      @PathVariable Long commentId, @AuthenticationPrincipal AccountDetails accountDetails) {
     return ResponseEntity.status(200)
         .body(commentService.modifyComment(commentRequestDto, postId, threadId, commentId,
-            memberDetails));
+            accountDetails));
   }
 
   /*
@@ -85,8 +85,8 @@ public class CommentController {
   @DeleteMapping("/api/posts/{postId}/{threadId}/comment/{commentId}")
   public ResponseEntity<String> deleteComment(@PathVariable Long postId,
       @PathVariable Long threadId,
-      @PathVariable Long commentId, @AuthenticationPrincipal MemberDetails memberDetails) {
-    commentService.deleteComment(postId, threadId, commentId, memberDetails);
+      @PathVariable Long commentId, @AuthenticationPrincipal AccountDetails accountDetails) {
+    commentService.deleteComment(postId, threadId, commentId, accountDetails);
     return ResponseEntity.status(200).body("삭제 완료");
   }
 }

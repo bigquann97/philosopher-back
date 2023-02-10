@@ -1,12 +1,12 @@
-package gladiator.philosopher.common.enumtype;
+package gladiator.philosopher.common.enums;
 
-public enum UserType {
+public enum UserRole {
   ROLE_USER(Authority.ROLE_USER),
   ROLE_ADMIN(Authority.ROLE_ADMIN);
 
   private final String authority;
 
-  UserType(String authority) {
+  UserRole(String authority) {
     this.authority = authority;
   }
 
