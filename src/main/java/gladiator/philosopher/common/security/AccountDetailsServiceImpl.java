@@ -1,4 +1,4 @@
-package gladiator.philosopher.security.members;
+package gladiator.philosopher.common.security;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.repository.AccountRepository;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberDetailsService implements UserDetailsService {
+public class AccountDetailsServiceImpl implements UserDetailsService {
 
   private final AccountRepository accountRepository;
 
@@ -20,7 +20,7 @@ public class MemberDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     Account account = accountRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-    return new MemberDetails(account);
+    return new AccountDetails(account);
   }
 
 }

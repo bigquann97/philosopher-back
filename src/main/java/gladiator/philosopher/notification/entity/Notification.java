@@ -1,7 +1,7 @@
 package gladiator.philosopher.notification.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.BaseEntity;
+import gladiator.philosopher.common.entity.BaseEntity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

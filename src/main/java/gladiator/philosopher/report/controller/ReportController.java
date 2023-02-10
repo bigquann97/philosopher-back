@@ -1,8 +1,8 @@
 package gladiator.philosopher.report.controller;
 
+import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.service.ReportService;
-import gladiator.philosopher.security.members.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,22 +20,22 @@ public class ReportController {
 
   @PostMapping("/post")
   public void reportPost(@RequestParam Long id, @RequestBody ReportRequestDto dto,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    reportService.reportPost(id, dto, memberDetails.getMember());
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    reportService.reportPost(id, dto, accountDetails.getAccount());
   }
 
   // /api/report/comment?id=3
   @PostMapping("/comment")
   public void reportComment(@RequestParam Long id, @RequestBody ReportRequestDto dto,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    reportService.reportComment(id, dto, memberDetails.getMember());
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    reportService.reportComment(id, dto, accountDetails.getAccount());
   }
 
   // api/report/thread?id=3
   @PostMapping("/thread")
   public void reportThread(@RequestParam Long id, @RequestBody ReportRequestDto dto,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    reportService.reportThread(id, dto, memberDetails.getMember());
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    reportService.reportThread(id, dto, accountDetails.getAccount());
   }
 
 }

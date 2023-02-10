@@ -1,7 +1,7 @@
 package gladiator.philosopher.common.image;
 
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.ExceptionStatus;
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import java.io.File;
 import java.io.IOException;
 import javax.annotation.PostConstruct;
@@ -24,11 +24,12 @@ public class ImageServiceImpl implements ImageService {
       dir.mkdir();
     }
   }
+
   @Override
   public void upload(MultipartFile file, String filename) {
     try {
       file.transferTo(new File(location + filename));
-      System.out.println("data is : "+(location + filename));
+      System.out.println("data is : " + (location + filename));
     } catch (IOException e) {
       throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }

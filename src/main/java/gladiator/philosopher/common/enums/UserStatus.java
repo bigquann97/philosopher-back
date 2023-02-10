@@ -1,4 +1,4 @@
-package gladiator.philosopher.common.enumtype;
+package gladiator.philosopher.common.enums;
 
 public enum UserStatus {
   ACTIVATED,

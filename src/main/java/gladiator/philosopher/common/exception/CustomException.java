@@ -1,5 +1,6 @@
 package gladiator.philosopher.common.exception;
 
+import gladiator.philosopher.common.enums.ExceptionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

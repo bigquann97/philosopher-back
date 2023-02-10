@@ -1,7 +1,7 @@
-package gladiator.philosopher.security;
+package gladiator.philosopher.common.jwt;
 
-import gladiator.philosopher.common.enumtype.UserType;
-import gladiator.philosopher.security.members.MemberDetailsService;
+import gladiator.philosopher.common.enums.UserRole;
+import gladiator.philosopher.common.security.AccountDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +31,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class JwtTokenProvider {
 
-  private final MemberDetailsService memberDetailsService;
+  private final AccountDetailsServiceImpl accountDetailsServiceImpl;
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String AUTHORIZATION_KEY = "auth";
   private static final String BEARER_PREFIX = "Bearer ";
@@ -59,7 +59,7 @@ public class JwtTokenProvider {
     return null;
   }
 
-  public String createToken(String username, UserType role) {
+  public String createToken(String username, UserRole role) {
     Date date = new Date();
     return BEARER_PREFIX +
         Jwts.builder()
@@ -93,7 +93,7 @@ public class JwtTokenProvider {
   }
 
   public Authentication createAuthentication(String username) {
-    UserDetails userDetails = memberDetailsService.loadUserByUsername(username);
+    UserDetails userDetails = accountDetailsServiceImpl.loadUserByUsername(username);
 
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
