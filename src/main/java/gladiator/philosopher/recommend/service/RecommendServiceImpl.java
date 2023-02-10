@@ -2,15 +2,10 @@ package gladiator.philosopher.recommend.service;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.comment.service.CommentService;
-import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.recommend.repository.RecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecommendServiceImpl implements RecommendService {
 
   private final RecommendRepository recommendRepository;
-  private final PostService postService;   // Impl말고 Service를 참조해야하게 수정필요
-  private final CommentService commentService;
-  //  private final ThreadService threadService;
-  private final ThreadRepository threadRepository;
 
   @Transactional
-  public void createRecommendPost(Long postId, Account account) {
-    Post post = postService.getPostEntity(postId);
-    Optional<Recommend> recommendPost = recommendRepository.findByPostIdAndAccount(postId, account);
+  public void createRecommendPost(Post post, Account account) {
+    Optional<Recommend> recommendPost = recommendRepository.findByPostIdAndAccount(post.getId(),
+        account);
     if (recommendPost.isPresent()) {
       throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
     }
@@ -39,8 +30,9 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void deleteRecommendPost(Long postId, Account account) {
-    Optional<Recommend> recommendPost = recommendRepository.findByPostIdAndAccount(postId, account);
+  public void deleteRecommendPost(Post post, Account account) {
+    Optional<Recommend> recommendPost = recommendRepository.findByPostIdAndAccount(post.getId(),
+        account);
     if (recommendPost.isEmpty()) {
       throw new IllegalArgumentException("이미 좋아요 취소를 하셨습니다.");
     }
@@ -48,11 +40,9 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void createRecommendThread(Long threadId, Account account) {
-//    Thread thread = threadService.getThreadEntity(threadId);
-    Thread thread = threadRepository.findById(threadId).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    Optional<Recommend> recommendThread = recommendRepository.findByThreadIdAndAccount(threadId,
+  public void createRecommendThread(Thread thread, Account account) {
+    Optional<Recommend> recommendThread = recommendRepository.findByThreadIdAndAccount(
+        thread.getId(),
         account);
     if (recommendThread.isPresent()) {
       throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
@@ -62,8 +52,9 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void deleteRecommendThread(Long threadId, Account account) {
-    Optional<Recommend> recommendThread = recommendRepository.findByThreadIdAndAccount(threadId,
+  public void deleteRecommendThread(Thread thread, Account account) {
+    Optional<Recommend> recommendThread = recommendRepository.findByThreadIdAndAccount(
+        thread.getId(),
         account);
     if (recommendThread.isEmpty()) {
       throw new IllegalArgumentException("이미 좋아요 취소를 하셨습니다.");
@@ -72,9 +63,9 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void createRecommendComment(Long commentId, Account account) {
-    Comment comment = commentService.getCommentEntity(commentId);
-    Optional<Recommend> recommendComment = recommendRepository.findByCommentIdAndAccount(commentId,
+  public void createRecommendComment(Comment comment, Account account) {
+    Optional<Recommend> recommendComment = recommendRepository.findByCommentIdAndAccount(
+        comment.getId(),
         account);
     if (recommendComment.isPresent()) {
       throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
@@ -84,8 +75,9 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void deleteRecommendComment(Long commentId, Account account) {
-    Optional<Recommend> recommendComment = recommendRepository.findByCommentIdAndAccount(commentId,
+  public void deleteRecommendComment(Comment comment, Account account) {
+    Optional<Recommend> recommendComment = recommendRepository.findByCommentIdAndAccount(
+        comment.getId(),
         account);
     if (recommendComment.isEmpty()) {
       throw new IllegalArgumentException("이미 좋아요 취소를 하셨습니다.");
