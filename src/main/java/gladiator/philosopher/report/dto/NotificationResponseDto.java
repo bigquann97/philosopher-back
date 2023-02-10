@@ -20,7 +20,7 @@ public class NotificationResponseDto {
   @Builder
   public NotificationResponseDto(Notification notification) {
     this.message = notification.getContent();
-    this.createdAt = notification.getCreateDate();
+    this.createdAt = notification.getCreatedDate();
   }
 
 }

@@ -1,15 +1,14 @@
 package gladiator.philosopher.post.controller;
 
+import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.service.PostService;
-import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,13 +31,14 @@ public class PostController {
   private final PostService postService;
 
   // /api/posts
-  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
+      MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.OK)
   public void createPost(
       @RequestPart("image") List<MultipartFile> multipartFiles,
       @RequestPart("dto") PostRequestDto postRequestDto,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    postService.createPost(multipartFiles, postRequestDto, memberDetails);
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    postService.createPost(multipartFiles, postRequestDto, accountDetails);
   }
 
   // /api/posts?page=1
@@ -59,15 +59,15 @@ public class PostController {
   @ResponseStatus(HttpStatus.OK)
   public PostResponseDto modifyPost(@PathVariable Long postId,
       @RequestBody PostRequestDto postRequestDto,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    return postService.modifyPost(postId, postRequestDto, memberDetails);
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    return postService.modifyPost(postId, postRequestDto, accountDetails);
   }
 
   @DeleteMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
   public void deletePost(@PathVariable Long postId,
-      @AuthenticationPrincipal MemberDetails memberDetails) {
-    postService.deletePost(postId, memberDetails);
+      @AuthenticationPrincipal AccountDetails accountDetails) {
+    postService.deletePost(postId, accountDetails);
   }
 
 }

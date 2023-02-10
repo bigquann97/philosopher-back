@@ -1,7 +1,7 @@
 package gladiator.philosopher.post.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.BaseEntity;
+import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.security.members.MemberDetails;
 import java.util.List;

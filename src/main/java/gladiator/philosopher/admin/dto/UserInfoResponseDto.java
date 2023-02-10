@@ -1,8 +1,8 @@
 package gladiator.philosopher.admin.dto;
 
-import gladiator.philosopher.common.enumtype.GenderType;
-import gladiator.philosopher.common.enumtype.UserStatus;
-import gladiator.philosopher.common.enumtype.UserType;
+import gladiator.philosopher.common.enums.Gender;
+import gladiator.philosopher.common.enums.UserStatus;
+import gladiator.philosopher.common.enums.UserRole;
 import lombok.Getter;
 
 @Getter
@@ -12,19 +12,19 @@ public class UserInfoResponseDto {
   private final String email;
   private final int age;
   private final String nickname;
-  private final GenderType genderType;
-  private final UserType userType;
+  private final Gender gender;
+  private final UserRole userRole;
   private final UserStatus userStatus;
 
   public UserInfoResponseDto(Long id, String email, int age, String nickname,
-      GenderType genderType, UserType userType,
+      Gender gender, UserRole userRole,
       UserStatus userStatus) {
     this.id = id;
     this.email = email;
     this.age = age;
     this.nickname = nickname;
-    this.genderType = genderType;
-    this.userType = userType;
+    this.gender = gender;
+    this.userRole = userRole;
     this.userStatus = userStatus;
   }
 }

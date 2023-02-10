@@ -2,7 +2,7 @@ package gladiator.philosopher.account.controller;
 
 import gladiator.philosopher.account.dto.EditProfileRequestDto;
 import gladiator.philosopher.account.service.ProfileService;
-import gladiator.philosopher.security.members.MemberDetails;
+import gladiator.philosopher.common.security.AccountDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,10 +23,10 @@ public class ProfileController {
   public void editProfile(
       @RequestPart("image") MultipartFile multipartFile,
       @RequestPart("req") final EditProfileRequestDto req,
-      final @AuthenticationPrincipal MemberDetails memberDetails
+      final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
     System.out.println(req.getNickname() + "AAA");
-    profileService.editProfile(multipartFile, req, memberDetails.getMember());
+    profileService.editProfile(multipartFile, req, accountDetails.getAccount());
   }
 
 }

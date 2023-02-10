@@ -1,9 +1,9 @@
 package gladiator.philosopher.account.entity;
 
-import gladiator.philosopher.common.BaseEntity;
-import gladiator.philosopher.common.enumtype.GenderType;
-import gladiator.philosopher.common.enumtype.UserStatus;
-import gladiator.philosopher.common.enumtype.UserType;
+import gladiator.philosopher.common.entity.BaseEntity;
+import gladiator.philosopher.common.enums.Gender;
+import gladiator.philosopher.common.enums.UserRole;
+import gladiator.philosopher.common.enums.UserStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -44,19 +44,19 @@ public class Account extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private GenderType gender;
+  private Gender gender;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private UserType type;
+  private UserRole type;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private UserStatus status;
 
   @Builder
-  public Account(String email, String password, int age, String nickname, GenderType gender,
-      UserType type, UserStatus status, AccountImage accountImage) {
+  public Account(String email, String password, int age, String nickname, Gender gender,
+      UserRole type, UserStatus status, AccountImage accountImage) {
     this.email = email;
     this.password = password;
     this.age = age;
@@ -84,7 +84,7 @@ public class Account extends BaseEntity {
 
   // testcode
   public Account(String email, String password, int age, String nickname,
-      GenderType gender, UserType type, UserStatus status) {
+      Gender gender, UserRole type, UserStatus status) {
     this.email = email;
     this.password = password;
     this.age = age;

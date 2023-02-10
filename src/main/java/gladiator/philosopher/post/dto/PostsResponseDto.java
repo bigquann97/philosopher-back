@@ -14,6 +14,6 @@ public class PostsResponseDto {
   public PostsResponseDto(Post post) {
     this.id = post.getId();
     this.title = post.getTitle();
-    this.createDate = post.getCreateDate();
+    this.createDate = post.getCreatedDate();
   }
 }
