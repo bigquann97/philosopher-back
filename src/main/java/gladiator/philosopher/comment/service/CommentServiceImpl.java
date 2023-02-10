@@ -39,12 +39,12 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional
   public CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
-      MemberDetails memberDetails) {
+      AccountDetails accountDetails) {
     Thread thread = threadRepository.findById(threadId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
 
     Comment comment = Comment.builder()
-        .account(memberDetails.getMember())
+        .account(accountDetails.getAccount())
         .thread(thread)
         .content(commentRequestDto.getContent())
         .build();
@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional
   public CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long threadId,
-      Long commentId, MemberDetails memberDetails) {
+      Long commentId, AccountDetails accountDetails) {
     Thread thread = threadRepository.findById(threadId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
 
@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
 
     Comment modifyComment = Comment.builder()
         .id(comment.getId())
-        .account(memberDetails.getMember())
+        .account(accountDetails.getAccount())
         .thread(thread)
         .content(commentRequestDto.getContent())
         .build();
@@ -76,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public void deleteComment(Long threadId, Long commentId, MemberDetails memberDetails) {
+  public void deleteComment(Long threadId, Long commentId, AccountDetails accountDetails) {
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     commentRepository.delete(comment);
