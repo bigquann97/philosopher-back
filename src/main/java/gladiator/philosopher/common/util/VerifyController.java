@@ -24,10 +24,10 @@ public class VerifyController {
   }
 
   // 인증링크 확인
-  @GetMapping("/mail/{key}")
+  @GetMapping("/mail/{code}")
   @ResponseStatus(HttpStatus.OK)
-  public void getVerify(@RequestParam String email, @PathVariable String key) {
-    verifyEmailService.verifyEmail(email, key);
+  public void getVerify(@RequestParam String email, @PathVariable String code) {
+    verifyEmailService.verifyEmail(email, code);
   }
 
 }

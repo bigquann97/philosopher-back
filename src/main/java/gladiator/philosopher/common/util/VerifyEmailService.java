@@ -14,6 +14,7 @@ public class VerifyEmailService {
   private final AccountRepository accountRepository;
   private final RedisUtil redisUtil;
   private final JavaMailSender emailSender;
+  private static final String KEY_PREFIX = "VERIFY-";
 
   public void sendMail(String to, String sub, String text) {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -24,23 +25,20 @@ public class VerifyEmailService {
   }
 
   public void sendVerificationMail(String email) {
-    String VERIFICATION_LINK = "http://localhost:8080/api/account/verify/";
     if (email == null) {
       throw new IllegalArgumentException("멤버가 조회되지 않음");
     }
-    String code = UUID.randomUUID().toString().substring(0, 7);
-    // redis에 링크 정보 저장
-    redisUtil.setDataExpire(email, code, 60 * 30L);
-    // 인증 링크 전송
+    String code = UUID.randomUUID().toString().substring(0, 7).toUpperCase();
+    redisUtil.setDataExpire(KEY_PREFIX + email, code, 60 * 3L); // 3분 인증 시간
     sendMail(email, EmailMessage.MESSAGE_TITLE, EmailMessage.createMessage(code));
   }
 
-  public void verifyEmail(String email, String key) {
-    String code = redisUtil.getData(email);
-    if (!code.equals(key)) {
+  public void verifyEmail(String email, String code) {
+    String validCode = redisUtil.getData(KEY_PREFIX + email);
+    if (!code.equals(validCode)) {
       throw new IllegalArgumentException("코드 번호가 일치하지 않습니다.");
     }
-    redisUtil.deleteData(email);
+    redisUtil.deleteData(KEY_PREFIX + email);
   }
-  
+
 }
