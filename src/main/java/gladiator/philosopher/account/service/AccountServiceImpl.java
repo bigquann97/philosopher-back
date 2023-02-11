@@ -13,6 +13,7 @@ import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.jwt.TokenDto;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.util.RedisUtil;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,24 +51,26 @@ public class AccountServiceImpl implements AccountService {
    * 로그인
    *
    * @param signInRequestDto
+   * @param response
    * @return
    */
   @Override
   @Transactional
-  public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
+  public SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response) {
     Account account = findAccountByEmail(signInRequestDto.getEmail());
     checkByMemberPassword(signInRequestDto.getPassword(), account);
     Authentication authentication = jwtTokenProvider.createAuthentication(
         signInRequestDto.getEmail());
     TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
     redisUtil.setData(authentication.getName(), tokenDto.getRefreshToken());
+    response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
     return SignInResponseDto.of(account.getEmail(), tokenDto.getAccessToken(),
         tokenDto.getRefreshToken());
   }
 
   @Override
   @Transactional
-  public SignInResponseDto reissue(TokenRequestDto tokenRequestDto) {
+  public SignInResponseDto reissue(TokenRequestDto tokenRequestDto, HttpServletResponse response) {
     String email = jwtTokenProvider.getUserInfoFromToken(tokenRequestDto.getAccessToken())
         .getSubject();
     validateRefreshToken(tokenRequestDto);
@@ -77,6 +80,7 @@ public class AccountServiceImpl implements AccountService {
       validateRefreshTokenOwner(validRefreshToken, tokenRequestDto);
       TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
       redisUtil.setData(authentication.getName(), tokenDto.getRefreshToken());
+      response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
       return SignInResponseDto.of(email, tokenDto.getAccessToken(), tokenDto.getRefreshToken());
     } else {
       throw new IllegalArgumentException("redis DB에 토큰정보 없음");
