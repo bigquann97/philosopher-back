@@ -6,6 +6,8 @@ import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import java.util.List;
+import gladiator.philosopher.common.jwt.TokenRequestDto;
+import javax.servlet.http.HttpServletResponse;
 
 public interface AccountService {
 
@@ -23,5 +25,7 @@ public interface AccountService {
 
   void UpdateAccountRole(Account account);
 
+  SignInResponseDto reissue(TokenRequestDto tokenRequestDto, HttpServletResponse response);
 
+  void signOut(Account account);
 }

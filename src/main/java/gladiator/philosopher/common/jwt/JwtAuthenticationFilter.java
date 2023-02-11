@@ -39,9 +39,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  public void setAuthentication(String username) {
+  public void setAuthentication(String email) {
     SecurityContext context = SecurityContextHolder.createEmptyContext();
-    Authentication authentication = jwtTokenProvider.createAuthentication(username);
+    Authentication authentication = jwtTokenProvider.createAuthentication(email);
     context.setAuthentication(authentication);
     SecurityContextHolder.setContext(context);
   }

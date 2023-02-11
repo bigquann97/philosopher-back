@@ -1,6 +1,5 @@
 package gladiator.philosopher.account.dto;
 
-import gladiator.philosopher.account.entity.Account;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,15 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class SignInResponseDto {
 
-  private final String nickname;
+  private final String email;
   private final String accessToken;
+  private final String refreshToken;
 
-  public SignInResponseDto(String nickName, String accessToken) {
-    this.nickname = nickName;
+  public SignInResponseDto(String email, String accessToken, String refreshToken) {
+    this.email = email;
     this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
   }
 
-  public static SignInResponseDto of(Account account, String accessToken) {
-    return new SignInResponseDto(account.getNickname(), accessToken);
+  public static SignInResponseDto of(String email, String accessToken, String refreshToken) {
+    return new SignInResponseDto(email, accessToken, refreshToken);
   }
 }
