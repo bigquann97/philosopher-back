@@ -31,4 +31,6 @@ public interface PostService {
   void modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
 
   List<TestPostResponseDto> getPostAndAccount(Long id);
+// postId만 필요할 경우 postId 존재 확인 후 postId를 반환
+//  Long existsPostId(Long id);
 }

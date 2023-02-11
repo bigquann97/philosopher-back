@@ -123,6 +123,17 @@ public class PostServiceImpl implements PostService {
     );
   }
 
+/*
+postId만 필요할 경우 postId 존재 확인 후 postId를 반환
+  @Override
+  public Long existsPostId(Long postId) {
+    if (postRepository.existsById(postId)) {
+      return postId;
+    }
+    throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
+  }
+*/
+
   @Override
   @Transactional
   public void modifyPostByAdmin(Long id, PostRequestDto postRequestDto) {
