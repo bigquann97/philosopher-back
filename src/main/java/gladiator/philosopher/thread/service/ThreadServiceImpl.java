@@ -1,10 +1,9 @@
 package gladiator.philosopher.thread.service;
 
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.recommend.service.RecommendService;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ThreadServiceImpl implements ThreadService {
 
   private final ThreadRepository threadRepository;
-  private final RecommendService recommendService;
   private final NotificationService notificationService;
 
   @Override

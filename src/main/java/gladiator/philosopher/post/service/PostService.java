@@ -28,4 +28,6 @@ public interface PostService {
   void deletePostByAdmin(Long id);
 
   void modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
+// postId만 필요할 경우 postId 존재 확인 후 postId를 반환
+//  Long existsPostId(Long id);
 }
