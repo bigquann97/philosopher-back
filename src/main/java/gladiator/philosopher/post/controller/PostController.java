@@ -4,11 +4,14 @@ import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.TestPostResponseDto;
+import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +71,11 @@ public class PostController {
   public void deletePost(@PathVariable Long postId,
       @AuthenticationPrincipal AccountDetails accountDetails) {
     postService.deletePost(postId, accountDetails);
+  }
+
+  @GetMapping("/test/{id}")
+  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id")Long id){
+    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
   }
 
 }

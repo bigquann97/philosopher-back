@@ -7,6 +7,7 @@ import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
@@ -130,5 +131,10 @@ public class PostServiceImpl implements PostService {
     );
     post.modifyPost(postRequestDto);
     postRepository.save(post);
+  }
+
+  @Override
+  public List<TestPostResponseDto> getPostAndAccount(Long id){
+    return postRepository.getPost(id);
   }
 }

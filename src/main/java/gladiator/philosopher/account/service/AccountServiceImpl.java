@@ -7,9 +7,12 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountImageRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.admin.dto.UserInfoResponseDto;
+import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +46,6 @@ public class AccountServiceImpl implements AccountService {
 
   /**
    * 로그인
-   *
    * @param signInRequestDto
    * @return
    */
@@ -80,6 +82,12 @@ public class AccountServiceImpl implements AccountService {
     return account;
   }
 
+  @Override
+  public Account getAccount(Long id) {
+    return accountRepository.findById(id)
+        .orElseThrow(() -> new CustomException(ExceptionStatus.ACCOUNT_IS_NOT_EXIST));
+  }
+
   /**
    * 회원가입 시 유저이메일 중복 확인
    *
@@ -101,6 +109,23 @@ public class AccountServiceImpl implements AccountService {
     if (accountRepository.existsByNickname(nickName)) {
       throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
     }
+  }
+
+  @Override
+  public List<UserInfoResponseDto> selectAccountsInfo() {
+    return accountRepository.getInfoByAccount();
+  }
+
+  @Override
+  public void AdminCheck() {
+
+  }
+  @Transactional
+  public void UpdateAccountRole(Account account){
+    if(account.getType().equals(UserRole.ROLE_USER))
+      account.UpdateAccountRole(UserRole.ROLE_ADMIN);
+    else
+      account.UpdateAccountRole(UserRole.ROLE_USER);
   }
 
 }
