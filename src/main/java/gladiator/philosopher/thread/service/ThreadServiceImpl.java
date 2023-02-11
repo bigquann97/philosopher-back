@@ -5,6 +5,7 @@ import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
+import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadStatus;
@@ -12,7 +13,6 @@ import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,6 @@ public class ThreadServiceImpl implements ThreadService {
         .title(post.getTitle())
         .content(post.getContent())
         .postImages(post.getImages())
-        .startTime(LocalDateTime.now())
         .endTime(LocalDateTime.now().plusDays(1L))
         .build();
 
@@ -54,7 +53,6 @@ public class ThreadServiceImpl implements ThreadService {
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
   }
 
-
   @Override
   @Transactional
   public ThreadResponseDto getThread(final Long threadId) {
@@ -66,17 +64,15 @@ public class ThreadServiceImpl implements ThreadService {
 
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> getActiveThreads() {
-    PageRequest page = PageRequest.of(0, 0);
-    Page<Thread> threads = threadRepository.findByStatus(ThreadStatus.CONTINUE, page);
+  public Page<ThreadSimpleResponseDto> getActiveThreads(ThreadSearchCond cond) {
+    Page<Thread> threads = threadRepository.findByStatus(ThreadStatus.CONTINUE, cond.getPageable());
     return threads.map(thread -> ThreadSimpleResponseDto.builder().thread(thread).build());
   }
 
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> getArchivedThreads() {
-    PageRequest page = PageRequest.of(0, 0);
-    Page<Thread> threads = threadRepository.findByStatus(ThreadStatus.ARCHIVED, page);
+  public Page<ThreadSimpleResponseDto> getArchivedThreads(ThreadSearchCond cond) {
+    Page<Thread> threads = threadRepository.findByStatus(ThreadStatus.ARCHIVED, cond.getPageable());
     return threads.map(thread -> ThreadSimpleResponseDto.builder().thread(thread).build());
   }
 

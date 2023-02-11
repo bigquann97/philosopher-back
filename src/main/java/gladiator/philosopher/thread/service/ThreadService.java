@@ -2,6 +2,7 @@ package gladiator.philosopher.thread.service;
 
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
+import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import org.springframework.data.domain.Page;
@@ -16,10 +17,10 @@ public interface ThreadService {
   ThreadResponseDto getThread(final Long threadId);
 
   @Transactional
-  Page<ThreadSimpleResponseDto> getActiveThreads();
+  Page<ThreadSimpleResponseDto> getActiveThreads(ThreadSearchCond cond);
 
   @Transactional
-  Page<ThreadSimpleResponseDto> getArchivedThreads();
+  Page<ThreadSimpleResponseDto> getArchivedThreads(ThreadSearchCond of);
 
   @Transactional
   Thread finishThread(final Thread thread);
