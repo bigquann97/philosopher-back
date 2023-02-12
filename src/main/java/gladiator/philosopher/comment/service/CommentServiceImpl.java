@@ -7,7 +7,6 @@ import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.security.AccountDetails;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.repository.ThreadRepository;
@@ -55,28 +54,13 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long threadId,
-      Long commentId, AccountDetails accountDetails) {
-    Thread thread = threadRepository.findById(threadId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
-    Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
-    Comment modifyComment = Comment.builder()
-        .id(comment.getId())
-        .account(accountDetails.getAccount())
-        .thread(thread)
-        .content(commentRequestDto.getContent())
-        .build();
-
-    comment = commentRepository.save(modifyComment);
-    return new CommentResponseDto(comment);
+  public void modifyComment(Long commentId, String content) {
+    commentRepository.modify(commentId, content);
   }
 
   @Override
   @Transactional
-  public void deleteComment(Long threadId, Long commentId, AccountDetails accountDetails) {
+  public void deleteComment(Long commentId) {
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     commentRepository.delete(comment);
@@ -89,4 +73,5 @@ public class CommentServiceImpl implements CommentService {
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     return comment;
   }
+
 }
