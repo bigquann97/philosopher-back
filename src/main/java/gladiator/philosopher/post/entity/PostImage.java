@@ -64,4 +64,7 @@ public class PostImage extends BaseEntity {
     return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
   }
 
+  public void addThread(Thread thread) {
+    this.thread = thread;
+  }
 }

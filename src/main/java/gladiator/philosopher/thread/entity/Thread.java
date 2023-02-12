@@ -60,6 +60,7 @@ public class Thread extends BaseEntity {
     this.title = title;
     this.content = content;
     this.postImages = postImages;
+    this.postImages.iterator().forEachRemaining(x -> x.addThread(this));
     this.account = account;
     this.status = ThreadStatus.CONTINUE;
     this.endDate = endDate;

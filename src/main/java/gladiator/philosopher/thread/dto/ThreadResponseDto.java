@@ -24,14 +24,13 @@ public class ThreadResponseDto {
   private final String nickname;
 
   public ThreadResponseDto(Long id, String title, String content, LocalDateTime createdDate,
-      LocalDateTime endDate, Long recommend, List<String> images, String nickname) {
+      LocalDateTime endDate, Long recommend, String nickname) {
     this.id = id;
     this.title = title;
     this.content = content;
     this.createdDate = createdDate;
     this.endDate = endDate;
     this.recommend = recommend;
-    this.images = images;
     this.nickname = nickname;
   }
 

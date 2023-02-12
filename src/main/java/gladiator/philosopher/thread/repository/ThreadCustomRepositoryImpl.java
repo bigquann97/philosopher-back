@@ -1,6 +1,5 @@
 package gladiator.philosopher.thread.repository;
 
-import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -54,11 +53,8 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   @Override
   public Optional<ThreadResponseDto> selectThread(Long id) {
 
-//    List<String> string = jpaQueryFactory.select(postImage.uniqueName).from(postImage)
-//        .where(postImage.thread.id.eq(id)).fetch();
-
-    ConstructorExpression<String> constructor = Projections.constructor(String.class,
-        postImage.uniqueName);
+    List<String> images = jpaQueryFactory.select(postImage.uniqueName).from(postImage)
+        .where(postImage.thread.id.eq(id)).fetch();
 
     ThreadResponseDto dto = jpaQueryFactory
         .select(Projections.constructor(ThreadResponseDto.class,
@@ -74,10 +70,12 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .leftJoin(thread.postImages, postImage)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
+        .groupBy(thread.id)
         .where(thread.id.eq(id))
+        .orderBy(thread.id.desc())
         .fetchOne();
 
-//    dto.addImage(string);
+    dto.addImage(images);
     return Optional.ofNullable(dto);
   }
 
