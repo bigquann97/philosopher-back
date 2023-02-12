@@ -21,13 +21,14 @@ public class ThreadSimpleResponseDto {
   private final LocalDateTime endDate;
 
   @Builder
-  public ThreadSimpleResponseDto(Thread thread) {
+  public ThreadSimpleResponseDto(Thread thread, Integer recommendCount) {
     this.id = thread.getId();
     this.title = thread.getTitle();
-    this.recommend = 1;
+    this.recommend = recommendCount;
     this.nickname = thread.getAccount().getNickname();
     this.createdDate = thread.getCreatedDate();
     this.endDate = thread.getEndTime();
   }
+
 
 }

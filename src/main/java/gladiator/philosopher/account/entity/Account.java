@@ -94,6 +94,7 @@ public class Account extends BaseEntity {
     this.type = type;
     this.status = status;
   }
+
   public void UpdateAccountRole(UserRole role){
     this.type = role;
   }

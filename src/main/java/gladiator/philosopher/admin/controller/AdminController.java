@@ -1,7 +1,7 @@
 package gladiator.philosopher.admin.controller;
 
-import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDto;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
@@ -9,12 +9,10 @@ import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.report.entity.Report;
+import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -105,8 +103,16 @@ public class AdminController {
   /**
    * 쓰레드 목록 조회
    */
-//  @GetMapping("/threads")
-//  public List<>
+  @GetMapping("/threads")
+  public ResponseEntity<List<Thread>> getThreads(){
+    return ResponseEntity.status(200).body(adminService.getThreads());
+  }
+
+  @GetMapping("/threadsV2")
+  public ResponseEntity<List<ThreadsSimpleResponseDto>> getThreadsV2(){
+    return ResponseEntity.status(200).body(adminService.getThreadsV2());
+  }
+
 
   /**
    * 아카이브 목록 조회

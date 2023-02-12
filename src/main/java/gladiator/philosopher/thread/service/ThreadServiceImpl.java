@@ -1,5 +1,6 @@
 package gladiator.philosopher.thread.service;
 
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDto;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.notification.service.NotificationService;
@@ -11,13 +12,18 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadStatus;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ThreadServiceImpl implements ThreadService {
 
   private final ThreadRepository threadRepository;
@@ -30,7 +36,7 @@ public class ThreadServiceImpl implements ThreadService {
         .account(post.getAccount())
         .title(post.getTitle())
         .content(post.getContent())
-        .postImages(post.getImages())
+        .postImages(null)
         .endTime(LocalDateTime.now().plusDays(1L))
         .build();
 
@@ -74,6 +80,21 @@ public class ThreadServiceImpl implements ThreadService {
   public Page<ThreadSimpleResponseDto> getArchivedThreads(ThreadSearchCond cond) {
     Page<Thread> threads = threadRepository.findByStatus(ThreadStatus.ARCHIVED, cond.getPageable());
     return threads.map(thread -> ThreadSimpleResponseDto.builder().thread(thread).build());
+  }
+
+  @Override
+  public List<Thread> getThreads() {
+//    threadRepository.findAllThreads();
+    return threadRepository.findAll();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<ThreadsSimpleResponseDto> getThreadsV2() {
+    List<Thread> insertData = threadRepository.findAllThreadsInfo();
+    List<ThreadsSimpleResponseDto> resultData = new ArrayList<>();
+
+    return resultData;
   }
 
 }
