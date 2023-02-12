@@ -32,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
   private final AccountImageRepository accountImageRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
+  private final RedisUtil redisUtil;
 
   /**
    * 회원가입
@@ -172,12 +173,12 @@ public class AccountServiceImpl implements AccountService {
   public void AdminCheck() {
 
   }
+
   @Transactional
-  public void UpdateAccountRole(Account account){
-    if(account.getType().equals(UserRole.ROLE_USER))
-      account.UpdateAccountRole(UserRole.ROLE_ADMIN);
-    else
-      account.UpdateAccountRole(UserRole.ROLE_USER);
+  public void UpdateAccountRole(Account account) {
+    if (account.getType().equals(UserRole.ROLE_USER)) {account.UpdateAccountRole(UserRole.ROLE_ADMIN);
+    } else {account.UpdateAccountRole(UserRole.ROLE_USER);
+    }
   }
 
 }

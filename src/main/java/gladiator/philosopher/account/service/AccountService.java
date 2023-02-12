@@ -13,9 +13,10 @@ public interface AccountService {
 
   void signUp(SignUpRequestDto signUpRequestDto); // 회원가입
 
-  SignInResponseDto signIn(SignInRequestDto signInRequestDto); // 로그인
+  SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response); // 로그인
 
   Account findAccountByEmail(String email); // 사용자 id를 이용한 사용자 정보 찾기
+
 
   List<UserInfoResponseDto> selectAccountsInfo(); // 모든 유저 정보 가지고 오기
 

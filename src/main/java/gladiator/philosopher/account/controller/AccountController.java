@@ -46,8 +46,7 @@ public class AccountController {
 
   @PostMapping("/re-issue")
   @ResponseStatus(HttpStatus.OK)
-  public SignInResponseDto reissue(@RequestBody TokenRequestDto tokenRequestDto,
-      HttpServletResponse response) {
+  public SignInResponseDto reissue(@RequestBody TokenRequestDto tokenRequestDto, HttpServletResponse response) {
     return accountService.reissue(tokenRequestDto, response);
   }
 
@@ -57,4 +56,5 @@ public class AccountController {
     System.out.println(accountDetails.getAccount());
     accountService.signOut(accountDetails.getAccount());
   }
+
 }

@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.repository;
 
+
 import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import java.util.List;
@@ -8,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRepository{
+public interface PostRepository extends JpaRepository<Post, Long>{
   @Override
   Page<Post> findAll(Pageable pageable);
 
