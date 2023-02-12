@@ -1,7 +1,9 @@
 package gladiator.philosopher.post.entity;
 
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.thread.entity.Thread;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.persistence.CascadeType;
@@ -20,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PostImage {
+public class PostImage extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +33,10 @@ public class PostImage {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "post_id")
   private Post post;
+
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "thread_id")
+  private Thread thread;
 
   private final static String supportedExtension[] = {"jpg", "jpeg", "bmp", "png"};
 

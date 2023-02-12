@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 
-public interface ThreadRepository extends JpaRepository<Thread, Long> {
+public interface ThreadRepository extends JpaRepository<Thread, Long>, ThreadCustomRepository {
 
   Page<Thread> findByStatus(@NonNull ThreadStatus status, Pageable pageable);
 
