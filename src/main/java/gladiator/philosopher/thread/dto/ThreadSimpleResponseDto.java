@@ -15,7 +15,7 @@ public class ThreadSimpleResponseDto {
 
   private final Long id;
   private final String title;
-  private final Integer recommend;
+  private final Long recommend;
   private final String nickname;
   private final LocalDateTime createdDate;
   private final LocalDateTime endDate;
@@ -24,10 +24,10 @@ public class ThreadSimpleResponseDto {
   public ThreadSimpleResponseDto(Thread thread) {
     this.id = thread.getId();
     this.title = thread.getTitle();
-    this.recommend = 1;
+    this.recommend = 1L;
     this.nickname = thread.getAccount().getNickname();
     this.createdDate = thread.getCreatedDate();
-    this.endDate = thread.getEndTime();
+    this.endDate = thread.getEndDate();
   }
 
 }

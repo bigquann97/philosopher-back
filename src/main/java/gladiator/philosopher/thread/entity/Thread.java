@@ -49,20 +49,20 @@ public class Thread extends BaseEntity {
   @Column(nullable = false)
   private ThreadStatus status;
 
-  private LocalDateTime endTime;
+  private LocalDateTime endDate;
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
   private Set<Recommend> recommends = new LinkedHashSet<>();
 
   @Builder
   public Thread(String title, String content, List<PostImage> postImages, Account account,
-      LocalDateTime endTime) {
+      LocalDateTime endDate) {
     this.title = title;
     this.content = content;
     this.postImages = postImages;
     this.account = account;
     this.status = ThreadStatus.CONTINUE;
-    this.endTime = endTime;
+    this.endDate = endDate;
   }
 
   public Thread finishThread() {

@@ -1,23 +1,25 @@
 package gladiator.philosopher.thread.repository;
 
-import static com.querydsl.core.types.dsl.Expressions.list;
-
+import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
 import gladiator.philosopher.post.entity.QPostImage;
+import gladiator.philosopher.post.repository.PostImageRepository;
+import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.entity.QRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadStatus;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,91 +35,109 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   private final QRecommend recommend;
   private final QAccount account;
   private final QPostImage postImage;
+  private final PostRepository postRepository;
+  private final PostImageRepository postImageRepository;
 
-  public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+  public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory,
+      PostRepository postRepository,
+      PostImageRepository postImageRepository) {
     super(Thread.class);
     this.jpaQueryFactory = jpaQueryFactory;
     this.thread = QThread.thread;
     this.recommend = QRecommend.recommend;
     this.account = QAccount.account;
     this.postImage = QPostImage.postImage;
+    this.postRepository = postRepository;
+    this.postImageRepository = postImageRepository;
   }
 
-  public Page<ThreadResponseDto> searchList(ThreadSearchCond cond) {
-    Pageable pageable = cond.getPageable();
+  @Override
+  public Optional<ThreadResponseDto> selectThread(Long id) {
 
-    JPAQuery<ThreadSimpleResponseDto> k = jpaQueryFactory
-        .select(Projections.constructor(ThreadSimpleResponseDto.class,
-            thread.id,
-            thread.title,
-            recommend.count(),
-            account.nickname,
-            account.createdDate
-        ))
-        .from(thread)
-        .leftJoin(thread.postImages, postImage)
-        .leftJoin(thread.recommends, recommend)
-        .leftJoin(thread.account, account)
-        .groupBy(thread.id)
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
-        .orderBy(thread.id.desc());
+//    List<String> string = jpaQueryFactory.select(postImage.uniqueName).from(postImage)
+//        .where(postImage.thread.id.eq(id)).fetch();
 
-    return null;
-  }
+    ConstructorExpression<String> constructor = Projections.constructor(String.class,
+        postImage.uniqueName);
 
-  public Page<ThreadResponseDto> searchOne(ThreadSearchCond cond) {
-    Pageable pageable = cond.getPageable();
-
-    JPAQuery<ThreadResponseDto> k = jpaQueryFactory
+    ThreadResponseDto dto = jpaQueryFactory
         .select(Projections.constructor(ThreadResponseDto.class,
             thread.id,
             thread.title,
             thread.content,
             thread.createdDate,
-            list(
-                Projections.fields(
-                    String.class,
-                    postImage.uniqueName
-                )
-            ),
+            thread.endDate,
             recommend.count(),
-            thread.endTime,
             account.nickname
         ))
         .from(thread)
         .leftJoin(thread.postImages, postImage)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
+        .where(thread.id.eq(id))
+        .fetchOne();
+
+//    dto.addImage(string);
+    return Optional.ofNullable(dto);
+  }
+
+  @Override
+  public Page<ThreadSimpleResponseDto> selectActiveThreadsWithPaging(ThreadSearchCond cond) {
+    Pageable pageable = cond.getPageable();
+
+    List<ThreadSimpleResponseDto> dtos = jpaQueryFactory
+        .select(Projections.constructor(
+            ThreadSimpleResponseDto.class,
+            thread.id,
+            thread.title,
+            recommend.count(),
+            account.nickname,
+            thread.createdDate,
+            thread.endDate
+        ))
+        .from(thread)
+        .leftJoin(thread.recommends, recommend)
+        .leftJoin(thread.account, account)
+        .where(thread.status.eq(ThreadStatus.CONTINUE))
         .groupBy(thread.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
-        .orderBy(thread.id.desc());
+        .orderBy(thread.id.desc())
+        .fetch();
 
-    return null;
+    return new PageImpl<>(dtos, pageable, dtos.size());
   }
 
   @Override
   public Page<ThreadResponseDto> getThreadsByCondition(ThreadSearchCond cond) {
+    return null;
+  }
+
+  @Override
+  public Page<ThreadSimpleResponseDto> selectArchivedThreadsWithPaging(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
 
-    List<Thread> threads = jpaQueryFactory.selectFrom(thread)
-        .where(
-            searchByTitle(cond.getWord())
-                .or(searchByContent(cond.getWord()))
-        )
+    List<ThreadSimpleResponseDto> responseDtoList = jpaQueryFactory
+        .select(Projections.constructor(
+            ThreadSimpleResponseDto.class,
+            thread.id,
+            thread.title,
+            recommend.count(),
+            account.nickname,
+            thread.createdDate,
+            thread.endDate
+        ))
+        .from(thread)
+        .leftJoin(thread.recommends, recommend)
+        .leftJoin(thread.account, account)
+        .where(thread.status.eq(ThreadStatus.ARCHIVED))
+        .groupBy(thread.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
+        .orderBy(thread.id.desc())
         .fetch();
 
-    Long threadCount = jpaQueryFactory.select(Wildcard.count)
-        .from(thread)
-        .where(
-            searchByTitle(cond.getWord()),
-            searchByContent(cond.getWord())
-        ).fetch().get(0);
-
-    return new PageImpl<>(ThreadResponseDto.of(threads), pageable, threadCount);
+    return new PageImpl<>(responseDtoList, pageable, responseDtoList.size());
   }
 
   @Override

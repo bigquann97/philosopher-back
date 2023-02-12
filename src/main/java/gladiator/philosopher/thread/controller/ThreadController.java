@@ -26,21 +26,21 @@ public class ThreadController {
   // 쓰레드 단건 조회
   @GetMapping("/{threadId}")
   @ResponseStatus(HttpStatus.OK)
-  public ThreadResponseDto getThread(
+  public ThreadResponseDto selectThread(
       @PathVariable final Long threadId
   ) {
-    return threadService.getThread(threadId);
+    return threadService.selectThread(threadId);
   }
 
   // 쓰레드 객체 페이징 조회
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public Page<ThreadSimpleResponseDto> getThreadItems(
+  public Page<ThreadSimpleResponseDto> selectActiveThreadsWithPaging(
       @RequestParam(required = false) final Integer page,
       @RequestParam(required = false) final Sort sort,
       @RequestParam(required = false) final String word
   ) {
-    return threadService.getActiveThreads(ThreadSearchCond.of(page, sort, word));
+    return threadService.selectActiveThreadsWithPaging(ThreadSearchCond.of(page, sort, word));
   }
 
   // 아카이빙 된 쓰레드 조회
