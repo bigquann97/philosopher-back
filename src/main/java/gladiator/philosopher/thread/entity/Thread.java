@@ -36,7 +36,7 @@ public class Thread extends BaseEntity {
 
   @OneToMany(mappedBy = "post")
   private List<PostImage> postImages;
-
+  // 오류:
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id")
   private Account account;
