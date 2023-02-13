@@ -136,10 +136,8 @@ public class AccountServiceImpl implements AccountService {
     }
   }
 
-
   /**
-   * 유저 아이디로 유저 객체 찾기
-   *
+   * 유저 이메일로 유저 객체 찾기 email -> entity
    * @param email
    * @return
    */
@@ -149,6 +147,11 @@ public class AccountServiceImpl implements AccountService {
     return account;
   }
 
+  /**
+   * 유저 식별자로 유저 객체 찾기 id -> entity
+   * @param id
+   * @return
+   */
   @Override
   public Account getAccount(Long id) {
     return accountRepository.findById(id)
