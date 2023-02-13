@@ -15,6 +15,7 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -67,22 +68,24 @@ public class InitData implements ApplicationRunner {
     accountRepository.save(account5);
 
     // 게시글 부
-    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다");
+    List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
+
+    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", opinions);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다");
+    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", opinions);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다");
+    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", opinions);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다");
+    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", opinions);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다");
+    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", opinions);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다");
+    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", opinions);
     postRepository.save(post6);
     List<PostImage> images = new ArrayList<>();
 

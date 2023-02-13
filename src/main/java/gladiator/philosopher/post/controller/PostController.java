@@ -6,7 +6,6 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import java.io.IOException;
 import java.util.List;

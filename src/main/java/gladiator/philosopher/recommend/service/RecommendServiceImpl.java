@@ -6,6 +6,7 @@ import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.recommend.repository.RecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecommendServiceImpl implements RecommendService {
 
   private final RecommendRepository recommendRepository;
+  private final ThreadService ThreadService;
 
   @Transactional
   public void createRecommendPost(Post post, Account account) {
@@ -24,6 +26,9 @@ public class RecommendServiceImpl implements RecommendService {
     }
     Recommend recommend = new Recommend(post, account);
     recommendRepository.save(recommend);
+    if (getPostRecommends(post).size() >= 2) {
+      ThreadService.startThread(post);
+    }
   }
 
   @Transactional
