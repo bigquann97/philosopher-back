@@ -13,15 +13,11 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadStatus;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
->>>>>>> f2d8a8198dc422e08907684d1361c21319ed760d
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,7 +74,7 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional
   public Thread getThreadEntity(Long id) {
-    return threadRepository.findById (id)
+    return threadRepository.findById(id)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
   }
 
@@ -124,6 +120,7 @@ public class ThreadServiceImpl implements ThreadService {
 
   /**
    * 어드민쪽에서 사용할 threads
+   *
    * @return
    */
 //  @Override
@@ -137,8 +134,6 @@ public class ThreadServiceImpl implements ThreadService {
 //    }
 //    return new PageImpl<>(result);
 //  }
-
-
   @Override // join 관련해서 한번 고민해볼것.
   @Transactional(readOnly = true)
   public List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2() {
@@ -146,7 +141,8 @@ public class ThreadServiceImpl implements ThreadService {
     final List<Thread> all = threadRepository.findAll();
     List<ThreadsSimpleResponseDtoByAdmin> resultData = new ArrayList<>();
     all.forEach(entity -> {
-      ThreadsSimpleResponseDtoByAdmin threadsSimpleResponseDtoByAdmin = new ThreadsSimpleResponseDtoByAdmin(entity);
+      ThreadsSimpleResponseDtoByAdmin threadsSimpleResponseDtoByAdmin = new ThreadsSimpleResponseDtoByAdmin(
+          entity);
       resultData.add(threadsSimpleResponseDtoByAdmin);
     });
     // 데이터가 있어야먄 join을 해온다는 점?

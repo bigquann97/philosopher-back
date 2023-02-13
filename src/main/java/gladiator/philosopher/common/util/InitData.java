@@ -84,10 +84,10 @@ public class InitData implements ApplicationRunner {
     List<PostImage> images = new ArrayList<>();
     // 쓰레드 부
 
-    Thread thread2 = new Thread(post4.getTitle(), post4.getContent(), null, account4,
+    Thread thread2 = new Thread(post4.getTitle(), post4.getContent(), new ArrayList<>(), account4,
         LocalDateTime.now());
     threadRepository.save(thread2);
-    Thread thread3 = new Thread(post5.getTitle(), post5.getContent(), null, account5,
+    Thread thread3 = new Thread(post5.getTitle(), post5.getContent(), new ArrayList<>(), account5,
         LocalDateTime.now());
     threadRepository.save(thread3);
 
