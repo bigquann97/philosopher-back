@@ -7,10 +7,15 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountImageRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
+import gladiator.philosopher.common.jwt.TokenDto;
+import gladiator.philosopher.common.jwt.TokenRequestDto;
+import gladiator.philosopher.common.util.RedisUtil;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +28,7 @@ public class AccountServiceImpl implements AccountService {
   private final AccountImageRepository accountImageRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
+  private final RedisUtil redisUtil;
 
   /**
    * 회원가입
@@ -45,15 +51,60 @@ public class AccountServiceImpl implements AccountService {
    * 로그인
    *
    * @param signInRequestDto
+   * @param response
    * @return
    */
   @Override
-  @Transactional(readOnly = true)
-  public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
+  @Transactional
+  public SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response) {
     Account account = findAccountByEmail(signInRequestDto.getEmail());
     checkByMemberPassword(signInRequestDto.getPassword(), account);
-    String token = jwtTokenProvider.createToken(account.getEmail(), account.getType());
-    return SignInResponseDto.of(account, token);
+    Authentication authentication = jwtTokenProvider.createAuthentication(
+        signInRequestDto.getEmail());
+    TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
+    redisUtil.setData(authentication.getName(), tokenDto.getRefreshToken());
+    response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+    return SignInResponseDto.of(account.getEmail(), tokenDto.getAccessToken(),
+        tokenDto.getRefreshToken());
+  }
+
+  @Override
+  @Transactional
+  public SignInResponseDto reissue(TokenRequestDto tokenRequestDto, HttpServletResponse response) {
+    String email = jwtTokenProvider.getUserInfoFromToken(tokenRequestDto.getAccessToken())
+        .getSubject();
+    validateRefreshToken(tokenRequestDto);
+    Authentication authentication = jwtTokenProvider.createAuthentication(email);
+    String validRefreshToken = redisUtil.getData(authentication.getName());
+    if (validRefreshToken != null) {
+      validateRefreshTokenOwner(validRefreshToken, tokenRequestDto);
+      TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
+      redisUtil.setData(authentication.getName(), tokenDto.getRefreshToken());
+      response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+      return SignInResponseDto.of(email, tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+    } else {
+      throw new IllegalArgumentException("redis DB에 토큰정보 없음");
+    }
+  }
+
+  @Override
+  @Transactional
+  public void signOut(Account account) {
+    String email = account.getEmail();
+    redisUtil.deleteData(email);
+  }
+
+  private void validateRefreshToken(TokenRequestDto tokenRequestDto) {
+    if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+      throw new IllegalArgumentException("유효하지 않은 리프레시 토큰");
+    }
+  }
+
+  private void validateRefreshTokenOwner(String validRefreshToken,
+      TokenRequestDto tokenRequestDto) {
+    if (!tokenRequestDto.validateToken(validRefreshToken)) {
+      throw new IllegalArgumentException("유효하지않은 토큰");
+    }
   }
 
   /**
