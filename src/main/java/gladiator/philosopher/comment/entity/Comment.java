@@ -3,7 +3,6 @@ package gladiator.philosopher.comment.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.entity.Thread;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +37,7 @@ public class Comment extends BaseEntity {
 
   @Builder
   public Comment(Long id, Account account, Thread thread, String content) {
+
     this.id = id;
     this.account = account;
     this.thread = thread;
@@ -51,4 +51,5 @@ public class Comment extends BaseEntity {
   public void blind() {
 
   }
+
 }

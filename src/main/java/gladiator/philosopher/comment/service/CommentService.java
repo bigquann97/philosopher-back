@@ -13,13 +13,16 @@ public interface CommentService {
   CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
       AccountDetails accountDetails);
 
-  CommentResponseDto modifyComment(CommentRequestDto commentRequestDto, Long threadId,
-      Long commentId, AccountDetails accountDetails);
+  Comment getCommentEntity(Long id);
 
-  void deleteComment(Long threadId, Long commentId, AccountDetails accountDetails);
+  void modifyComment(Long commentId, String content);
+
+  void deleteComment(Long commentId);
 
   Comment getCommentEntity(Long id);
 
   void modifyCommentByAdmin(Long id, CommentRequestDto commentRequestDto);
+  
   void deleteCommentByAdmin(Long id);
+
 }
