@@ -4,6 +4,7 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.thread.dto.ThreadStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -48,7 +49,10 @@ public class Thread extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private ThreadStatus status;
+  private ThreadLocation location;
+
+  @Enumerated(EnumType.STRING)
+  private ThreadStatus status = ThreadStatus.ACTIVE;
 
   private LocalDateTime endDate;
 
@@ -63,17 +67,21 @@ public class Thread extends BaseEntity {
     this.postImages = postImages != null ? postImages : new ArrayList<>(); // null일 경우 빈 List 객체를 생성
     this.postImages.iterator().forEachRemaining(x -> x.addThread(this));
     this.account = account;
-    this.status = ThreadStatus.CONTINUE;
+    this.location = ThreadLocation.CONTINUE;
     this.endDate = endDate;
   }
 
   public Thread finishThread() {
-    this.status = ThreadStatus.ARCHIVED;
+    this.location = ThreadLocation.ARCHIVED;
     return this;
   }
 
   public void blind() {
+    this.status = ThreadStatus.BLINDEND;
+  }
 
+  public void releaseBlind() {
+    this.status = ThreadStatus.ACTIVE;
   }
 
   public List<Recommend> getRecommends() {

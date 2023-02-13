@@ -14,6 +14,7 @@ public interface ReportService {
   void reportThread(Long id, ReportRequestDto dto, Account member);
 
   void reportPostTest(Long id);
+
   void reportPostTest2(Long id, ReportRequestDto dto, Account member);
 
   List<ReportResponseDto> getReports();

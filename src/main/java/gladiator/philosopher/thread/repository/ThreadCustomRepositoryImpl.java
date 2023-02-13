@@ -15,7 +15,7 @@ import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.entity.ThreadLocation;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -116,7 +116,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .from(thread)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
-        .where(thread.status.eq(ThreadStatus.CONTINUE))
+        .where(thread.status.eq(ThreadLocation.CONTINUE))
         .groupBy(thread.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
@@ -148,7 +148,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .from(thread)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
-        .where(thread.status.eq(ThreadStatus.ARCHIVED))
+        .where(thread.status.eq(ThreadLocation.ARCHIVED))
         .groupBy(thread.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())

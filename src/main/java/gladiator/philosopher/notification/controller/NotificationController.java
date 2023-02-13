@@ -1,8 +1,8 @@
 package gladiator.philosopher.notification.controller;
 
 import gladiator.philosopher.common.security.AccountDetails;
+import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.notification.service.NotificationService;
-import gladiator.philosopher.report.dto.NotificationResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

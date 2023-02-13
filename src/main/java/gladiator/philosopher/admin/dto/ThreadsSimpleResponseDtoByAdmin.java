@@ -3,7 +3,7 @@ package gladiator.philosopher.admin.dto;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.entity.ThreadLocation;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public class ThreadsSimpleResponseDtoByAdmin {
   private final List<String> imageUrl; // 이미지 주소 ->
   private final Long recommendCount; // 추천 수 ->
   private final String nickname; // 작성자 명
-  private final ThreadStatus status;
+  private final ThreadLocation location;
   private final LocalDateTime createdDate; // 시작시간
   private final LocalDateTime endDate; // 끝나는 시간
 
@@ -33,7 +33,7 @@ public class ThreadsSimpleResponseDtoByAdmin {
         Collectors.toList());
     this.recommendCount = thread.getRecommends().stream().map(Recommend::getThread).count();
     this.nickname = thread.getAccount().getNickname();
-    this.status = thread.getStatus();
+    this.location = thread.getLocation();
     this.createdDate = thread.getCreatedDate();
     this.endDate = thread.getEndDate();
   }

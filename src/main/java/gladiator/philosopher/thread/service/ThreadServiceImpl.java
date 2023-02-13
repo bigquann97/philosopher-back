@@ -10,7 +10,7 @@ import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.entity.ThreadLocation;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -113,7 +113,8 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional
   public Page<ThreadSimpleResponseDto> getArchivedThreads(ThreadSearchCond cond) {
-    Page<Thread> threads = threadRepository.findByStatus(ThreadStatus.ARCHIVED, cond.getPageable());
+    Page<Thread> threads = threadRepository.findByStatus(ThreadLocation.ARCHIVED,
+        cond.getPageable());
     return threads.map(thread -> ThreadSimpleResponseDto.builder().thread(thread).build());
   }
 

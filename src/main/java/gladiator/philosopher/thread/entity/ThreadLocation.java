@@ -1,5 +1,5 @@
 package gladiator.philosopher.thread.entity;
 
-public enum ThreadStatus {
+public enum ThreadLocation {
   CONTINUE, ARCHIVED;
 }
