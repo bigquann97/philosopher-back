@@ -35,10 +35,8 @@ public class ThreadsSimpleResponseDtoByAdmin {
     this.nickname = thread.getAccount().getNickname();
     this.status = thread.getStatus();
     this.createdDate = thread.getCreatedDate();
-    this.endDate = thread.getEndTime();
+    this.endDate = thread.getEndDate();
   }
-
-
 
 
 }

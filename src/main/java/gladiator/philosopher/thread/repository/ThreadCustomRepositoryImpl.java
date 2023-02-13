@@ -6,7 +6,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
-import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.post.entity.QPostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostRepository;
@@ -51,7 +50,6 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.postImageRepository = postImageRepository;
   }
 
-<<<<<<< HEAD
 //  @Override
 //  public Page<Thread> getThreads(ThreadSearchCond cond) {
 //    Pageable pageable = cond.getPageable();
@@ -69,13 +67,14 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
   public Page<ThreadResponseDto> searchList(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
-=======
+    return null;
+  }
+
   @Override
   public Optional<ThreadResponseDto> selectThread(Long id) {
 
     List<String> images = jpaQueryFactory.select(postImage.uniqueName).from(postImage)
         .where(postImage.thread.id.eq(id)).fetch();
->>>>>>> f2d8a8198dc422e08907684d1361c21319ed760d
 
     ThreadResponseDto dto = jpaQueryFactory
         .select(Projections.constructor(ThreadResponseDto.class,

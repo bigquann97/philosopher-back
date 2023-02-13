@@ -153,15 +153,15 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
   }
 
   @Override
-<<<<<<< HEAD
-  public List<TestPostResponseDto> getPostAndAccount(Long id){
+  public List<TestPostResponseDto> getPostAndAccount(Long id) {
     return postRepository.getPost(id);
-=======
+  }
+
   @Transactional
   public void checkRecommendCount(Post post) {
     if (recommendService.getPostRecommends(post).size() >= 3) {
       threadService.startThread(post);
     }
->>>>>>> f2d8a8198dc422e08907684d1361c21319ed760d
   }
+  
 }
