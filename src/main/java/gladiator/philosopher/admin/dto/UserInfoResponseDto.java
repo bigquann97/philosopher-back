@@ -1,5 +1,6 @@
 package gladiator.philosopher.admin.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserStatus;
 import gladiator.philosopher.common.enums.UserRole;
@@ -16,6 +17,7 @@ public class UserInfoResponseDto {
   private final UserRole userRole;
   private final UserStatus userStatus;
 
+  @QueryProjection
   public UserInfoResponseDto(Long id, String email, int age, String nickname,
       Gender gender, UserRole userRole,
       UserStatus userStatus) {

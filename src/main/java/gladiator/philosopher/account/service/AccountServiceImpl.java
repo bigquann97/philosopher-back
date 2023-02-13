@@ -4,14 +4,13 @@ import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.entity.AccountImage;
-import gladiator.philosopher.account.repository.AccountImageRepository;
+import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import java.util.List;
 import gladiator.philosopher.common.jwt.TokenDto;
@@ -19,6 +18,7 @@ import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.util.RedisUtil;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,10 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class AccountServiceImpl implements AccountService {
 
   private final AccountRepository accountRepository;
-  private final AccountImageRepository accountImageRepository;
+  private final AccountInfoRepository accountInfoRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisUtil redisUtil;
@@ -41,14 +42,14 @@ public class AccountServiceImpl implements AccountService {
    */
   @Transactional
   @Override
-  public void signUp(SignUpRequestDto registerRequestDto) {
+  public void signUp(List<String> urlList, SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
-    AccountImage image = new AccountImage("default_image.jpg");
-    String password = passwordEncoder.encode(registerRequestDto.getPassword());
-    Account account = registerRequestDto.toEntity(password, image);
-    accountImageRepository.save(image);
+    String url = urlList.get(0);
+    Account account = registerRequestDto.toEntity(passwordEncoder.encode(registerRequestDto.getPassword()));
     accountRepository.save(account);
+    AccountInfo accountInfo = new AccountInfo(account, url);
+    accountInfoRepository.save(accountInfo);
   }
 
   /**
@@ -71,6 +72,7 @@ public class AccountServiceImpl implements AccountService {
     return SignInResponseDto.of(account.getEmail(), tokenDto.getAccessToken(),
         tokenDto.getRefreshToken());
   }
+
 
   @Override
   @Transactional
@@ -124,8 +126,7 @@ public class AccountServiceImpl implements AccountService {
   }
 
   /**
-   * 유저 아이디로 유저 객체 찾기
-   *
+   * 유저 이메일로 유저 객체 찾기 email -> entity
    * @param email
    * @return
    */
@@ -135,6 +136,11 @@ public class AccountServiceImpl implements AccountService {
     return account;
   }
 
+  /**
+   * 유저 식별자로 유저 객체 찾기 id -> entity
+   * @param id
+   * @return
+   */
   @Override
   public Account getAccount(Long id) {
     return accountRepository.findById(id)
@@ -176,8 +182,10 @@ public class AccountServiceImpl implements AccountService {
 
   @Transactional
   public void UpdateAccountRole(Account account) {
-    if (account.getType().equals(UserRole.ROLE_USER)) {account.UpdateAccountRole(UserRole.ROLE_ADMIN);
-    } else {account.UpdateAccountRole(UserRole.ROLE_USER);
+    if (account.getType().equals(UserRole.ROLE_USER)) {
+      account.UpdateAccountRole(UserRole.ROLE_ADMIN);
+    } else {
+      account.UpdateAccountRole(UserRole.ROLE_USER);
     }
   }
 

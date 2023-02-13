@@ -133,7 +133,6 @@ public class JwtTokenProvider {
 
   public Authentication createAuthentication(String username) {
     UserDetails userDetails = accountDetailsServiceImpl.loadUserByUsername(username);
-
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
 
