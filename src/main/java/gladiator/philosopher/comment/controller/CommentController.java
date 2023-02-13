@@ -41,7 +41,7 @@ public class CommentController {
    *
    * @param commentRequestDto
    * @param threadId
-   * @param memberDetails
+   * @param accountDetails
    * @return
    */
   @ResponseStatus(HttpStatus.OK)
@@ -55,10 +55,8 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/api/comment/{commentId}")
-  public void modifyComment(
-      @RequestBody CommentRequestDto commentRequestDto,
+  public void modifyComment(@RequestBody CommentRequestDto commentRequestDto,
       @PathVariable Long commentId, @AuthenticationPrincipal AccountDetails accountDetails) {
-
     commentService.modifyComment(commentId, commentRequestDto.getContent());
   }
 
@@ -68,5 +66,5 @@ public class CommentController {
       @AuthenticationPrincipal AccountDetails accountDetails) {
     commentService.deleteComment(commentId);
   }
-//
+
 }

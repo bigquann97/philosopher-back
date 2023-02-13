@@ -21,9 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
 
   private final CommentRepository commentRepository;
-
   private final PostRepository postRepository;
-
   private final ThreadRepository threadRepository;
 
   @Override
@@ -55,6 +53,8 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional
   public void modifyComment(Long commentId, String content) {
+    Comment comment = commentRepository.findById(commentId)
+        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     commentRepository.modify(commentId, content);
   }
 

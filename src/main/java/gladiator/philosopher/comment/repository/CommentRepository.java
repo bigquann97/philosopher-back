@@ -20,12 +20,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   @Modifying
   @Transactional
-  @Query(value = "UPDATE TABLE comment SET i = :commentId WHERE id = :content ", nativeQuery = true)
+  @Query(value = "UPDATE comment SET content = :content WHERE commentId = :commentId ", nativeQuery = true)
   void modify(Long commentId, String content);
 
   @Modifying
   @Transactional
-  @Query(value = "DELETE FROM comment WHERE commentId = : commentId ", nativeQuery = true)
+  @Query(value = "DELETE FROM comment WHERE commentId = :commentId ", nativeQuery = true)
   void delete(String commentId);
 
 }
