@@ -17,7 +17,8 @@ public class ThreadSimpleResponseDto {
   private final String title;
   private final Long recommend;
   private final String nickname;
-  private final LocalDateTime createdAt;
+  private final LocalDateTime createdDate;
+  private final LocalDateTime endDate;
 
   @Builder
   public ThreadSimpleResponseDto(Thread thread) {
@@ -25,7 +26,8 @@ public class ThreadSimpleResponseDto {
     this.title = thread.getTitle();
     this.recommend = 1L;
     this.nickname = thread.getAccount().getNickname();
-    this.createdAt = thread.getCreatedDate();
+    this.createdDate = thread.getCreatedDate();
+    this.endDate = thread.getEndDate();
   }
 
 }

@@ -3,8 +3,12 @@ package gladiator.philosopher.thread.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.recommend.entity.Recommend;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,7 +38,7 @@ public class Thread extends BaseEntity {
 
   private String content;
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "thread")
   private List<PostImage> postImages;
   // 오류:
   @ManyToOne(fetch = FetchType.LAZY)
@@ -45,19 +49,21 @@ public class Thread extends BaseEntity {
   @Column(nullable = false)
   private ThreadStatus status;
 
-  private LocalDateTime startTime;
+  private LocalDateTime endDate;
 
-  private LocalDateTime endTime;
+  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
+  private Set<Recommend> recommends = new LinkedHashSet<>();
 
   @Builder
   public Thread(String title, String content, List<PostImage> postImages, Account account,
-      LocalDateTime startTime, LocalDateTime endTime) {
+      LocalDateTime endDate) {
     this.title = title;
     this.content = content;
     this.postImages = postImages;
+    this.postImages.iterator().forEachRemaining(x -> x.addThread(this));
     this.account = account;
     this.status = ThreadStatus.CONTINUE;
-    this.endTime = endTime;
+    this.endDate = endDate;
   }
 
   public Thread finishThread() {
