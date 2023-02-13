@@ -5,6 +5,7 @@ import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.recommend.entity.Recommend;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class Thread extends BaseEntity {
 
   @OneToMany(mappedBy = "thread")
   private List<PostImage> postImages;
-  // 오류:
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id")
   private Account account;
@@ -59,7 +60,7 @@ public class Thread extends BaseEntity {
       LocalDateTime endDate) {
     this.title = title;
     this.content = content;
-    this.postImages = postImages;
+    this.postImages = postImages != null ? postImages : new ArrayList<>(); // null일 경우 빈 List 객체를 생성
     this.postImages.iterator().forEachRemaining(x -> x.addThread(this));
     this.account = account;
     this.status = ThreadStatus.CONTINUE;
@@ -73,5 +74,9 @@ public class Thread extends BaseEntity {
 
   public void blind() {
 
+  }
+
+  public List<Recommend> getRecommends() {
+    return new ArrayList<>(this.recommends);
   }
 }

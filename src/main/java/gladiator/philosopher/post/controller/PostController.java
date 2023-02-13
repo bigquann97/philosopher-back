@@ -5,7 +5,6 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +73,7 @@ public class PostController {
   }
 
   @GetMapping("/test/{id}")
-  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id")Long id){
+  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
     return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
   }
 
