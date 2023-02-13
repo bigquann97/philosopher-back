@@ -40,7 +40,7 @@ public class Thread extends BaseEntity {
 
   @OneToMany(mappedBy = "thread")
   private List<PostImage> postImages;
-
+  // 오류:
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id")
   private Account account;
@@ -49,20 +49,21 @@ public class Thread extends BaseEntity {
   @Column(nullable = false)
   private ThreadStatus status;
 
-  private LocalDateTime endTime;
+  private LocalDateTime endDate;
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
   private Set<Recommend> recommends = new LinkedHashSet<>();
 
   @Builder
   public Thread(String title, String content, List<PostImage> postImages, Account account,
-      LocalDateTime endTime) {
+      LocalDateTime endDate) {
     this.title = title;
     this.content = content;
     this.postImages = postImages;
+    this.postImages.iterator().forEachRemaining(x -> x.addThread(this));
     this.account = account;
     this.status = ThreadStatus.CONTINUE;
-    this.endTime = endTime;
+    this.endDate = endDate;
   }
 
   public Thread finishThread() {

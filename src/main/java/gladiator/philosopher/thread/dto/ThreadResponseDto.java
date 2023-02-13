@@ -17,10 +17,22 @@ public class ThreadResponseDto {
   private final Long id;
   private final String title;
   private final String content;
-  private final Integer recommend;
+  private final LocalDateTime createdDate;
   private final LocalDateTime endDate;
-  private final List<String> images;
+  private final Long recommend;
+  private List<String> images;
   private final String nickname;
+
+  public ThreadResponseDto(Long id, String title, String content, LocalDateTime createdDate,
+      LocalDateTime endDate, Long recommend, String nickname) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.createdDate = createdDate;
+    this.endDate = endDate;
+    this.recommend = recommend;
+    this.nickname = nickname;
+  }
 
   @Builder
   public ThreadResponseDto(final Thread thread) {
@@ -29,9 +41,10 @@ public class ThreadResponseDto {
     this.content = thread.getContent();
     this.images = thread.getPostImages().stream().map(PostImage::getUniqueName)
         .collect(Collectors.toList());
-    this.recommend = 1;
+    this.recommend = 1L;
     this.nickname = thread.getAccount().getNickname();
-    this.endDate = thread.getEndTime();
+    this.endDate = thread.getEndDate();
+    this.createdDate = thread.getCreatedDate();
   }
 
   public static ThreadResponseDto of(Thread thread) {
@@ -41,4 +54,9 @@ public class ThreadResponseDto {
   public static List<ThreadResponseDto> of(List<Thread> threads) {
     return threads.stream().map(ThreadResponseDto::of).collect(Collectors.toList());
   }
+
+  public void addImage(List<String> images) {
+    this.images = images;
+  }
+
 }

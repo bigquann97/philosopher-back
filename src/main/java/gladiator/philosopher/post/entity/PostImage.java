@@ -40,14 +40,12 @@ public class PostImage extends BaseEntity {
 
   private final static String supportedExtension[] = {"jpg", "jpeg", "bmp", "png"};
 
-  @Builder(builderMethodName = "postImage")
+  @Builder
   public PostImage(String originalName, Post post) {
     this.originalName = originalName;
     this.uniqueName = generateUniqueName(extractExtension(originalName));
     this.post = post;
   }
-
-
 
   private String generateUniqueName(String extension) {
     return UUID.randomUUID() + "." + extension;
@@ -66,10 +64,7 @@ public class PostImage extends BaseEntity {
     return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
   }
 
-  @Builder(builderMethodName = "threadBuilder")
-  public PostImage(String originalName, Thread thread) {
-    this.originalName = originalName;
-    this.uniqueName = generateUniqueName(extractExtension(originalName));
+  public void addThread(Thread thread) {
     this.thread = thread;
   }
 }

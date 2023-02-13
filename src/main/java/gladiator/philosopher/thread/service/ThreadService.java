@@ -16,10 +16,10 @@ public interface ThreadService {
   Thread startThread(final Post post);
 
   @Transactional
-  ThreadResponseDto getThread(final Long threadId);
+  ThreadResponseDto selectThread(final Long threadId);
 
   @Transactional
-  Page<ThreadSimpleResponseDto> getActiveThreads(ThreadSearchCond cond);
+  Page<ThreadSimpleResponseDto> selectActiveThreadsWithPaging(ThreadSearchCond cond);
 
   @Transactional
   Page<ThreadSimpleResponseDto> getArchivedThreads(ThreadSearchCond of);
