@@ -13,6 +13,7 @@ import gladiator.philosopher.recommend.entity.QRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
+import gladiator.philosopher.thread.dto.ThreadStatus;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadLocation;
@@ -49,21 +50,6 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.postRepository = postRepository;
     this.postImageRepository = postImageRepository;
   }
-
-//  @Override
-//  public Page<Thread> getThreads(ThreadSearchCond cond) {
-//    Pageable pageable = cond.getPageable();
-//    List<Thread> result = jpaQueryFactory.select(thread)
-//        .from(thread)
-//        .leftJoin(thread.postImages, postImage)
-//        .leftJoin(thread.recommends, recommend)
-//        .leftJoin(thread.account, account)
-//        .groupBy(thread.id)
-//        .offset(pageable.getOffset())
-//        .limit(pageable.getPageSize()).fetch();
-//
-//    return new PageImpl<>(result);
-//  }
 
   public Page<ThreadResponseDto> searchList(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
@@ -116,7 +102,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .from(thread)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
-        .where(thread.status.eq(ThreadLocation.CONTINUE))
+        .where(thread.status.eq(ThreadStatus.ACTIVE))
         .groupBy(thread.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
@@ -148,7 +134,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .from(thread)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
-        .where(thread.status.eq(ThreadLocation.ARCHIVED))
+        .where(thread.status.eq(ThreadStatus.ACTIVE))
         .groupBy(thread.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
