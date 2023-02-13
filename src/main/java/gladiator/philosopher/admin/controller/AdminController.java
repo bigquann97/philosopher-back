@@ -1,15 +1,19 @@
 package gladiator.philosopher.admin.controller;
 
+import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
+import gladiator.philosopher.comment.dto.CommentRequestDto;
+import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.report.entity.Report;
+import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,30 +29,89 @@ public class AdminController {
 
   private final AdminService adminService;
   private final PostService postService;
+  private final AccountService accountService;
+  private final CommentService commentService;
 
-  @GetMapping("/accounts") // 모든 회원 정보 가지고 오기
-  public ResponseEntity<List<UserInfoResponseDto>> getAccounts(){
-    return ResponseEntity.ok(adminService.getUsersInfoList());
-  }
-  // 권한 관련 수정은 조금 더 방식을 생각해보자
-  @PatchMapping("/role/{id}") // 권한 관련 수정 ( 미완성 )
-  public void modifyUserRole(@PathVariable("id")Long id){
-  }
-  @DeleteMapping("post/{id}") // 게시글 삭제 (완료) -> 일단 데이터는 지우지말고, db만 날린 후에 작업 진행해봅시다. -> 그냥 cacade 조건 줘벌임
-  public void deletePostByAdmin(@PathVariable("id")Long id){
-    postService.deletePostByAdmin(id); // 바로 post로?  or admin -> post로 ?
-  }
-  @PatchMapping("post/{id}") // 게시글 수정
-  public void modifyPostByAdmin(@PathVariable("id")Long id,@RequestBody PostRequestDto postRequestDto){
-    postService.modifyPostByAdmin(id,postRequestDto);
-  }
-  @GetMapping("/reports") // 신고 목록 조회 ( 신고 목록 조회 관련해서 신고별로 entity를 분리할 것인지? 아니면 그냥 search 조건 부여해서? )
-  public ResponseEntity<List<ReportResponseDto>> getReports(){
-    return ResponseEntity.ok(adminService.getReports());
+  /**
+   * 유저 목록 조회
+   *
+   * @return
+   */
+  @GetMapping("/accounts")
+  public List<UserInfoResponseDto> getAccounts() {
+    return adminService.getUsersInfoList();
   }
 
-  // 앞으로 더 필요한 로직
-  // 댓글 삭제, 댓글 수정 -> 삭제시 연관데이터 고려해야할 것 ( 게시글 삭제도 마찬가지 -> 현재 500 error 발생함 )
+  /**
+   * 권한 수정
+   *
+   * @param id
+   */
+  @PatchMapping("/modify/account/role/{id}")
+  @PreAuthorize("hasRole('ROLE_MASTER')")
+  public void modifyUserRole(@PathVariable("id") Long id) {
+    adminService.modifyUserRole(accountService.getAccount(id));
+  }
+
+  /**
+   * 게시글 삭제
+   *
+   * @param id
+   */
+  @DeleteMapping("post/{id}")
+  public void deletePostByAdmin(@PathVariable("id") Long id) {
+    postService.deletePostByAdmin(id);
+  }
+
+  /**
+   * 게시글 수정
+   *
+   * @param id
+   * @param postRequestDto
+   */
+  @PatchMapping("post/{id}")
+  public void modifyPostByAdmin(@PathVariable("id") Long id,
+      @RequestBody PostRequestDto postRequestDto) {
+    postService.modifyPostByAdmin(id, postRequestDto);
+  }
+
+  /**
+   * 신고 목록 조회
+   *
+   * @return
+   */
+  @GetMapping("/reports")
+  public List<ReportResponseDto> getReports() {
+    return adminService.getReports();
+  }
+  /**
+   * 댓글 수정
+   */
+  @PatchMapping("comment/{id}")
+  public void modifyCommentByAdmin(@PathVariable("id")Long id, @RequestBody CommentRequestDto commentRequestDto){
+    commentService.modifyCommentByAdmin(id, commentRequestDto);
+  }
+
+  /**
+   * 댓글 삭제
+   */
+  @DeleteMapping("comment/{id}")
+  public void deleteCommentByAdmin(@PathVariable("id")Long id){
+    commentService.deleteCommentByAdmin(id);
+  }
+
+  /**
+   * 쓰레드 목록 조회
+   */
+  @GetMapping("/threadsV2")
+  public ResponseEntity<List<ThreadsSimpleResponseDtoByAdmin>> getThreadsV2(){
+    return ResponseEntity.status(200).body(adminService.getThreadsV2());
+  }
+
+
+  /**
+   * 아카이브 목록 조회
+   */
 
 
 }

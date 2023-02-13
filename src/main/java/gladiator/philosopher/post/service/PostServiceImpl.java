@@ -7,10 +7,13 @@ import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.recommend.service.RecommendService;
+import gladiator.philosopher.thread.service.ThreadService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +33,8 @@ public class PostServiceImpl implements PostService {
   private final PostRepository postRepository;
   private final ImageService imageService;
   private final PostImageRepository postImageRepository;
+  private final RecommendService recommendService;
+  private final ThreadService threadService;
 
   @Override
   @Transactional
@@ -78,8 +83,11 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    return new PostResponseDto(post);
+    int recommendCount = recommendService.getPostRecommends(post).size();
+//    checkRecommendCount(post); // 좋아요 수 확인하고, 3이상이면 쓰레드를 생성하는 메서드
+    return new PostResponseDto(post, recommendCount);
   }
+
 
   @Override
   @Transactional
@@ -93,7 +101,8 @@ public class PostServiceImpl implements PostService {
     }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
-    return new PostResponseDto(post);
+    int recommendCount = recommendService.getPostRecommends(post).size();
+    return new PostResponseDto(post, recommendCount);
   }
 
   @Override
@@ -142,4 +151,17 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
     post.modifyPost(postRequestDto);
     postRepository.save(post);
   }
+
+  @Override
+  public List<TestPostResponseDto> getPostAndAccount(Long id) {
+    return postRepository.getPost(id);
+  }
+
+  @Transactional
+  public void checkRecommendCount(Post post) {
+    if (recommendService.getPostRecommends(post).size() >= 3) {
+      threadService.startThread(post);
+    }
+  }
+  
 }

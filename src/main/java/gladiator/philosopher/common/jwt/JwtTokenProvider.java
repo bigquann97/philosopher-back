@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -35,7 +37,10 @@ public class JwtTokenProvider {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String AUTHORIZATION_KEY = "auth";
   private static final String BEARER_PREFIX = "Bearer ";
-  private static final long TOKEN_TIME = 60 * 60 * 1000 * 3000L; // 임의로 x 3000함 -> 발행시간 오지게 길 듯
+  private static final long ACCESS_TOKEN_EXPIRE_TIME =
+      60 * 60 * 1000 * 3000L; // 임의로 x 3000함 -> 발행시간 오지게 길 듯
+  private static final long REFRESH_TOKEN_EXPIRE_TIME =
+      60 * 60 * 1000 * 3000L; // 임의로 x 3000함 -> 발행시간 오지게 길 듯
 
 
   @Value("${spring.jwt.secretKey}")
@@ -47,7 +52,7 @@ public class JwtTokenProvider {
   @PostConstruct
   public void init() {
     byte[] bytes = Base64.getDecoder().decode(secretKey);
-    key = Keys.hmacShaKeyFor(bytes);
+    this.key = Keys.hmacShaKeyFor(bytes);
   }
 
 
@@ -65,10 +70,40 @@ public class JwtTokenProvider {
         Jwts.builder()
             .setSubject(username)
             .claim(AUTHORIZATION_KEY, role)
-            .setExpiration(new Date(date.getTime() + TOKEN_TIME))
+            .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)
             .compact();
+  }
+
+  //
+  public TokenDto createTokenDto(Authentication authentication) {
+    String authorities = authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.joining(","));
+
+    long now = (new Date()).getTime();
+
+    Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+    String accessToken = Jwts.builder()
+        .setSubject(authentication.getName())
+        .claim(AUTHORIZATION_KEY, authorities)
+        .setExpiration(accessTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
+
+    Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
+    String refreshToken = Jwts.builder()
+        .setExpiration(refreshTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
+
+    return TokenDto.builder()
+        .grantType(BEARER_PREFIX)
+        .accessToken(accessToken)
+        .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+        .refreshToken(refreshToken)
+        .build();
   }
 
   public boolean validateToken(String token) {
@@ -89,7 +124,11 @@ public class JwtTokenProvider {
 
 
   public Claims getUserInfoFromToken(String token) {
-    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    try {
+      return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    } catch (ExpiredJwtException e) {
+      return e.getClaims();
+    }
   }
 
   public Authentication createAuthentication(String username) {
@@ -97,4 +136,5 @@ public class JwtTokenProvider {
 
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
+
 }

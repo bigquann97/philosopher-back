@@ -18,13 +18,15 @@ public class PostResponseDto {
 
   private final List<String> images;
 
+  private final int recommendCount;
+
   private final String content;
 
   private final LocalDateTime createDate;
 
   private final LocalDateTime modifiedDate;
 
-  public PostResponseDto(Post post) {
+  public PostResponseDto(Post post, int recommendCount) {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
@@ -33,5 +35,6 @@ public class PostResponseDto {
     this.content = post.getContent();
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();
+    this.recommendCount = recommendCount;
   }
 }

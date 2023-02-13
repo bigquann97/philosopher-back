@@ -28,12 +28,9 @@ public class Post extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "account_id")
   private Account account;
-
-  @Column(nullable = false)
-  private int recommendCount;
 
   @Column(nullable = false)
   private String title;
@@ -50,7 +47,6 @@ public class Post extends BaseEntity {
     this.title = title;
     this.content = content;
     this.images = images;
-    this.recommendCount = 0;
   }
 
   public Post(Account account, String title, String content) {
@@ -75,4 +71,5 @@ public class Post extends BaseEntity {
       return false;
     }
   }
+
 }
