@@ -43,24 +43,25 @@ public class AccountServiceImpl implements AccountService {
    */
   @Transactional
   @Override
-  public void signUp(List<MultipartFile> multipartFiles, SignUpRequestDto registerRequestDto) {
+  public void signUp(List<String> urlList, SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
-    AccountImage image = new AccountImage();
-    final AccountImage accountImage = checkByAccountFiles(image, multipartFiles);
-    String password = passwordEncoder.encode(registerRequestDto.getPassword());
-    Account account = registerRequestDto.toEntity(password, accountImage);
-    accountImageRepository.save(accountImage);
-    accountRepository.save(account);
+    for(int i=0; i<urlList.size(); i++){
+      System.out.println("data"+i+"is :" +urlList.get(i).toString());
+    }
+
+//    Account account = registerRequestDto.toEntity(passwordEncoder.encode(registerRequestDto.getPassword()));
+//    accountImageRepository.save(accountImage);
+//    accountRepository.save(account);
   }
 
-  private AccountImage checkByAccountFiles(AccountImage accountImage,List<MultipartFile> files) {
-    if (files.get(0).isEmpty()) {
-      return accountImage.updateImage("default_image.jpg");
-    }else{
-      return accountImage.updateImage(files.get(0).getOriginalFilename());
-    }
-  }
+//  private AccountImage checkByAccountFiles(AccountImage accountImage,List<MultipartFile> files) {
+//    if (files.get(0).isEmpty()) {
+//      return accountImage.updateImage("default_image.jpg");
+//    }else{
+//      return accountImage.updateImage(files.get(0).getOriginalFilename());
+//    }
+//  }
 
 
   /**

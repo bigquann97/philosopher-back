@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AccountService {
 
-  void signUp(List<MultipartFile> multipartFiles, SignUpRequestDto signUpRequestDto); // 회원가입
+  void signUp(List<String> urlList, SignUpRequestDto signUpRequestDto); // 회원가입
 
   SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response); // 로그인
 

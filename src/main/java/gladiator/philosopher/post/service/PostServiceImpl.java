@@ -38,9 +38,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
-      AccountDetails accountDetails
-  ) {
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, AccountDetails accountDetails) {
     List<PostImage> postImages = new ArrayList<>();
 
     Post post = Post.builder()

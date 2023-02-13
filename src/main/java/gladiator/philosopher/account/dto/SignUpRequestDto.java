@@ -37,14 +37,13 @@ public class SignUpRequestDto {
 
   private final String gender;
 
-  public Account toEntity(String password, AccountImage accountImage) {
+  public Account toEntity(String password) {
     return Account.builder()
         .email(this.getEmail())
         .password(password)
         .age(this.getAge())
         .nickname(this.getNickname())
         .gender(this.checkGender(this.getNickname()))
-        .accountImage(accountImage)
         .type(UserRole.ROLE_USER)
         .status(UserStatus.ACTIVATED).build();
   }
