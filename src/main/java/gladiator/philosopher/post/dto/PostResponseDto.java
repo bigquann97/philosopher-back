@@ -20,6 +20,8 @@ public class PostResponseDto {
 
   private final int recommendCount;
 
+  private final List<String> opinions;
+
   private final String content;
 
   private final LocalDateTime createDate;
@@ -36,5 +38,6 @@ public class PostResponseDto {
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();
     this.recommendCount = recommendCount;
+    this.opinions = post.getOpinions().stream().collect(Collectors.toList());
   }
 }

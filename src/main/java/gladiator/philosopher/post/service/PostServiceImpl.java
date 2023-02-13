@@ -45,6 +45,7 @@ public class PostServiceImpl implements PostService {
         .account(accountDetails.getAccount())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
+        .opinions(postRequestDto.getOpinions())
         .build();
 
     for (MultipartFile multipartFile : multipartFiles) {
