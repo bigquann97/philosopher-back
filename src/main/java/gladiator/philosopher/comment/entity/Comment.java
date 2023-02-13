@@ -44,8 +44,8 @@ public class Comment extends BaseEntity {
     this.content = content;
   }
 
-  public void modifyComment(CommentRequestDto commentRequestDto) {
-    this.content = commentRequestDto.getContent();
+  public void modifyComment(String content) {
+    this.content = content;
   }
 
   public void blind() {

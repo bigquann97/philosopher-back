@@ -67,7 +67,7 @@ public class Account extends BaseEntity {
     this.accountImage = accountImage;
   }
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "account_image_id")
   private AccountImage accountImage;
 
@@ -83,8 +83,9 @@ public class Account extends BaseEntity {
   }
 
   // testcode
-  public Account(String email, String password, int age, String nickname,
+  public Account(Long id,String email, String password, int age, String nickname,
       Gender gender, UserRole type, UserStatus status) {
+    this.id=id;
     this.email = email;
     this.password = password;
     this.age = age;
@@ -92,6 +93,10 @@ public class Account extends BaseEntity {
     this.gender = gender;
     this.type = type;
     this.status = status;
+  }
+
+  public void UpdateAccountRole(UserRole role){
+    this.type = role;
   }
 
 }

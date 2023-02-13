@@ -7,6 +7,7 @@ import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
@@ -152,10 +153,15 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
   }
 
   @Override
+<<<<<<< HEAD
+  public List<TestPostResponseDto> getPostAndAccount(Long id){
+    return postRepository.getPost(id);
+=======
   @Transactional
   public void checkRecommendCount(Post post) {
     if (recommendService.getPostRecommends(post).size() >= 3) {
       threadService.startThread(post);
     }
+>>>>>>> f2d8a8198dc422e08907684d1361c21319ed760d
   }
 }

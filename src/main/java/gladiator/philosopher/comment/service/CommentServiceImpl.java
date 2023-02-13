@@ -89,4 +89,19 @@ public class CommentServiceImpl implements CommentService {
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     return comment;
   }
+
+  @Override
+  @Transactional
+  public void modifyCommentByAdmin(Long id, CommentRequestDto commentRequestDto) {
+    Comment comment = getCommentEntity(id);
+    comment.modifyComment(comment.getContent());
+  }
+
+  @Override
+  @Transactional
+  public void deleteCommentByAdmin(Long id) {
+    Comment comment = getCommentEntity(id);
+    commentRepository.delete(comment);
+  }
+
 }

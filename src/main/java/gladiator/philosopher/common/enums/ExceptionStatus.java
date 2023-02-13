@@ -14,6 +14,7 @@ public enum ExceptionStatus {
   UNMATCHED_USER(400, "게시물 작성자가 아닙니다."),
   // 404 ->  NOT _ FOUND : 잘못된 리소스 접근 (ex. 존재하지 않는 값)
   POST_IS_NOT_EXIST(404, "존재하지 않는 게시물입니다."),
+  ACCOUNT_IS_NOT_EXIST(404," 존재하지 않는 사용자입니다. "),
   // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
   ACCOUNT_IS_EXIST(409, " 이미 등록된 사용자 입니다. "),
   ACCOUNT_NICKNAME_IS_EXIST(409, " 이미 사용중인 닉네임 입니다. ");

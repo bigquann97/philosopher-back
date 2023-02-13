@@ -19,4 +19,7 @@ public interface CommentService {
   void deleteComment(Long threadId, Long commentId, AccountDetails accountDetails);
 
   Comment getCommentEntity(Long id);
+
+  void modifyCommentByAdmin(Long id, CommentRequestDto commentRequestDto);
+  void deleteCommentByAdmin(Long id);
 }

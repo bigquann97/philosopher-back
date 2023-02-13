@@ -30,4 +30,9 @@ public class VerifyController {
     verifyEmailService.verifyEmail(email, code);
   }
 
+  // 사용자는 회원가입을 한다 -> 그리고 이메일 인증을 받는다 -> 인증을 받고 나면 회원 가입이 완료가 된다
+  // 다시 여쭤볼 것
+  // 회원가입 중간 시 이메일 인하기족
+
+
 }
