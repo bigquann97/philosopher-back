@@ -23,6 +23,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
   @Query(value = "UPDATE comment SET content = :content WHERE commentId = :commentId ", nativeQuery = true)
   void modify(Long commentId, String content);
 
+  /*
+   *  찐으로 해당 코멘트 쓴 사람 id찾기
+   */
+  @Transactional
+  @Query(value = "SELECT account_id from ACCOUNT WHERE id = :id", nativeQuery = true)
+  String findWriter(Long id);
+
   @Modifying
   @Transactional
   @Query(value = "DELETE FROM comment WHERE commentId = :commentId ", nativeQuery = true)

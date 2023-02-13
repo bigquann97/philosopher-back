@@ -13,9 +13,9 @@ public interface CommentService {
   CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
       AccountDetails accountDetails);
 
-  void modifyComment(Long commentId, String content);
+  void modifyComment(Long commentId, String content, Long id);
 
-  void deleteComment(Long commentId);
+  void deleteComment(Long commentId, Long id);
 
   Comment getCommentEntity(Long id);
 

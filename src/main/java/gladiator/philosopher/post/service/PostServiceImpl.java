@@ -13,7 +13,6 @@ import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.service.RecommendService;
-import gladiator.philosopher.thread.service.ThreadService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,19 +33,17 @@ public class PostServiceImpl implements PostService {
   private final ImageService imageService;
   private final PostImageRepository postImageRepository;
   private final RecommendService recommendService;
-  private final ThreadService threadService;
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
-      AccountDetails accountDetails
-  ) {
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, AccountDetails accountDetails) {
     List<PostImage> postImages = new ArrayList<>();
 
     Post post = Post.builder()
         .account(accountDetails.getAccount())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
+        .opinions(postRequestDto.getOpinions())
         .build();
 
     for (MultipartFile multipartFile : multipartFiles) {
@@ -84,7 +81,6 @@ public class PostServiceImpl implements PostService {
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
     int recommendCount = recommendService.getPostRecommends(post).size();
-//    checkRecommendCount(post); // 좋아요 수 확인하고, 3이상이면 쓰레드를 생성하는 메서드
     return new PostResponseDto(post, recommendCount);
   }
 
@@ -157,11 +153,4 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
     return postRepository.getPost(id);
   }
 
-  @Transactional
-  public void checkRecommendCount(Post post) {
-    if (recommendService.getPostRecommends(post).size() >= 3) {
-      threadService.startThread(post);
-    }
-  }
-  
 }

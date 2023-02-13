@@ -1,5 +1,6 @@
 package gladiator.philosopher.admin.controller;
 
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
@@ -40,6 +41,11 @@ public class AdminController {
   @GetMapping("/accounts")
   public List<UserInfoResponseDto> getAccounts() {
     return adminService.getUsersInfoList();
+  }
+
+  @GetMapping("/accountsV2")
+  public List<UserInfoResponseDto> getAccountsV2(AccountSearchCondition condition){
+    return adminService.getAccounts(condition);
   }
 
   /**

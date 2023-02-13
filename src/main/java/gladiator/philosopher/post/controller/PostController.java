@@ -1,14 +1,16 @@
 package gladiator.philosopher.post.controller;
 
+import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +31,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
+@Slf4j
 public class PostController {
 
   private final PostService postService;
+  private final S3Uploader s3Uploader;
+  private final String driName = "postImg";
 
   // /api/posts
   @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -41,7 +46,17 @@ public class PostController {
       @RequestPart("image") List<MultipartFile> multipartFiles,
       @RequestPart("dto") PostRequestDto postRequestDto,
       @AuthenticationPrincipal AccountDetails accountDetails) {
+//    log.info("file : " + multipartFiles);
+//
+//    try {
+//      List<String> urlList = s3Uploader.upLoadFile(multipartFiles, driName);
+//
+//    } catch (IOException e) {
+//      throw new RuntimeException(e);
+//    }
+
     postService.createPost(multipartFiles, postRequestDto, accountDetails);
+
   }
 
   // /api/posts?page=1
@@ -74,7 +89,7 @@ public class PostController {
   }
 
   @GetMapping("/test/{id}")
-  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id")Long id){
+  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
     return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
   }
 

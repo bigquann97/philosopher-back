@@ -46,8 +46,8 @@ public class ThreadServiceImpl implements ThreadService {
         .postImages(images)
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
-
-    notificationService.notifyToRecommendersThatThreadHasStarted(post);
+    
+    notificationService.notifyToRecommendersThatThreadHasStarted(post, thread);
 
     return threadRepository.save(thread);
   }

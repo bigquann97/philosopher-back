@@ -1,5 +1,6 @@
 package gladiator.philosopher.admin.service;
 
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
@@ -16,6 +17,7 @@ public interface AdminService {
 
   List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2();
 
+  List<UserInfoResponseDto> getAccounts(AccountSearchCondition condition);
 
 
 

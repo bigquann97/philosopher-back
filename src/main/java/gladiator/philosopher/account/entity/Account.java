@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Account extends BaseEntity {
 
   @Id
@@ -56,7 +55,7 @@ public class Account extends BaseEntity {
 
   @Builder
   public Account(String email, String password, int age, String nickname, Gender gender,
-      UserRole type, UserStatus status, AccountImage accountImage) {
+      UserRole type, UserStatus status) {
     this.email = email;
     this.password = password;
     this.age = age;
@@ -64,23 +63,20 @@ public class Account extends BaseEntity {
     this.gender = gender;
     this.type = type;
     this.status = status;
-    this.accountImage = accountImage;
   }
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "account_image_id")
-  private AccountImage accountImage;
 
-  public void changeProfile(String nickname, AccountImage accountImage) {
-    this.nickname = nickname;
-    if (!accountImage.getOriginalName().equals("default_image.jpg")) {
-      this.accountImage = accountImage;
-    }
-  }
 
-  public boolean hasDefaultAccountImage() {
-    return this.accountImage.getUniqueName().equals("default_image.jpg");
-  }
+//  public void changeProfile(String nickname, AccountImage accountImage) {
+//    this.nickname = nickname;
+//    if (!accountImage.getOriginalName().equals("default_image.jpg")) {
+//      this.accountImage = accountImage;
+//    }
+//  }
+//
+//  public boolean hasDefaultAccountImage() {
+//    return this.accountImage.getUniqueName().equals("default_image.jpg");
+//  }
 
   // testcode
   public Account(Long id,String email, String password, int age, String nickname,

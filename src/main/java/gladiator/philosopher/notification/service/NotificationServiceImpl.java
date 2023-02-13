@@ -6,7 +6,8 @@ import gladiator.philosopher.notification.entity.Notification;
 import gladiator.philosopher.notification.repository.NotificationRepository;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.entity.Recommend;
-import gladiator.philosopher.recommend.service.RecommendService;
+import gladiator.philosopher.report.dto.NotificationResponseDto;
+import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationServiceImpl implements NotificationService {
 
   private final NotificationRepository notificationRepository;
-  private final RecommendService recommendService;
 
   @Override
   @Transactional
-  public void notifyToRecommendersThatThreadHasStarted(final Post post) {
-    List<Recommend> recommends = recommendService.getPostRecommends(post);
-    for (Recommend recommend : recommends) {
+  public void notifyToRecommendersThatThreadHasStarted(final Post post, final Thread thread) {
+    for (Recommend recommend : thread.getRecommends()) {
       Account user = recommend.getAccount();
       String content =
           user.getNickname() + "님이 추천을 누른 \"" + post.getTitle() + "\" 게시글에 대한 회의장이 열렸습니다!";

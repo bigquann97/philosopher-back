@@ -1,6 +1,8 @@
 package gladiator.philosopher.admin.service;
 
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
@@ -20,9 +22,17 @@ public class AdminServiceImpl implements AdminService {
   private final ReportService reportService;
   private final AccountService accountService;
   private final ThreadService threadService;
+  private final AccountRepository accountRepository;
+
   @Override
   public List<UserInfoResponseDto> getUsersInfoList() {
     return accountService.selectAccountsInfo();}
+
+  @Override
+  public List<UserInfoResponseDto> getAccounts(AccountSearchCondition condition) {
+    return accountRepository.searchAccount(condition);
+  }
+
   @Override
   public List<ReportResponseDto> getReports() {
     return reportService.getReports();
