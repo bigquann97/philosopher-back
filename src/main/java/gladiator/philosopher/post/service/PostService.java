@@ -30,4 +30,6 @@ public interface PostService {
   void modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
 // postId만 필요할 경우 postId 존재 확인 후 postId를 반환
 //  Long existsPostId(Long id);
+
+  void checkRecommendCount(Post post);
 }
