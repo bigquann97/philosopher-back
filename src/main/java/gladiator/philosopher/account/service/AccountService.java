@@ -8,10 +8,11 @@ import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import java.util.List;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AccountService {
 
-  void signUp(SignUpRequestDto signUpRequestDto); // 회원가입
+  void signUp(List<MultipartFile> multipartFiles, SignUpRequestDto signUpRequestDto); // 회원가입
 
   SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response); // 로그인
 
@@ -24,9 +25,9 @@ public interface AccountService {
 
   Account getAccount(Long id); // 사용자 가지고 오기 ( 단건조회 )
 
-  void UpdateAccountRole(Account account);
+  void UpdateAccountRole(Account account); // 권한 업데이트 ( 어드민 )
 
-  SignInResponseDto reissue(TokenRequestDto tokenRequestDto, HttpServletResponse response);
+  SignInResponseDto reissue(TokenRequestDto tokenRequestDto, HttpServletResponse response); // 토큰 재발행
 
-  void signOut(Account account);
+  void signOut(Account account); // 로그아웃
 }

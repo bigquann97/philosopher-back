@@ -11,7 +11,6 @@ import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import java.util.List;
 import gladiator.philosopher.common.jwt.TokenDto;
@@ -19,13 +18,16 @@ import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.util.RedisUtil;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class AccountServiceImpl implements AccountService {
 
   private final AccountRepository accountRepository;
@@ -41,15 +43,25 @@ public class AccountServiceImpl implements AccountService {
    */
   @Transactional
   @Override
-  public void signUp(SignUpRequestDto registerRequestDto) {
+  public void signUp(List<MultipartFile> multipartFiles, SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
-    AccountImage image = new AccountImage("default_image.jpg");
+    AccountImage image = new AccountImage();
+    final AccountImage accountImage = checkByAccountFiles(image, multipartFiles);
     String password = passwordEncoder.encode(registerRequestDto.getPassword());
-    Account account = registerRequestDto.toEntity(password, image);
-    accountImageRepository.save(image);
+    Account account = registerRequestDto.toEntity(password, accountImage);
+    accountImageRepository.save(accountImage);
     accountRepository.save(account);
   }
+
+  private AccountImage checkByAccountFiles(AccountImage accountImage,List<MultipartFile> files) {
+    if (files.get(0).isEmpty()) {
+      return accountImage.updateImage("default_image.jpg");
+    }else{
+      return accountImage.updateImage(files.get(0).getOriginalFilename());
+    }
+  }
+
 
   /**
    * 로그인
@@ -71,6 +83,7 @@ public class AccountServiceImpl implements AccountService {
     return SignInResponseDto.of(account.getEmail(), tokenDto.getAccessToken(),
         tokenDto.getRefreshToken());
   }
+
 
   @Override
   @Transactional
@@ -122,6 +135,7 @@ public class AccountServiceImpl implements AccountService {
       throw new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION);
     }
   }
+
 
   /**
    * 유저 아이디로 유저 객체 찾기
@@ -176,8 +190,10 @@ public class AccountServiceImpl implements AccountService {
 
   @Transactional
   public void UpdateAccountRole(Account account) {
-    if (account.getType().equals(UserRole.ROLE_USER)) {account.UpdateAccountRole(UserRole.ROLE_ADMIN);
-    } else {account.UpdateAccountRole(UserRole.ROLE_USER);
+    if (account.getType().equals(UserRole.ROLE_USER)) {
+      account.UpdateAccountRole(UserRole.ROLE_ADMIN);
+    } else {
+      account.UpdateAccountRole(UserRole.ROLE_USER);
     }
   }
 

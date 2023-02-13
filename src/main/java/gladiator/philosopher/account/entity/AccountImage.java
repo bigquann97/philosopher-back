@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AccountImage {
 
@@ -53,6 +52,16 @@ public class AccountImage {
 
   private boolean isSupportedFormat(String ext) {
     return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
+  }
+
+  public AccountImage updateImage(String originalFilename) {
+    this.uniqueName = originalFilename;
+    return AccountImage.builder()
+        .originalName(originalFilename)
+        .build();
+  }
+
+  public AccountImage(){
   }
 
 }

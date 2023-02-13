@@ -22,24 +22,41 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
+  /**
+   * 카테고리 생성
+   * @param dto
+   */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public void createCategory(final CategoryRequestDto dto) {
     categoryService.createCategory(dto);
   }
 
+  /**
+   * 카테고리 선택
+   * @return
+   */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<CategoryResponseDto> selectCategories() {
     return categoryService.selectAllCategories();
   }
 
+  /**
+   * 카테고리 삭제
+   * @param categoryId
+   */
   @DeleteMapping("/{categoryId}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteCategory(@PathVariable final Long categoryId) {
     categoryService.deleteCategory(categoryId);
   }
 
+  /**
+   * 카테고리 수정
+   * @param categoryId
+   * @param dto
+   */
   @PutMapping("/{categoryId}")
   public void modifyCategory(
       final @PathVariable Long categoryId,
