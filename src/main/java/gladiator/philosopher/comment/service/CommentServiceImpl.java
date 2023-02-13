@@ -52,18 +52,28 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public void modifyComment(Long commentId, String content) {
+  public void modifyComment(Long commentId, String content, Long id) {
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    commentRepository.modify(commentId, content);
+    String writerId = commentRepository.findWriter(commentId);
+    if (id.equals(writerId)) {
+      commentRepository.modify(commentId, content);
+    } else {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
   }
 
   @Override
   @Transactional
-  public void deleteComment(Long commentId) {
+  public void deleteComment(Long commentId, Long id) {
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    commentRepository.delete(comment);
+    String writerId = commentRepository.findWriter(commentId);
+    if (id.equals(writerId)) {
+      commentRepository.delete(comment);
+    } else {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
   }
 
   @Override

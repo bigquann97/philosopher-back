@@ -1,5 +1,6 @@
 package gladiator.philosopher.comment.controller;
 
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.service.CommentService;
@@ -57,14 +58,21 @@ public class CommentController {
   @PutMapping("/api/comment/{commentId}")
   public void modifyComment(@RequestBody CommentRequestDto commentRequestDto,
       @PathVariable Long commentId, @AuthenticationPrincipal AccountDetails accountDetails) {
-    commentService.modifyComment(commentId, commentRequestDto.getContent());
+    String content = commentRequestDto.getContent();
+    Account account = accountDetails.getAccount();
+    Long id = account.getId();
+    commentService.modifyComment(commentId, content, id);
+
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/api/comment/{commentId}")
-  public void deleteComment(@PathVariable Long commentId,
+  public void deleteComment(@PathVariable Long commentId, CommentRequestDto commentRequestDto,
       @AuthenticationPrincipal AccountDetails accountDetails) {
-    commentService.deleteComment(commentId);
+    String content = commentRequestDto.getContent();
+    Account account = accountDetails.getAccount();
+    Long id = account.getId();
+    commentService.deleteComment(commentId, id);
   }
 
 }
