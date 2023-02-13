@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Account extends BaseEntity {
 
   @Id
@@ -66,9 +65,7 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "account_image_id")
-  private AccountImage accountImage;
+
 
 //  public void changeProfile(String nickname, AccountImage accountImage) {
 //    this.nickname = nickname;

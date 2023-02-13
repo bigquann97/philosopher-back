@@ -4,8 +4,8 @@ import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.entity.AccountImage;
-import gladiator.philosopher.account.repository.AccountImageRepository;
+import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.common.enums.UserRole;
@@ -23,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountServiceImpl implements AccountService {
 
   private final AccountRepository accountRepository;
-  private final AccountImageRepository accountImageRepository;
+  private final AccountInfoRepository accountInfoRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisUtil redisUtil;
@@ -46,23 +45,12 @@ public class AccountServiceImpl implements AccountService {
   public void signUp(List<String> urlList, SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
-    for(int i=0; i<urlList.size(); i++){
-      System.out.println("data"+i+"is :" +urlList.get(i).toString());
-    }
-
-//    Account account = registerRequestDto.toEntity(passwordEncoder.encode(registerRequestDto.getPassword()));
-//    accountImageRepository.save(accountImage);
-//    accountRepository.save(account);
+    String url = urlList.get(0);
+    Account account = registerRequestDto.toEntity(passwordEncoder.encode(registerRequestDto.getPassword()));
+    accountRepository.save(account);
+    AccountInfo accountInfo = new AccountInfo(account, url);
+    accountInfoRepository.save(accountInfo);
   }
-
-//  private AccountImage checkByAccountFiles(AccountImage accountImage,List<MultipartFile> files) {
-//    if (files.get(0).isEmpty()) {
-//      return accountImage.updateImage("default_image.jpg");
-//    }else{
-//      return accountImage.updateImage(files.get(0).getOriginalFilename());
-//    }
-//  }
-
 
   /**
    * 로그인

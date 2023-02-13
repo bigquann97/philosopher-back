@@ -38,14 +38,19 @@ public class AccountController {
   /**
    * 회원가입
    */
-  @PostMapping(value = "/sign-up",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
+  @PostMapping(value = "/sign-up", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
       MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
   public void signUp(@RequestPart("image") List<MultipartFile> multipartFiles,
-      @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto) throws IOException {
-    log.info("file : "+multipartFiles);
-    List<String> urlList = s3Uploader.upLoadFile(multipartFiles, dirName);
-    accountService.signUp(urlList, signUpRequestDto);
+      @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto) {
+    log.info("file : " + multipartFiles);
+    try {
+      s3Uploader.checkByFiles(multipartFiles);
+      List<String> urlList = s3Uploader.upLoadFile(multipartFiles, dirName);
+      accountService.signUp(urlList, signUpRequestDto);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
@@ -60,18 +65,21 @@ public class AccountController {
 
   /**
    * 토큰 재발행
+   *
    * @param tokenRequestDto
    * @param response
    * @return
    */
   @PostMapping("/re-issue")
   @ResponseStatus(HttpStatus.OK)
-  public SignInResponseDto reissue(@RequestBody TokenRequestDto tokenRequestDto, HttpServletResponse response) {
+  public SignInResponseDto reissue(@RequestBody TokenRequestDto tokenRequestDto,
+      HttpServletResponse response) {
     return accountService.reissue(tokenRequestDto, response);
   }
 
   /**
    * 로그아웃 -> redis 속 리프레시 토큰 삭제
+   *
    * @param accountDetails
    */
   @DeleteMapping("/sign-out")

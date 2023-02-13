@@ -5,10 +5,13 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +29,8 @@ public class S3Uploader {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  public List<String> upLoadFile(List<MultipartFile> multipartFiles, String dirName) throws IOException {
+  public List<String> upLoadFile(List<MultipartFile> multipartFiles, String dirName)
+      throws IOException {
     List<String> resultUrlList = new ArrayList<>();
 
     for (MultipartFile multipartFile : multipartFiles) {
@@ -59,4 +63,45 @@ public class S3Uploader {
     DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
     amazonS3Client.deleteObject(request);
   }
+
+  public boolean checkFileExtension(List<MultipartFile> files) {
+    List<String> extension = new ArrayList<>();
+    boolean result = true;
+
+    files.forEach(multipartFile -> {
+      int index = multipartFile.getOriginalFilename().lastIndexOf(".");
+      extension.add(multipartFile.getOriginalFilename().substring(index + 1));
+      log.info(multipartFile.getOriginalFilename().substring(index + 1));
+    });
+    for (String check : extension) {
+      String checkCase = check.toLowerCase(Locale.ROOT);
+      switch (checkCase) {
+        case "jpg":
+          break;
+        case "png":
+          break;
+        case "jpeg":
+          break;
+        default:
+          result = false;
+          break;
+      }
+    }
+    return result;
+  }
+
+  // 확장자가 참인지 아닌지 -
+  public void checkByFiles(List<MultipartFile> files) {
+    boolean result = checkFileExtension(files);
+    if (result) {
+      return;
+    } else {
+      if (files.get(0).getOriginalFilename().equals("")) {
+        return;
+      } else {
+        throw new CustomException(ExceptionStatus.IMAGEEXTENSION_IS_NOT_ALLOW);
+      }
+    }
+  }
+
 }
