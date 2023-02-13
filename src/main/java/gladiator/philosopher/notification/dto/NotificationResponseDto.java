@@ -1,4 +1,4 @@
-package gladiator.philosopher.report.dto;
+package gladiator.philosopher.notification.dto;
 
 import gladiator.philosopher.notification.entity.Notification;
 import java.time.LocalDateTime;

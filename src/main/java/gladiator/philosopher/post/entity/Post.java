@@ -4,10 +4,13 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
+import gladiator.philosopher.post.dto.PostStatus;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,6 +44,9 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String content;
 
+  @Enumerated(EnumType.STRING)
+  private PostStatus status = PostStatus.ACTIVE;
+
   @Builder
   public Post(Account account, String title, String content, List<PostImage> images) {
     this.account = account;
@@ -61,7 +67,11 @@ public class Post extends BaseEntity {
   }
 
   public void blind() {
+    this.status = PostStatus.BLINDED;
+  }
 
+  public void releaseBlind() {
+    this.status = PostStatus.ACTIVE;
   }
 
   public boolean isWriter(AccountDetails memberDetails) {

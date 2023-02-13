@@ -1,12 +1,12 @@
 package gladiator.philosopher.notification.service;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.notification.entity.Notification;
 import gladiator.philosopher.notification.repository.NotificationRepository;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.recommend.service.RecommendService;
-import gladiator.philosopher.report.dto.NotificationResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

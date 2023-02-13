@@ -1,11 +1,13 @@
 package gladiator.philosopher.comment.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.comment.dto.CommentRequestDto;
+import gladiator.philosopher.comment.dto.CommentStatus;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.thread.entity.Thread;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +37,9 @@ public class Comment extends BaseEntity {
   @Column(nullable = false)
   private String content;
 
+  @Enumerated(EnumType.STRING)
+  private CommentStatus status;
+
   @Builder
   public Comment(Long id, Account account, Thread thread, String content) {
 
@@ -49,7 +54,12 @@ public class Comment extends BaseEntity {
   }
 
   public void blind() {
-
+    this.status = CommentStatus.BLINDED;
   }
+
+  public void releaseBlind() {
+    this.status = CommentStatus.ACTIVE;
+  }
+
 
 }

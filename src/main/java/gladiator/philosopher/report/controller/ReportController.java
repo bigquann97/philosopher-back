@@ -18,8 +18,11 @@ public class ReportController {
 
   private final ReportService reportService;
 
+  // /api/report/post?id=10
   @PostMapping("/post")
-  public void reportPost(@RequestParam Long id, @RequestBody ReportRequestDto dto,
+  public void reportPost(
+      @RequestParam Long id,
+      @RequestBody ReportRequestDto dto,
       @AuthenticationPrincipal AccountDetails accountDetails) {
     reportService.reportPost(id, dto, accountDetails.getAccount());
   }
