@@ -1,6 +1,6 @@
 package gladiator.philosopher.thread.service;
 
-import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDto;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
@@ -29,8 +29,8 @@ public interface ThreadService {
 
   Thread getThreadEntity(Long id);
 
-  List<Thread> getThreads();
+//  Page<ThreadsSimpleResponseDtoByAdmin> getThreads(ThreadSearchCond cond);
 
-  List<ThreadsSimpleResponseDto> getThreadsV2();
+  List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2();
 
 }

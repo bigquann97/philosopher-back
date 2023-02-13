@@ -65,8 +65,6 @@ public class Thread extends BaseEntity {
     this.endTime = endTime;
   }
 
-
-
   public Thread finishThread() {
     this.status = ThreadStatus.ARCHIVED;
     return this;

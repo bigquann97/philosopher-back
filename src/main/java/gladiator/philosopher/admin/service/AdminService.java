@@ -1,12 +1,12 @@
 package gladiator.philosopher.admin.service;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDto;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface AdminService {
 
@@ -14,9 +14,7 @@ public interface AdminService {
   List<ReportResponseDto> getReports(); // 모든 신고 조회
   void modifyUserRole(Account account); // 권한 수정
 
-  List<Thread> getThreads();
-
-  List<ThreadsSimpleResponseDto> getThreadsV2();
+  List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2();
 
 
 

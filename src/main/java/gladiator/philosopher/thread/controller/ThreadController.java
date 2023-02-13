@@ -57,6 +57,7 @@ public class ThreadController {
     return threadService.getArchivedThreads(ThreadSearchCond.of(page, sort, word));
   }
 
+  // 쓰레드 시작 -> test를 위해 만들어 놨음
   @PostMapping("/test/{id}")
   public void startThreadTest(@PathVariable("id")Long id){
     threadService.startThread(postService.getPostEntity(id));

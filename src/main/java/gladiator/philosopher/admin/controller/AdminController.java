@@ -1,7 +1,7 @@
 package gladiator.philosopher.admin.controller;
 
 import gladiator.philosopher.account.service.AccountService;
-import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDto;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
@@ -103,13 +103,8 @@ public class AdminController {
   /**
    * 쓰레드 목록 조회
    */
-  @GetMapping("/threads")
-  public ResponseEntity<List<Thread>> getThreads(){
-    return ResponseEntity.status(200).body(adminService.getThreads());
-  }
-
   @GetMapping("/threadsV2")
-  public ResponseEntity<List<ThreadsSimpleResponseDto>> getThreadsV2(){
+  public ResponseEntity<List<ThreadsSimpleResponseDtoByAdmin>> getThreadsV2(){
     return ResponseEntity.status(200).body(adminService.getThreadsV2());
   }
 

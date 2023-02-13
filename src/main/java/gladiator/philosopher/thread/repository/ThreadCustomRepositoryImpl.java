@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.post.entity.QPostImage;
 import gladiator.philosopher.recommend.entity.QRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
@@ -42,6 +43,21 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.account = QAccount.account;
     this.postImage = QPostImage.postImage;
   }
+
+//  @Override
+//  public Page<Thread> getThreads(ThreadSearchCond cond) {
+//    Pageable pageable = cond.getPageable();
+//    List<Thread> result = jpaQueryFactory.select(thread)
+//        .from(thread)
+//        .leftJoin(thread.postImages, postImage)
+//        .leftJoin(thread.recommends, recommend)
+//        .leftJoin(thread.account, account)
+//        .groupBy(thread.id)
+//        .offset(pageable.getOffset())
+//        .limit(pageable.getPageSize()).fetch();
+//
+//    return new PageImpl<>(result);
+//  }
 
   public Page<ThreadResponseDto> searchList(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
