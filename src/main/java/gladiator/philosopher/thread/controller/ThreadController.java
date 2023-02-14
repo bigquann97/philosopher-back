@@ -36,10 +36,10 @@ public class ThreadController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public Page<ThreadSimpleResponseDto> selectActiveThreads(
-      @RequestParam(required = false) final Long category,
-      @RequestParam(required = false) final Integer page,
-      @RequestParam(required = false) final Sort sort,
-      @RequestParam(required = false) final String word
+      final @RequestParam(required = false) Long category,
+      final @RequestParam(required = false) Integer page,
+      final @RequestParam(required = false) Sort sort,
+      final @RequestParam(required = false) String word
   ) {
     return threadService.selectActiveThreads(ThreadSearchCond.of(page, sort, word, category));
   }
@@ -48,10 +48,10 @@ public class ThreadController {
   @GetMapping("/archived")
   @ResponseStatus(HttpStatus.OK)
   public Page<ThreadSimpleResponseDto> selectArchivedThreads(
-      @RequestParam(required = false) final Long category,
-      @RequestParam(required = false) final Integer page,
-      @RequestParam(required = false) final Sort sort,
-      @RequestParam(required = false) final String word
+      final @RequestParam(required = false) Long category,
+      final @RequestParam(required = false) Integer page,
+      final @RequestParam(required = false) Sort sort,
+      final @RequestParam(required = false) String word
   ) {
     return threadService.selectArchivedThreads(ThreadSearchCond.of(page, sort, word, category));
   }
