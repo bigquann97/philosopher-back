@@ -4,6 +4,8 @@ import gladiator.philosopher.account.dto.SignInRequestDto;
 import gladiator.philosopher.account.dto.SignInResponseDto;
 import gladiator.philosopher.account.dto.SignUpRequestDto;
 import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
@@ -41,13 +43,12 @@ public class AccountController {
   @PostMapping(value = "/sign-up", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
       MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
-  public void signUp(@RequestPart("image") List<MultipartFile> multipartFiles,
-      @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto) {
-    log.info("file : " + multipartFiles);
+  public void signUp(@RequestPart("image") MultipartFile multipartFiles,
+      @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto)  {
     try {
-      s3Uploader.checkByFiles(multipartFiles);
-      final List<String> list = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-      accountService.signUp(list, signUpRequestDto);
+      s3Uploader.checkFileExtension(multipartFiles);
+      final String imageUrl = s3Uploader.upLoadFileToSingle(multipartFiles, dirName);
+      accountService.signUp(imageUrl, signUpRequestDto);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

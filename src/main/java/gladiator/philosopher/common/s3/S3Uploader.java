@@ -10,6 +10,7 @@ import gladiator.philosopher.common.exception.CustomException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -28,6 +29,15 @@ public class S3Uploader {
   private final AmazonS3Client amazonS3Client;
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
+  private final static String Extension[] = {"jpg","jpeg","png",""};
+
+  /**
+   * 단일 파일 업로드
+   * @param multipartFile
+   * @param dirName
+   * @return
+   * @throws IOException
+   */
   public String upLoadFileToSingle(MultipartFile multipartFile, String dirName)throws IOException {
     ObjectMetadata objectMetadata = new ObjectMetadata();
     objectMetadata.setContentLength(multipartFile.getSize());
@@ -40,6 +50,14 @@ public class S3Uploader {
 
     return uploadImageUrl;
   }
+
+  /**
+   * 다중 파일 업로드
+   * @param multipartFiles
+   * @param dirName
+   * @return
+   * @throws IOException
+   */
   public List<String> upLoadFileToMulti(List<MultipartFile> multipartFiles, String dirName)
       throws IOException {
     List<String> resultUrlList = new ArrayList<>();
@@ -61,7 +79,13 @@ public class S3Uploader {
   }
 
 
-  // S3로 업로드
+  /**
+   * S3 업로드
+   * @param file
+   * @param fileName
+   * @param objectMetadata
+   * @return
+   */
   private String putS3(InputStream file, String fileName, ObjectMetadata objectMetadata) {
     amazonS3Client.putObject(
         new PutObjectRequest(bucket, fileName, file, objectMetadata).withCannedAcl(
@@ -69,18 +93,34 @@ public class S3Uploader {
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
 
-  // S3에서 삭제
+  /**
+   * S3 삭제
+   * @param fileName
+   */
   public void deleteS3(String fileName) {
     DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
     amazonS3Client.deleteObject(request);
   }
 
-  public boolean checkFileExtension(MultipartFile file){
-    String extension;
-    boolean result = true;
-    file.getOriginalFilename().lastIndexOf(".");
-    return result;
+  /**
+   * 단일 파일 확장자 검사
+   * @param file
+   * @return
+   */
+  public void checkFileExtension(MultipartFile file){
+    int index = file.getOriginalFilename().lastIndexOf(".");
+    String substring = file.getOriginalFilename().substring(index + 1);
+    boolean b = Arrays.stream(Extension).anyMatch(check -> check.equalsIgnoreCase(substring));
+    System.out.println(b);
+    if(!b)
+      throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
   }
+
+  /**
+   * 다중 파일 확장자 검사
+   * @param files
+   * @return
+   */
   public boolean checkFilesExtension(List<MultipartFile> files) {
     List<String> extension = new ArrayList<>();
     boolean result = true;
@@ -116,13 +156,9 @@ public class S3Uploader {
       if (files.get(0).getOriginalFilename().equals("")) {
         return;
       } else {
-        throw new CustomException(ExceptionStatus.IMAGEEXTENSION_IS_NOT_ALLOW);
+        throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
       }
     }
-  }
-
-  public void checkByFile(MultipartFile file){
-
   }
 
 }
