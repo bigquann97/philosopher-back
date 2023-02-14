@@ -39,7 +39,7 @@ public class Recommend {
   @Column(name = "recommend_id")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
 
@@ -47,11 +47,11 @@ public class Recommend {
   @JoinColumn(name = "post_id")
   private Post post;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "thread_id")
   private Thread thread;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "comment_id")
   private Comment comment;
 

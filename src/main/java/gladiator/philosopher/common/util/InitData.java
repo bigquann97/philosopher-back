@@ -6,15 +6,23 @@ import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.repository.CategoryRepository;
+import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.enums.UserStatus;
+import gladiator.philosopher.mention.entity.Mention;
+import gladiator.philosopher.mention.repository.MentionRepository;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.recommend.repository.RecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
+import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -40,6 +48,10 @@ public class InitData implements ApplicationRunner {
   private final AccountInfoRepository accountInfoRepository;
   private final PostOpinionRepository postOpinionRepository;
   private final CategoryRepository categoryRepository;
+  private final CommentRepository commentRepository;
+  private final MentionRepository mentionRepository;
+  private final RecommendRepository recommendRepository;
+  private final ThreadOpinionRepository threadOpinionRepository;
 
 
   @Override
@@ -74,36 +86,36 @@ public class InitData implements ApplicationRunner {
     accountRepository.save(account5);
 
     // 카테고리
-    Category category1 = new Category(1L,"철학");
+    Category category1 = new Category(1L, "철학");
     categoryRepository.save(category1);
-    Category category2 = new Category(2L,"인문");
+    Category category2 = new Category(2L, "인문");
     categoryRepository.save(category2);
-    Category category3 = new Category(3L,"사회");
+    Category category3 = new Category(3L, "사회");
     categoryRepository.save(category3);
-    Category category4 = new Category(4L,"연애");
+    Category category4 = new Category(4L, "연애");
     categoryRepository.save(category4);
-    Category category5 = new Category(5L,"논쟁");
+    Category category5 = new Category(5L, "논쟁");
     categoryRepository.save(category5);
 
     // 게시글 부
     List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
 
-    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", null,category1);
+    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", null, category1);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", null,category1);
+    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", null, category1);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", null,category2);
+    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", null, category2);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", null,category2);
+    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", null, category2);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", null,category4);
+    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", null, category4);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null,category5);
+    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null, category5);
     postRepository.save(post6);
 
     List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
@@ -127,12 +139,32 @@ public class InitData implements ApplicationRunner {
     postOpinionRepository.saveAll(list6);
 
     // 쓰레드 부
-    Thread thread2 = new Thread(post4.getTitle(), post4.getContent(), account4, LocalDateTime.now(),
+    Thread thread1 = new Thread(post4.getTitle(), post4.getContent(), account4, LocalDateTime.now(),
+        null);
+    threadRepository.save(thread1);
+    Thread thread2 = new Thread(post5.getTitle(), post5.getContent(), account5, LocalDateTime.now(),
         null);
     threadRepository.save(thread2);
-    Thread thread3 = new Thread(post5.getTitle(), post5.getContent(), account5, LocalDateTime.now(),
-        null);
-    threadRepository.save(thread3);
+
+    ThreadOpinion threadOpinion1 = new ThreadOpinion(thread1, "한다");
+    ThreadOpinion threadOpinion2 = new ThreadOpinion(thread1, "안한다");
+    threadOpinionRepository.save(threadOpinion1);
+    threadOpinionRepository.save(threadOpinion2);
+
+    Comment comment = new Comment(account1, thread2, "내용", "의견1");
+    Comment comment2 = new Comment(account2, thread2, "내용", "의견2");
+
+    commentRepository.save(comment);
+    commentRepository.save(comment2);
+
+    Mention mention = new Mention(comment, comment2);
+    mentionRepository.saveAndFlush(mention);
+
+    Recommend recommend1 = new Recommend(comment, account1);
+    Recommend recommend2 = new Recommend(comment, account1);
+    recommendRepository.save(recommend1);
+    recommendRepository.save(recommend2);
+
 
   }
 

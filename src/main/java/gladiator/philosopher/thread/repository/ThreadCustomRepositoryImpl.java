@@ -1,7 +1,8 @@
 package gladiator.philosopher.thread.repository;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -17,7 +18,6 @@ import gladiator.philosopher.thread.entity.QThreadImage;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadLocation;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -96,8 +96,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .leftJoin(thread.account, account)
         .where(
             threadStatusEq(ThreadLocation.CONTINUE),
-            titleContainsWord(cond.getWord())
-                .or(contentContainsWord(cond.getWord())),
+            titleOrContentContainsWord(cond.getWord()),
             categoryEq(cond)
         )
         .groupBy(thread.id)
@@ -115,8 +114,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .leftJoin(thread.account, account)
         .where(
             threadStatusEq(ThreadLocation.CONTINUE),
-            titleContainsWord(cond.getWord())
-                .or(contentContainsWord(cond.getWord())),
+            titleOrContentContainsWord(cond.getWord()),
             categoryEq(cond)
         )
         .groupBy(thread.id)
@@ -149,8 +147,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .leftJoin(thread.account, account)
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),
-            titleContainsWord(cond.getWord())
-                .or(contentContainsWord(cond.getWord())),
+            titleOrContentContainsWord(cond.getWord()),
             categoryEq(cond)
         )
         .groupBy(thread.id)
@@ -168,8 +165,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .leftJoin(thread.account, account)
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),
-            titleContainsWord(cond.getWord())
-                .or(contentContainsWord(cond.getWord())),
+            titleOrContentContainsWord(cond.getWord()),
             categoryEq(cond)
         )
         .groupBy(thread.id)
@@ -199,26 +195,13 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     }
   }
 
-  private BooleanExpression contentContainsWord(String word) {
-    return thread.content.containsIgnoreCase(word);
-  }
-
-  private BooleanExpression titleContainsWord(String word) {
-    return thread.title.containsIgnoreCase(word);
+  private BooleanExpression titleOrContentContainsWord(String word) {
+    return hasText(word) ? thread.content.containsIgnoreCase(word)
+        .or(thread.content.containsIgnoreCase(word)) : null;
   }
 
   private BooleanExpression threadStatusEq(ThreadLocation location) {
     return thread.location.eq(location);
   }
-
-
-  private Predicate searchByContent(String word) {
-    return Objects.nonNull(word) ? thread.content.containsIgnoreCase(word) : null;
-  }
-
-  private BooleanExpression searchByTitle(String word) {
-    return Objects.nonNull(word) ? thread.title.containsIgnoreCase(word) : null;
-  }
-
 
 }

@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentRequestDto {
 
+  private String opinion;
   private String content;
 
-  public CommentRequestDto(final String content) {
+  public CommentRequestDto(final String content, final String opinion) {
     this.content = content;
   }
 
@@ -20,7 +21,8 @@ public class CommentRequestDto {
     return Comment.builder()
         .account(account)
         .thread(thread)
-        .content(content)
+        .content(this.content)
+        .opinion(this.opinion)
         .build();
   }
 }

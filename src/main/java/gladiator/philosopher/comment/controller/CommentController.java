@@ -6,8 +6,8 @@ import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/comments")
 public class CommentController {
 
   private final CommentService commentService;
@@ -33,10 +36,13 @@ public class CommentController {
    * @return
    */
   @ResponseStatus(HttpStatus.OK)
-  @GetMapping("/api/{threadId}/comment")
-  public List<CommentResponseDto> getComments(final @PathVariable Long threadId) {
+  @GetMapping("/thread/{threadId}")
+  public Page<CommentResponseDto> selectCommentsWithPaging(
+      final @PathVariable Long threadId,
+      final @RequestParam(required = false, defaultValue = "1") int page
+  ) {
     Thread thread = threadService.getThreadEntity(threadId);
-    return commentService.getComments(thread);
+    return commentService.selectCommentsWithPaging(thread, page - 1);
   }
 
   /**
@@ -48,7 +54,7 @@ public class CommentController {
    * @return
    */
   @ResponseStatus(HttpStatus.OK)
-  @PostMapping("/api/{threadId}/comment")
+  @PostMapping("/thread/{threadId}")
   public void createComment(
       final @RequestBody CommentRequestDto commentRequestDto,
       final @PathVariable Long threadId,
@@ -58,7 +64,7 @@ public class CommentController {
   }
 
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping("/api/comment/{commentId}")
+  @PutMapping("/{commentId}")
   public void modifyComment(
       final @RequestBody CommentRequestDto commentRequestDto,
       final @PathVariable Long commentId,
@@ -67,7 +73,7 @@ public class CommentController {
   }
 
   @ResponseStatus(HttpStatus.OK)
-  @DeleteMapping("/api/comment/{commentId}")
+  @DeleteMapping("/{commentId}")
   public void deleteComment(
       final @PathVariable Long commentId,
       final CommentRequestDto commentRequestDto,
