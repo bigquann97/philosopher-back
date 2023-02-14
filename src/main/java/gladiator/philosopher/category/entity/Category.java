@@ -32,4 +32,10 @@ public class Category extends BaseEntity {
     this.name = name;
     return this;
   }
+
+  //test 생성자
+  public Category(Long id, String name){
+    this.id =id;
+    this.name = name;
+  }
 }

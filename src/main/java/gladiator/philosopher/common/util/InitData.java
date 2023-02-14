@@ -4,6 +4,8 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountInfo;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.category.repository.CategoryRepository;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.enums.UserStatus;
@@ -37,6 +39,7 @@ public class InitData implements ApplicationRunner {
   private final PostImageRepository postImageRepository;
   private final AccountInfoRepository accountInfoRepository;
   private final PostOpinionRepository postOpinionRepository;
+  private final CategoryRepository categoryRepository;
 
 
   @Override
@@ -70,25 +73,37 @@ public class InitData implements ApplicationRunner {
         "김관호", Gender.FEMALE, UserRole.ROLE_USER, UserStatus.SUSPENDED);
     accountRepository.save(account5);
 
+    // 카테고리
+    Category category1 = new Category(1L,"철학");
+    categoryRepository.save(category1);
+    Category category2 = new Category(2L,"인문");
+    categoryRepository.save(category2);
+    Category category3 = new Category(3L,"사회");
+    categoryRepository.save(category3);
+    Category category4 = new Category(4L,"연애");
+    categoryRepository.save(category4);
+    Category category5 = new Category(5L,"논쟁");
+    categoryRepository.save(category5);
+
     // 게시글 부
     List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
 
-    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", null);
+    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", null,category1);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", null);
+    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", null,category1);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", null);
+    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", null,category2);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", null);
+    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", null,category2);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", null);
+    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", null,category4);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null);
+    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null,category5);
     postRepository.save(post6);
 
     List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
@@ -118,7 +133,6 @@ public class InitData implements ApplicationRunner {
     Thread thread3 = new Thread(post5.getTitle(), post5.getContent(), account5, LocalDateTime.now(),
         null);
     threadRepository.save(thread3);
-
 
   }
 

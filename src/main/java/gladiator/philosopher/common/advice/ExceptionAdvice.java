@@ -3,6 +3,7 @@ package gladiator.philosopher.common.advice;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.dto.ErrorDto;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,14 @@ public class ExceptionAdvice {
     e.printStackTrace();
     log.error(e.getMessage());
     return new ErrorDto(e.getCode(), e.getMessage());
+  }
+  @ExceptionHandler({IOException.class})
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ErrorDto IoStreamException(CustomException ex) {
+    ex.printStackTrace();
+    log.error(ex.getMessage());
+    return new ErrorDto(ex.getExceptionStatus().getStatusCode(),
+        ex.getExceptionStatus().getMessage());
   }
   
 }

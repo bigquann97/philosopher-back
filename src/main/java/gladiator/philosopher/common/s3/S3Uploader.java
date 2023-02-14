@@ -70,7 +70,7 @@ public class S3Uploader {
       String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
       String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
           objectMetadata); // s3로 업로드
-      log.info("url : " + uploadImageUrl);
+      log.info("upfile url is :" + uploadImageUrl);
 
       resultUrlList.add(uploadImageUrl);
 
@@ -99,6 +99,7 @@ public class S3Uploader {
    */
   public void deleteS3(String fileName) {
     DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+    log.info("delete url : "+request);
     amazonS3Client.deleteObject(request);
   }
 

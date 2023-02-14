@@ -27,44 +27,18 @@ public class PostImage extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String originalName;
-  private String uniqueName;
+
+  private String imageUrl;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "post_id")
   private Post post;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "thread_id")
-  private Thread thread;
-
-  private final static String supportedExtension[] = {"jpg", "jpeg", "bmp", "png"};
-
   @Builder
-  public PostImage(String originalName, Post post) {
-    this.originalName = originalName;
-    this.uniqueName = generateUniqueName(extractExtension(originalName));
+  public PostImage(String url, Post post) {
+    this.imageUrl = url;
     this.post = post;
   }
 
-  private String generateUniqueName(String extension) {
-    return UUID.randomUUID() + "." + extension;
-  }
 
-  private String extractExtension(String originName) {
-    String ext = originName.substring(originName.lastIndexOf(".") + 1);
-    if (isSupportedFormat(ext)) {
-      return ext;
-    } else {
-      throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
-    }
-  }
-
-  private boolean isSupportedFormat(String ext) {
-    return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
-  }
-
-  public void addThread(Thread thread) {
-    this.thread = thread;
-  }
 }

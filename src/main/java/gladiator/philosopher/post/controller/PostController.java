@@ -1,5 +1,9 @@
 package gladiator.philosopher.post.controller;
 
+import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.category.service.CategoryService;
+import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
@@ -9,6 +13,7 @@ import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.service.PostService;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,7 +41,8 @@ public class PostController {
 
   private final PostService postService;
   private final S3Uploader s3Uploader;
-  private final String driName = "postImg";
+  private final String dirName = "postImg";
+  private final CategoryService categoryService;
 
   // /api/posts
   @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -46,13 +52,21 @@ public class PostController {
       @RequestPart("image") List<MultipartFile> multipartFiles,
       @RequestPart("dto") PostRequestDto postRequestDto,
       @AuthenticationPrincipal AccountDetails accountDetails) {
-    postService.createPost(multipartFiles, postRequestDto, accountDetails);
+    List<String> FailToPostUrls = null;
     try {
+      postRequestDto.checkByOpinionCount();
       s3Uploader.checkFilesExtension(multipartFiles);
-      s3Uploader.upLoadFileToMulti(multipartFiles, driName);
-      postService.createPost(multipartFiles, postRequestDto, accountDetails);
+      List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+      FailToPostUrls = urls.stream().collect(Collectors.toList());
+      Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
+      postService.createPost(urls, postRequestDto, accountDetails, Category);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      for (String url : FailToPostUrls) {
+        String[] split = url.split("/");
+        String filename = dirName +"/" + split[split.length - 1];
+        s3Uploader.deleteS3(filename);
+      }
+      throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
   }
 

@@ -1,6 +1,7 @@
 package gladiator.philosopher.post.entity;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
@@ -55,23 +56,29 @@ public class Post extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private PostStatus status;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Category category;
+
   @Builder
   public Post(Account account, String title, String content, List<PostImage> images,
-      List<PostOpinion> opinions) {
+      List<PostOpinion> opinions, Category category) {
     this.account = account;
     this.title = title;
     this.content = content;
     this.status = PostStatus.ACTIVE;
     this.images = images;
     this.opinions = opinions;
+    this.category = category;
   }
 
-  public Post(Account account, String title, String content, List<PostOpinion> opinions) {
+  // 테스트 생성자
+  public Post(Account account, String title, String content, List<PostOpinion> opinions, Category category) {
     this.account = account;
     this.title = title;
     this.content = content;
     this.status = PostStatus.ACTIVE;
     this.opinions = opinions;
+    this.category = category;
   }
 
   public void modifyPost(PostRequestDto postRequestDto) {
