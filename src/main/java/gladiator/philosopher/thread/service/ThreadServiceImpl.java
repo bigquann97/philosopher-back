@@ -6,6 +6,7 @@ import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
@@ -54,8 +55,8 @@ public class ThreadServiceImpl implements ThreadService {
     for (String imageUrl : images) {
       threadImageRepository.save(new ThreadImage(imageUrl, thread));
     }
-
-    notificationService.notifyToRecommendersThatThreadHasStarted(post);
+    List<Recommend> recommends = post.getRecommends();
+    notificationService.notifyToRecommendersThatThreadHasStarted(post, recommends);
 
     return threadRepository.save(thread);
   }

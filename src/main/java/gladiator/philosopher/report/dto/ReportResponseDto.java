@@ -1,7 +1,5 @@
 package gladiator.philosopher.report.dto;
 
-import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.report.entity.Report;
 import gladiator.philosopher.report.entity.ReportCategory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +12,9 @@ public class ReportResponseDto {
   private final String reportedAccount;
   private final String reportAccount;
   private final ReportCategory category;
-  private final Long post;
-  private final Long thread;
+  private final Long postId;
+  private final Long threadId;
+  private final Long commentId;
   private final String content;
 
 }

@@ -2,6 +2,7 @@ package gladiator.philosopher.post.dto;
 
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.entity.PostOpinion;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class PostResponseDto {
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();
     this.recommendCount = recommendCount;
-    this.opinions = post.getOpinions().stream().collect(Collectors.toList());
+    this.opinions = post.getOpinions().stream().map(PostOpinion::getOpinion)
+        .collect(Collectors.toList());
   }
 }

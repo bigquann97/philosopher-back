@@ -61,6 +61,9 @@ public class Thread extends BaseEntity {
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
   private List<Recommend> recommends = new ArrayList<>();
 
+  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
+  private List<ThreadOpinion> opinions = new ArrayList<>();
+
   @Builder
   public Thread(String title, String content, Account account, LocalDateTime endDate,
       Category category) {
