@@ -29,12 +29,11 @@ public class PostResponseDto {
 
   private final LocalDateTime modifiedDate;
 
-  public PostResponseDto(Post post, int recommendCount) {
+  public PostResponseDto(Post post, int recommendCount, List<String> postImage) {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
-    this.images = post.getImages().stream().map(PostImage::getUniqueName)
-        .collect(Collectors.toList());
+    this.images = postImage;
     this.content = post.getContent();
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();

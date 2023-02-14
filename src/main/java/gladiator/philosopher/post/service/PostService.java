@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.service;
 
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
@@ -15,8 +16,8 @@ public interface PostService {
 
   List<PostsResponseDto> getPosts(int pageChoice);
 
-  void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
-      AccountDetails accountDetails);
+  void createPost(List<String> urls, PostRequestDto postRequestDto,
+      AccountDetails accountDetails, Category category);
 
   PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
       AccountDetails accountDetails);

@@ -12,10 +12,12 @@ public enum ExceptionStatus {
   IMAGE_UPLOAD_FAILED(400, "이미지 정상 업로드 실패"),
   UNSUPPORTED_IMAGE_TYPE(400, "지원하지 않는 이미지 형식"),
   UNMATCHED_USER(400, "게시물 작성자가 아닙니다."),
+  TO_MUCH_INPUTDATAS(400, " 최대 5개의 유형만 설정할 수있습니다."),
 
   // 404 ->  NOT _ FOUND : 잘못된 리소스 접근 (ex. 존재하지 않는 값)
   POST_IS_NOT_EXIST(404, "존재하지 않는 게시물입니다."),
   ACCOUNT_IS_NOT_EXIST(404," 존재하지 않는 사용자입니다. "),
+  CATEGORY_IS_NOT_EXIST(404," 존재하지 않는 카테고리입니다. "),
 
   // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
   ACCOUNT_IS_EXIST(409, " 이미 등록된 사용자 입니다. "),
