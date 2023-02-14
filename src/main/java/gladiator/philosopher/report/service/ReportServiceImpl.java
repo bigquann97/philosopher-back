@@ -2,14 +2,11 @@ package gladiator.philosopher.report.service;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.repository.ReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,48 +17,41 @@ public class ReportServiceImpl implements ReportService {
 
   private final static int COUNT_FOR_AUTO_BLIND = 10;
   private final ReportRepository reportRepository;
-  private final PostService postService;
-  private final ThreadService threadService;
-  private final CommentService commentService;
 
   @Override
-  public void reportPost(final Long id, ReportRequestDto dto, Account reporter) {
-    Post post = postService.getPostEntity(id);
+  public void reportPost(
+      final Post post,
+      final ReportRequestDto dto,
+      final Account reporter
+  ) {
     reportRepository.save(dto.toEntity(post, reporter));
-    if (reportRepository.countByPost(post) >= COUNT_FOR_AUTO_BLIND) {
+    if (reportRepository.countByPostId(post.getId()) >= COUNT_FOR_AUTO_BLIND) {
       post.blind();
     }
   }
 
   @Override
-  public void reportComment(Long id, ReportRequestDto dto, Account reporter) {
-    Comment comment = commentService.getCommentEntity(id);
+  public void reportComment(
+      final Comment comment,
+      final ReportRequestDto dto,
+      final Account reporter
+  ) {
     reportRepository.save(dto.toEntity(comment, reporter));
-    if (reportRepository.countByComment(comment) >= COUNT_FOR_AUTO_BLIND) {
+    if (reportRepository.countByCommentId(comment.getId()) >= COUNT_FOR_AUTO_BLIND) {
       comment.blind();
     }
   }
 
   @Override
-  public void reportThread(Long id, ReportRequestDto dto, Account reporter) {
-    Thread thread = threadService.getThreadEntity(id);
+  public void reportThread(
+      final Thread thread,
+      final ReportRequestDto dto,
+      final Account reporter
+  ) {
     reportRepository.save(dto.toEntity(thread, reporter));
-    if (reportRepository.countByThread(thread) >= COUNT_FOR_AUTO_BLIND) {
+    if (reportRepository.countByThreadId(thread.getId()) >= COUNT_FOR_AUTO_BLIND) {
       thread.blind();
     }
-  }
-
-  @Override
-  public void reportPostTest(Long id) {
-    Post post = postService.getPostEntity(id);
-    System.out.println("post data is : " + post.getTitle());
-  }
-
-  @Override
-  public void reportPostTest2(Long id, ReportRequestDto dto, Account member) {
-    System.out.println("dto data is : " + dto.getContent());
-    System.out.println("dto data is T : " + dto.getCategory());
-    System.out.println("member data is : " + member.getEmail());
   }
 
   @Override

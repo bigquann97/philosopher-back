@@ -13,14 +13,16 @@ import org.springframework.data.domain.Sort.Direction;
 public class ThreadSearchCond {
 
   private final int page;
-  private final Sort sort; // 정렬기준 - 없음, 날짜, 조회수, 좋아요수
+  private final Sort sort; // 정렬기준
+  private final Long categoryId;
   private final String word; // 검색어
   private final Pageable pageable;
 
   @Builder
-  public ThreadSearchCond(int page, Sort sort, String word, Pageable pageable) {
+  public ThreadSearchCond(int page, Sort sort, String word, Pageable pageable, Long categoryId) {
     this.page = page;
     this.sort = sort;
+    this.categoryId = categoryId;
     this.word = word;
     this.pageable = pageable;
   }
@@ -28,21 +30,22 @@ public class ThreadSearchCond {
   public static ThreadSearchCond of(
       Integer page,
       Sort sort,
-      String word
+      String word,
+      Long categoryId
   ) {
     Pageable pageable;
 
+    categoryId = (categoryId == null) || (categoryId <= 0) ? 0 : categoryId;
     page = (page == null) || (page <= 0) ? 0 : page - 1;
     sort = sort == null ? Sort.NEW : sort;
     word = (word == null) ? "" : word;
     pageable = PageRequest.of(page, 10, Direction.DESC, sort.getOption());
 
-    System.out.println(sort.getOption());
-
     return ThreadSearchCond.builder()
         .page(page)
         .sort(sort)
         .word(word)
+        .categoryId(categoryId)
         .pageable(pageable)
         .build();
   }

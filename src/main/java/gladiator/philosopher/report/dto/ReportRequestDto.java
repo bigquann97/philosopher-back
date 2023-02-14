@@ -15,38 +15,46 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class ReportRequestDto {
+
   private final String content;
   private final ReportCategory category;
 
   // dtoToEntity -> post
-  public Report toEntity(Post post,Account reporter){
-    return Report.postReport()
+  public Report toEntity(Post post, Account reporter) {
+    return Report.builder()
+        .category(this.category)
+        .content(this.content)
         .reporter(reporter)
         .reported(post.getAccount())
-        .category(this.getCategory())
-        .content(this.content)
-        .post(post)
+        .postId(post.getId())
+        .commentId(null)
+        .threadId(null)
         .build();
   }
 
   // dtoToEntity -> thread
-  public Report toEntity(Thread thread, Account reporter){
-    return Report.threadReport()
+  public Report toEntity(Thread thread, Account reporter) {
+    return Report.builder()
+        .category(this.category)
+        .content(this.content)
         .reporter(reporter)
         .reported(thread.getAccount())
-        .category(this.getCategory())
-        .content(this.content)
-        .thread(thread)
+        .postId(null)
+        .commentId(null)
+        .threadId(thread.getId())
         .build();
   }
+
   // dtoToEntity -> comment
-  public Report toEntity(Comment comment, Account reporter){
-    return Report.commentReport()
+  public Report toEntity(Comment comment, Account reporter) {
+    return Report.builder()
+        .category(this.category)
+        .content(this.content)
         .reporter(reporter)
         .reported(comment.getAccount())
-        .category(this.getCategory())
-        .content(this.content)
-        .comment(comment)
+        .postId(null)
+        .commentId(comment.getId())
+        .threadId(null)
         .build();
   }
 }

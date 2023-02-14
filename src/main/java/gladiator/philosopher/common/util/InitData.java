@@ -8,15 +8,16 @@ import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.enums.UserStatus;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
+import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -35,6 +36,7 @@ public class InitData implements ApplicationRunner {
   private final PostRepository postRepository;
   private final PostImageRepository postImageRepository;
   private final AccountInfoRepository accountInfoRepository;
+  private final PostOpinionRepository postOpinionRepository;
 
 
   @Override
@@ -71,41 +73,51 @@ public class InitData implements ApplicationRunner {
     // 게시글 부
     List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
 
-    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", opinions);
+    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", null);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", opinions);
+    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", null);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", opinions);
+    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", null);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", opinions);
+    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", null);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", opinions);
+    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", null);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", opinions);
+    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null);
     postRepository.save(post6);
 
-    // 쓰레드 부
-    Thread thread2 = new Thread(post4.getTitle(), post4.getContent(), new ArrayList<>(), account4,
-        LocalDateTime.now());
-    threadRepository.save(thread2);
-    Thread thread3 = new Thread(post5.getTitle(), post5.getContent(), new ArrayList<>(), account5,
-        LocalDateTime.now());
-    threadRepository.save(thread3);
+    List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list2 = opinions.stream().map(x -> new PostOpinion(post2, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list3 = opinions.stream().map(x -> new PostOpinion(post3, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list4 = opinions.stream().map(x -> new PostOpinion(post4, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list5 = opinions.stream().map(x -> new PostOpinion(post5, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list6 = opinions.stream().map(x -> new PostOpinion(post6, x))
+        .collect(Collectors.toList());
 
-    // 김관호 작업
-    List<PostImage> postImages = List.of(
-        new PostImage("sample.jpg", null),
-        new PostImage("sample.jpg", null),
-        new PostImage("sample.jpg", null)
-    );
-    postImageRepository.saveAll(postImages);
-    Thread thread = new Thread("title", "content", postImages, account1, LocalDateTime.now());
-    threadRepository.save(thread);
+    postOpinionRepository.saveAll(list);
+    postOpinionRepository.saveAll(list2);
+    postOpinionRepository.saveAll(list3);
+    postOpinionRepository.saveAll(list4);
+    postOpinionRepository.saveAll(list5);
+    postOpinionRepository.saveAll(list6);
+
+    // 쓰레드 부
+    Thread thread2 = new Thread(post4.getTitle(), post4.getContent(), account4, LocalDateTime.now(),
+        null);
+    threadRepository.save(thread2);
+    Thread thread3 = new Thread(post5.getTitle(), post5.getContent(), account5, LocalDateTime.now(),
+        null);
+    threadRepository.save(thread3);
 
 
   }

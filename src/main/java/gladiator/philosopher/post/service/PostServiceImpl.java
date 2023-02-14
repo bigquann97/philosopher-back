@@ -10,7 +10,9 @@ import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
+import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.service.RecommendService;
 import java.util.ArrayList;
@@ -33,18 +35,24 @@ public class PostServiceImpl implements PostService {
   private final ImageService imageService;
   private final PostImageRepository postImageRepository;
   private final RecommendService recommendService;
+  private final PostOpinionRepository postOpinionRepository;
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, AccountDetails accountDetails) {
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
+      AccountDetails accountDetails) {
     List<PostImage> postImages = new ArrayList<>();
 
     Post post = Post.builder()
         .account(accountDetails.getAccount())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
-        .opinions(postRequestDto.getOpinions())
         .build();
+
+    List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
+        .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
+
+    postOpinionRepository.saveAll(opinions);
 
     for (MultipartFile multipartFile : multipartFiles) {
       PostImage postImage = new PostImage(multipartFile.getOriginalFilename(), post);
