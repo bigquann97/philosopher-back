@@ -15,7 +15,8 @@ public class CategoryResponseDto {
 
   private final String name;
 
-  public static CategoryResponseDto of(Category entity) {
+  public static CategoryResponseDto of(final Category entity) {
     return new CategoryResponseDto(entity.getId(), entity.getName());
   }
+  
 }

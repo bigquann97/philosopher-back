@@ -24,11 +24,11 @@ public class Category extends BaseEntity {
   private String name;
 
   @Builder
-  public Category(String name) {
+  public Category(final String name) {
     this.name = name;
   }
 
-  public Category modifyName(String name) {
+  public Category modifyName(final String name) {
     this.name = name;
     return this;
   }
