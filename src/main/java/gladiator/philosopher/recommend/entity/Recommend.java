@@ -5,6 +5,7 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.entity.Thread;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,11 +27,12 @@ public class Recommend {
   @Column(name = "recommend_id")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "account_id", nullable = false)
+
   private Account account;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "post_id", nullable = false)
   private Post post;
 
