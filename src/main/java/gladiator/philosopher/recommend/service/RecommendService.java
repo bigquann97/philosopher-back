@@ -19,5 +19,5 @@ public interface RecommendService {
 
   void deleteRecommendComment(final Comment comment, final Account account);
 
-  long getPostRecommends(final Post post);
+  long getPostRecommendCount(final Post post);
 }

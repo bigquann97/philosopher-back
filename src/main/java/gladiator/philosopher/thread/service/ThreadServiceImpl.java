@@ -11,8 +11,8 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
-import gladiator.philosopher.thread.entity.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
+import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,10 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class ThreadServiceImpl implements ThreadService {
 
-  private final ThreadOpinionRepository threadOpinionRepository;
-
   private final ThreadRepository threadRepository;
+  private final ThreadOpinionRepository threadOpinionRepository;
   private final ThreadImageRepository threadImageRepository;
+  
   private final NotificationService notificationService;
 
   /**

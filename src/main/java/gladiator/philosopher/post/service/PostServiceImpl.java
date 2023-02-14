@@ -88,8 +88,8 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    int recommendCount = recommendService.getPostRecommends(post).size();
-    return new PostResponseDto(post, recommendCount);
+    long postRecommendCount = recommendService.getPostRecommendCount(post);
+    return new PostResponseDto(post, postRecommendCount);
   }
 
 
@@ -105,8 +105,8 @@ public class PostServiceImpl implements PostService {
     }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
-    int recommendCount = recommendService.getPostRecommends(post).size();
-    return new PostResponseDto(post, recommendCount);
+    long postRecommendCount = recommendService.getPostRecommendCount(post);
+    return new PostResponseDto(post, postRecommendCount);
   }
 
   @Override
