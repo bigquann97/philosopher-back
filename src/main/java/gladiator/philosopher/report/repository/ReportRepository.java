@@ -1,5 +1,6 @@
 package gladiator.philosopher.report.repository;
 
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.entity.Report;
 import java.util.List;
@@ -8,6 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
+
+  boolean existsByReporterAndThreadId(@NonNull Account reporter, @NonNull Long threadId);
+  
+  boolean existsByReporterAndPostId(@NonNull Account reporter, @NonNull Long postId);
+
+  boolean existsByReporterAndCommentId(@NonNull Account reporter, @NonNull Long commentId);
 
   long countByThreadId(@NonNull Long threadId);
 

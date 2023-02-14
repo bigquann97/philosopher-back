@@ -24,14 +24,11 @@ import org.hibernate.Hibernate;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "recommendContraint",
-            columnNames = {"account_id", "post_id", "thread_id", "comment_id"}
-        )
-    }
-)
+@Table(uniqueConstraints = {
+    @UniqueConstraint(name = "pstCnst", columnNames = {"account_id", "post_id"}),
+    @UniqueConstraint(name = "thdCnst", columnNames = {"account_id", "thread_id"}),
+    @UniqueConstraint(name = "cmtCnst", columnNames = {"account_id", "comment_id"})
+})
 public class Recommend {
 
   @Id

@@ -45,14 +45,6 @@ public class CommentResponseDto {
     this.recommendCount = recommendCount;
   }
 
-  public CommentResponseDto(final Comment comment) {
-    this.commentId = comment.getId();
-    this.nickname = comment.getAccount().getNickname();
-    this.content = comment.getContent();
-    this.createDate = comment.getCreatedDate();
-    this.opinion = comment.getOpinion();
-  }
-
   public static CommentResponseDto of(Comment comment) {
     return CommentResponseDto.builder()
         .commentId(comment.getId())

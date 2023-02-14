@@ -23,14 +23,11 @@ import org.hibernate.Hibernate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "reportConstraint",
-            columnNames = {"postId", "threadId", "commentId", "report_account_id"}
-        )
-    }
-)
+@Table(uniqueConstraints = {
+    @UniqueConstraint(name = "pstCnst", columnNames = {"reporter_account_id", "postId"}),
+    @UniqueConstraint(name = "thdCnst", columnNames = {"reporter_account_id", "threadId"}),
+    @UniqueConstraint(name = "cmtCnst", columnNames = {"reporter_account_id", "commentId"})
+})
 public class Report {
 
   @Id
@@ -51,7 +48,7 @@ public class Report {
   private ReportCategory category;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "report_account_id", nullable = false)
+  @JoinColumn(name = "reporter_account_id", nullable = false)
   private Account reporter;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -86,5 +83,5 @@ public class Report {
   public int hashCode() {
     return getClass().hashCode();
   }
-  
+
 }
