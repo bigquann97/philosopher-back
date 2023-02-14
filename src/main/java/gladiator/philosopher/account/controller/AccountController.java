@@ -46,8 +46,8 @@ public class AccountController {
     log.info("file : " + multipartFiles);
     try {
       s3Uploader.checkByFiles(multipartFiles);
-      List<String> urlList = s3Uploader.upLoadFile(multipartFiles, dirName);
-      accountService.signUp(urlList, signUpRequestDto);
+      final List<String> list = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+      accountService.signUp(list, signUpRequestDto);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

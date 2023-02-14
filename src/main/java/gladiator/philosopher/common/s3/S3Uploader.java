@@ -28,8 +28,19 @@ public class S3Uploader {
   private final AmazonS3Client amazonS3Client;
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
+  public String upLoadFileToSingle(MultipartFile multipartFile, String dirName)throws IOException {
+    ObjectMetadata objectMetadata = new ObjectMetadata();
+    objectMetadata.setContentLength(multipartFile.getSize());
+    objectMetadata.setContentType(multipartFile.getContentType());
 
-  public List<String> upLoadFile(List<MultipartFile> multipartFiles, String dirName)
+    String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+    String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
+        objectMetadata); // s3로 업로드
+    log.info("url : " + uploadImageUrl);
+
+    return uploadImageUrl;
+  }
+  public List<String> upLoadFileToMulti(List<MultipartFile> multipartFiles, String dirName)
       throws IOException {
     List<String> resultUrlList = new ArrayList<>();
 
@@ -38,8 +49,7 @@ public class S3Uploader {
       objectMetadata.setContentLength(multipartFile.getSize());
       objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
 
-      String fileName =
-          dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+      String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
       String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
           objectMetadata); // s3로 업로드
       log.info("url : " + uploadImageUrl);
@@ -49,6 +59,7 @@ public class S3Uploader {
     }
     return resultUrlList;
   }
+
 
   // S3로 업로드
   private String putS3(InputStream file, String fileName, ObjectMetadata objectMetadata) {
@@ -64,7 +75,13 @@ public class S3Uploader {
     amazonS3Client.deleteObject(request);
   }
 
-  public boolean checkFileExtension(List<MultipartFile> files) {
+  public boolean checkFileExtension(MultipartFile file){
+    String extension;
+    boolean result = true;
+    file.getOriginalFilename().lastIndexOf(".");
+    return result;
+  }
+  public boolean checkFilesExtension(List<MultipartFile> files) {
     List<String> extension = new ArrayList<>();
     boolean result = true;
 
@@ -92,7 +109,7 @@ public class S3Uploader {
 
   // 확장자가 참인지 아닌지 -
   public void checkByFiles(List<MultipartFile> files) {
-    boolean result = checkFileExtension(files);
+    boolean result = checkFilesExtension(files);
     if (result) {
       return;
     } else {
@@ -102,6 +119,10 @@ public class S3Uploader {
         throw new CustomException(ExceptionStatus.IMAGEEXTENSION_IS_NOT_ALLOW);
       }
     }
+  }
+
+  public void checkByFile(MultipartFile file){
+
   }
 
 }
