@@ -42,13 +42,12 @@ public class AccountServiceImpl implements AccountService {
    */
   @Transactional
   @Override
-  public void signUp(List<String> urlList, SignUpRequestDto registerRequestDto) {
+  public void signUp(String imageUrl, SignUpRequestDto registerRequestDto) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
-    String url = urlList.get(0);
     Account account = registerRequestDto.toEntity(passwordEncoder.encode(registerRequestDto.getPassword()));
     accountRepository.save(account);
-    AccountInfo accountInfo = new AccountInfo(account, url);
+    AccountInfo accountInfo = new AccountInfo(account, imageUrl);
     accountInfoRepository.save(accountInfo);
   }
 

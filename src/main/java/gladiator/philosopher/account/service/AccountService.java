@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface AccountService {
 
-  void signUp(List<String> urlList, SignUpRequestDto signUpRequestDto); // 회원가입
+  void signUp(String imageUrl, SignUpRequestDto signUpRequestDto); // 회원가입
 
   SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response); // 로그인
 
