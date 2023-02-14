@@ -3,7 +3,6 @@ package gladiator.philosopher.post.service;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.image.ImageService;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -92,7 +90,7 @@ public class PostServiceImpl implements PostService {
     );
     postImageRepository.findById(post.getId());
     List<String> postImage = new ArrayList<>(); // 수정해야함
-    int recommendCount = recommendService.getPostRecommends(post).size();
+    long recommendCount = recommendService.getPostRecommends(post);
     return new PostResponseDto(post, recommendCount, postImage); // 수정해야함
   }
 
@@ -101,7 +99,7 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
       AccountDetails accountDetails) {
-    List<String>  postImage = new ArrayList<>(); // 수정해야함
+    List<String> postImage = new ArrayList<>(); // 수정해야함
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
@@ -110,7 +108,7 @@ public class PostServiceImpl implements PostService {
     }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
-    int recommendCount = recommendService.getPostRecommends(post).size();
+    long recommendCount = recommendService.getPostRecommends(post);
     return new PostResponseDto(post, recommendCount, postImage); // 수정해야함
   }
 

@@ -13,6 +13,8 @@ import org.springframework.lang.NonNull;
 
 public interface RecommendRepository extends JpaRepository<Recommend, Long> {
 
+  long countByPost(@NonNull Post post);
+
   boolean existsByCommentAndAccount(Comment comment, Account account);
 
   boolean existsByThreadAndAccount(Thread thread, Account account);
@@ -24,14 +26,6 @@ public interface RecommendRepository extends JpaRepository<Recommend, Long> {
   Optional<Recommend> findByThreadAndAccount(Thread thread, Account account);
 
   Optional<Recommend> findByCommentAndAccount(Comment comment, Account account);
-
-/*
-  Long countByPostId(Long postId);
-
-  Long countByThreadId(Long threadId);
-
-  Long countByCommentId(Long commentId);
-*/
 
   List<Recommend> findByPost(@NonNull Post post);
 

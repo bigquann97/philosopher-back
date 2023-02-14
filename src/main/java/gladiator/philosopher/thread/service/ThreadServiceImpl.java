@@ -42,9 +42,9 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional
   public Thread startThread(final Post post) {
-    List<String> postImg = new ArrayList<>(); // 수정해야함
-//    List<String> images = post.getImages().stream().map(PostImage::getUniqueName) // 수정해야함
-//        .collect(Collectors.toList());
+    List<String> images = post.getImages().stream().map(PostImage::getImageUrl)
+        .collect(Collectors.toList());
+
     Thread thread = Thread.builder()
         .account(post.getAccount())
         .title(post.getTitle())
@@ -52,7 +52,7 @@ public class ThreadServiceImpl implements ThreadService {
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
-    for (String imageUrl : postImg) {
+    for (String imageUrl : images) {
       threadImageRepository.save(new ThreadImage(imageUrl, thread));
     }
     List<Recommend> recommends = post.getRecommends();

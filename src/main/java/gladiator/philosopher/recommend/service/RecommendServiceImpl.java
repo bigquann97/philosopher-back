@@ -7,7 +7,6 @@ import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.recommend.repository.RecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,62 +15,84 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
 
+  private final static int COUNT_FOR_MAKE_THREAD = 2;
   private final RecommendRepository recommendRepository;
   private final ThreadService ThreadService;
 
   @Transactional
-  public void createRecommendPost(Post post, Account account) {
-    if (recommendRepository.existsByPostAndAccount(post, account)) {
-      throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
-    }
+  public void createRecommendPost(final Post post, final Account account) {
+    checkIfUserAlreadyLiked(post, account);
     Recommend recommend = new Recommend(post, account);
     recommendRepository.save(recommend);
-    if (getPostRecommends(post).size() >= 2) {
-      ThreadService.startThread(post);
-    }
+    makeThreadIfRecommendCountSatisfied(post);
   }
 
   @Transactional
-  public void deleteRecommendPost(Post post, Account account) {
-    Recommend recommend = recommendRepository.findByPostAndAccount(post,
-        account).orElseThrow(() -> new IllegalArgumentException("이미 좋아요 취소를 하셨습니다."));
+  public void deleteRecommendPost(final Post post, final Account account) {
+    Recommend recommend = recommendRepository.findByPostAndAccount(post, account)
+        .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
     recommendRepository.delete(recommend);
   }
 
   @Transactional
-  public void createRecommendThread(Thread thread, Account account) {
-    if (recommendRepository.existsByThreadAndAccount(thread, account)) {
-      throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
-    }
+  public void createRecommendThread(final Thread thread, final Account account) {
+    checkIfUserAlreadyLiked(thread, account);
     Recommend recommend = new Recommend(thread, account);
     recommendRepository.save(recommend);
   }
 
   @Transactional
-  public void deleteRecommendThread(Thread thread, Account account) {
+  public void deleteRecommendThread(final Thread thread, final Account account) {
     Recommend recommend = recommendRepository.findByThreadAndAccount(thread,
-        account).orElseThrow(() -> new IllegalArgumentException("이미 좋아요 취소를 하셨습니다."));
+        account).orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
     recommendRepository.delete(recommend);
   }
 
   @Transactional
-  public void createRecommendComment(Comment comment, Account account) {
-    if (recommendRepository.existsByCommentAndAccount(comment, account)) {
-      throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
-    }
+  public void createRecommendComment(final Comment comment, final Account account) {
+    checkIfUserAlreadyLiked(comment, account);
     Recommend recommend = new Recommend(comment, account);
     recommendRepository.save(recommend);
   }
 
   @Transactional
-  public void deleteRecommendComment(Comment comment, Account account) {
+  public void deleteRecommendComment(final Comment comment, final Account account) {
     Recommend recommend = recommendRepository.findByCommentAndAccount(comment,
-        account).orElseThrow(() -> new IllegalArgumentException("이미 좋아요 취소를 하셨습니다."));
+        account).orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
     recommendRepository.delete(recommend);
   }
 
   @Override
-  public List<Recommend> getPostRecommends(Post post) {
-    return recommendRepository.findByPost(post);
+  public long getPostRecommends(final Post post) {
+    return recommendRepository.countByPost(post);
   }
+
+  private void checkIfUserAlreadyLiked(final Object obj, final Account account) {
+    if (obj instanceof Post) {
+      Post post = (Post) obj;
+      if (recommendRepository.existsByPostAndAccount(post, account)) {
+        throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
+      }
+    } else if (obj instanceof Thread) {
+      Thread thread = (Thread) obj;
+      if (recommendRepository.existsByThreadAndAccount(thread, account)) {
+        throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
+      }
+    } else if (obj instanceof Comment) {
+      Comment comment = (Comment) obj;
+      if (recommendRepository.existsByCommentAndAccount(comment, account)) {
+        throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
+      }
+    } else {
+      throw new IllegalArgumentException("잘못된 접근입니다.");
+    }
+  }
+
+  private void makeThreadIfRecommendCountSatisfied(final Post post) {
+    if (getPostRecommends(post) >= COUNT_FOR_MAKE_THREAD) {
+      ThreadService.startThread(post);
+    }
+  }
+
+
 }
