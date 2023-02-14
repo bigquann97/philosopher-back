@@ -41,13 +41,13 @@ public class AccountController {
   @PostMapping(value = "/sign-up", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
       MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
-  public void signUp(@RequestPart("image") List<MultipartFile> multipartFiles,
+  public void signUp(@RequestPart("image") MultipartFile multipartFiles,
       @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto) {
     log.info("file : " + multipartFiles);
     try {
       s3Uploader.checkByFiles(multipartFiles);
-      List<String> urlList = s3Uploader.upLoadFile(multipartFiles, dirName);
-      accountService.signUp(urlList, signUpRequestDto);
+      String fileUrl = s3Uploader.upLoadFileToSingle(multipartFiles, dirName);
+      accountService.signUp(fileUrl, signUpRequestDto);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
