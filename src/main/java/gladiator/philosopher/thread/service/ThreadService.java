@@ -15,13 +15,13 @@ public interface ThreadService {
 
   ThreadResponseDto selectThread(final Long threadId);
 
-  Page<ThreadSimpleResponseDto> selectActiveThreads(ThreadSearchCond cond);
+  Page<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond);
 
-  Page<ThreadSimpleResponseDto> selectArchivedThreads(ThreadSearchCond of);
+  Page<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond of);
 
   Thread finishThread(final Thread thread);
 
-  Thread getThreadEntity(Long id);
+  Thread getThreadEntity(final Long id);
 
   List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2();
 

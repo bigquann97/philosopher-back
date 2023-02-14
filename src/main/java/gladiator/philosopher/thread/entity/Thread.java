@@ -7,6 +7,7 @@ import gladiator.philosopher.recommend.entity.Recommend;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 @Getter
 @Entity
@@ -88,8 +90,22 @@ public class Thread extends BaseEntity {
   public void releaseBlind() {
     this.status = ThreadStatus.ACTIVE;
   }
-
-  public List<Recommend> getRecommends() {
-    return new ArrayList<>(this.recommends);
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Thread thread = (Thread) o;
+    return id != null && Objects.equals(id, thread.id);
   }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+
 }

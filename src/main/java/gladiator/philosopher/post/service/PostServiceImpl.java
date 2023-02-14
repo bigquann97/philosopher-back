@@ -33,36 +33,35 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
+  private final ImageService imageService;
   private final PostImageRepository postImageRepository;
   private final RecommendService recommendService;
   private final PostOpinionRepository postOpinionRepository;
 
   @Override
   @Transactional
-  public void createPost(List<String> urls, PostRequestDto postRequestDto,
-      AccountDetails accountDetails, Category category) {
-    /**
-     * 포스트 저장
-     */
-    Post post = postRequestDto.toEntity(accountDetails.getAccount(), category);
-    postRepository.save(post);
+  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
+      AccountDetails accountDetails) {
+    List<PostImage> postImages = new ArrayList<>();
 
-    /**
-     * 포스트 옵션 저장
-     */
-    final List<String> opinions1 = postRequestDto.getOpinions();
-    List<PostOpinion> opinions = opinions1.stream()
+    Post post = Post.builder()
+        .account(accountDetails.getAccount())
+        .title(postRequestDto.getTitle())
+        .content(postRequestDto.getContent())
+        .build();
+
+    List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
 
     postOpinionRepository.saveAll(opinions);
-    /**
-     * 포스트 이미지 저장
-     */
-    urls.forEach(url -> {
-      PostImage postImage = PostImage.builder().url(url).post(post).build();
-      postImageRepository.save(postImage);
-    });
 
+    for (MultipartFile multipartFile : multipartFiles) {
+      PostImage postImage = new PostImage(multipartFile.getOriginalFilename(), post);
+      imageService.upload(multipartFile, postImage.getImageUrl());
+      postImageRepository.save(postImage);
+      postImages.add(postImage);
+    }
+    postRepository.save(post);
   }
 
   @Override
@@ -75,6 +74,12 @@ public class PostServiceImpl implements PostService {
     List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
         Collectors.toList());
     return PostResponseDtoList;
+  }
+
+  @Override
+  public void createPost(List<String> urls, PostRequestDto postRequestDto,
+      AccountDetails accountDetails, Category category) {
+
   }
 
   private Pageable pageableSetting(int pageChoice) {
@@ -90,10 +95,8 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    postImageRepository.findById(post.getId());
-    List<String> postImage = new ArrayList<>(); // 수정해야함
-    int recommendCount = recommendService.getPostRecommends(post).size();
-    return new PostResponseDto(post, recommendCount, postImage); // 수정해야함
+    long postRecommendCount = recommendService.getPostRecommendCount(post);
+    return new PostResponseDto(post, postRecommendCount);
   }
 
 
@@ -101,7 +104,6 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
       AccountDetails accountDetails) {
-    List<String>  postImage = new ArrayList<>(); // 수정해야함
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
@@ -110,8 +112,8 @@ public class PostServiceImpl implements PostService {
     }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
-    int recommendCount = recommendService.getPostRecommends(post).size();
-    return new PostResponseDto(post, recommendCount, postImage); // 수정해야함
+    long postRecommendCount = recommendService.getPostRecommendCount(post);
+    return new PostResponseDto(post, postRecommendCount);
   }
 
   @Override

@@ -19,7 +19,7 @@ public class PostResponseDto {
 
   private final List<String> images;
 
-  private final int recommendCount;
+  private final long recommendCount;
 
   private final List<String> opinions;
 
@@ -29,11 +29,12 @@ public class PostResponseDto {
 
   private final LocalDateTime modifiedDate;
 
-  public PostResponseDto(Post post, int recommendCount, List<String> postImage) {
+  public PostResponseDto(Post post, long recommendCount) {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
-    this.images = postImage;
+    this.images = post.getImages().stream().map(PostImage::getImageUrl)
+        .collect(Collectors.toList());
     this.content = post.getContent();
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();

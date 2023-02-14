@@ -24,6 +24,7 @@ public class CategoryController {
 
   /**
    * 카테고리 생성
+   *
    * @param dto
    */
   @PostMapping
@@ -34,6 +35,7 @@ public class CategoryController {
 
   /**
    * 카테고리 선택
+   *
    * @return
    */
   @GetMapping
@@ -44,16 +46,18 @@ public class CategoryController {
 
   /**
    * 카테고리 삭제
+   *
    * @param categoryId
    */
   @DeleteMapping("/{categoryId}")
   @ResponseStatus(HttpStatus.OK)
-  public void deleteCategory(@PathVariable final Long categoryId) {
+  public void deleteCategory(final @PathVariable Long categoryId) {
     categoryService.deleteCategory(categoryId);
   }
 
   /**
    * 카테고리 수정
+   *
    * @param categoryId
    * @param dto
    */

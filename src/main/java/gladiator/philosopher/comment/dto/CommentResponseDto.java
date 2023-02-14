@@ -19,7 +19,7 @@ public class CommentResponseDto {
 
   private LocalDateTime modifiedDate;
 
-  public CommentResponseDto(Comment comment) {
+  public CommentResponseDto(final Comment comment) {
     this.commentId = comment.getId();
     this.nickname = comment.getAccount().getNickname();
     this.content = comment.getContent();

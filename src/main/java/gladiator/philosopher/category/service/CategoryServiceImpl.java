@@ -20,13 +20,13 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   @Transactional
-  public void createCategory(CategoryRequestDto dto) {
+  public void createCategory(final CategoryRequestDto dto) {
     Category category = dto.toEntity();
     categoryRepository.save(category);
   }
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public List<CategoryResponseDto> selectAllCategories() {
     List<Category> categories = categoryRepository.findAll();
     return categories.stream().map(CategoryResponseDto::of)
@@ -35,13 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   @Transactional
-  public void deleteCategory(Long id) {
+  public void deleteCategory(final Long id) {
     categoryRepository.deleteById(id);
   }
 
   @Override
   @Transactional
-  public void modifyCategory(Long id, CategoryRequestDto dto) {
+  public void modifyCategory(final Long id, final CategoryRequestDto dto) {
     Category category = categoryRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
     Category modifiedCategory = category.modifyName(dto.getName());

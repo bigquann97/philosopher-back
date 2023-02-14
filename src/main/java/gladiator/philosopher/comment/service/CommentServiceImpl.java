@@ -1,15 +1,14 @@
 package gladiator.philosopher.comment.service;
 
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.security.AccountDetails;
-import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.mention.service.MentionService;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,64 +20,58 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
 
   private final CommentRepository commentRepository;
-  private final PostRepository postRepository;
-  private final ThreadRepository threadRepository;
+  private final MentionService mentionService;
 
   @Override
-  public List<CommentResponseDto> getComments(Long threadId) {
-    Thread thread = threadRepository.findById(threadId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
+  @Transactional(readOnly = true)
+  public List<CommentResponseDto> getComments(final Thread thread) {
     List<Comment> comments = commentRepository.findAllByThread(thread);
     return comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
   }
 
   @Override
   @Transactional
-  public CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
-      AccountDetails accountDetails) {
-    Thread thread = threadRepository.findById(threadId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-
-    Comment comment = Comment.builder()
-        .account(accountDetails.getAccount())
-        .thread(thread)
-        .content(commentRequestDto.getContent())
-        .build();
-
-    comment = commentRepository.save(comment);
-    return new CommentResponseDto(comment);
+  public void createComment(
+      final CommentRequestDto commentRequestDto,
+      final Thread thread,
+      final Account account
+  ) {
+    Comment comment = commentRequestDto.toEntity(thread, account);
+    mentionService.mentionComment(comment);
+    commentRepository.save(comment);
   }
 
   @Override
   @Transactional
-  public void modifyComment(Long commentId, String content, Long id) {
-    Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    String writerId = commentRepository.findWriter(commentId);
-    if (id.equals(writerId)) {
-      commentRepository.modify(commentId, content);
-    } else {
-      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
-    }
+  public void modifyComment(
+      final CommentRequestDto dto,
+      final Long commentId,
+      final Account account
+  ) {
+    Comment comment = getCommentEntity(commentId);
+    checkIfAccountIsWriter(comment, account);
+    mentionService.deleteMentions(comment);
+    comment.modifyComment(dto.getContent());
+    mentionService.mentionComment(comment);
+    commentRepository.save(comment);
   }
 
   @Override
   @Transactional
-  public void deleteComment(Long commentId, Long id) {
-    Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
-    String writerId = commentRepository.findWriter(commentId);
-    if (id.equals(writerId)) {
-      commentRepository.delete(comment);
-    } else {
-      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
-    }
+  public void deleteComment(
+      final CommentRequestDto commentRequestDto,
+      final Long commentId,
+      final Account account
+  ) {
+    Comment comment = getCommentEntity(commentId);
+    checkIfAccountIsWriter(comment, account);
+    mentionService.deleteMentions(comment);
+    commentRepository.delete(comment);
   }
 
   @Override
-  @Transactional
-  public Comment getCommentEntity(Long id) {
+  @Transactional(readOnly = true)
+  public Comment getCommentEntity(final Long id) {
     Comment comment = commentRepository.findById(id)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
     return comment;
@@ -86,16 +79,23 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public void modifyCommentByAdmin(Long id, CommentRequestDto commentRequestDto) {
+  public void modifyCommentByAdmin(final Long id, final CommentRequestDto commentRequestDto) {
     Comment comment = getCommentEntity(id);
     comment.modifyComment(comment.getContent());
   }
 
   @Override
   @Transactional
-  public void deleteCommentByAdmin(Long id) {
+  public void deleteCommentByAdmin(final Long id) {
     Comment comment = getCommentEntity(id);
     commentRepository.delete(comment);
   }
+
+  private void checkIfAccountIsWriter(final Comment comment, final Account account) {
+    if (!comment.isWriter(account)) {
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+    }
+  }
+
 
 }

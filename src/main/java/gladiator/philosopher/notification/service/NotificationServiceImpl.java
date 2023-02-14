@@ -40,7 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public List<NotificationResponseDto> getMyNotifications(final Account member) {
     List<Notification> notifications = notificationRepository.findByAccount(member);
-    return notifications.stream().map(NotificationResponseDto::new)
+    return notifications.stream().map(NotificationResponseDto::of)
         .collect(Collectors.toList());
   }
 

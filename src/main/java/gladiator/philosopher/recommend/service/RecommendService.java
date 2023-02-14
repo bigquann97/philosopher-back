@@ -3,23 +3,21 @@ package gladiator.philosopher.recommend.service;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.entity.Thread;
-import java.util.List;
 
 public interface RecommendService {
 
-  void createRecommendPost(Post post, Account account);
+  void createRecommendPost(final Post post, final Account account);
 
-  void deleteRecommendPost(Post post, Account account);
+  void deleteRecommendPost(final Post post, final Account account);
 
-  void createRecommendThread(Thread thread, Account account);
+  void createRecommendThread(final Thread thread, final Account account);
 
-  void deleteRecommendThread(Thread thread, Account account);
+  void deleteRecommendThread(final Thread thread, final Account account);
 
-  void createRecommendComment(Comment comment, Account account);
+  void createRecommendComment(final Comment comment, final Account account);
 
-  void deleteRecommendComment(Comment comment, Account account);
+  void deleteRecommendComment(final Comment comment, final Account account);
 
-  List<Recommend> getPostRecommends(Post post);
+  long getPostRecommendCount(final Post post);
 }

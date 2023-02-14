@@ -1,21 +1,25 @@
 package gladiator.philosopher.comment.service;
 
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.common.security.AccountDetails;
+import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 
 public interface CommentService {
 
-  List<CommentResponseDto> getComments(Long threadId);
+  List<CommentResponseDto> getComments(final Thread threadId);
 
-  CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long threadId,
-      AccountDetails accountDetails);
+  void createComment(
+      final CommentRequestDto commentRequestDto,
+      final Thread threadId,
+      final Account account
+  );
 
-  void modifyComment(Long commentId, String content, Long id);
+  void modifyComment(CommentRequestDto commentRequestDto, Long commentId, Account account);
 
-  void deleteComment(Long commentId, Long id);
+  void deleteComment(CommentRequestDto commentRequestDto, Long commentId, Account account);
 
   Comment getCommentEntity(Long id);
 
