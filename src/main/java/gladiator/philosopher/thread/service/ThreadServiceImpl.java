@@ -11,8 +11,8 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
-import gladiator.philosopher.thread.entity.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
+import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class ThreadServiceImpl implements ThreadService {
         .build();
 
     List<ThreadImage> images = post.getImages().stream()
-        .map(x -> new ThreadImage(x.getUniqueName(), thread)).
+        .map(x -> new ThreadImage(x.getImageUrl(), thread)).
         collect(Collectors.toList());
 
     threadImageRepository.saveAll(images);

@@ -33,7 +33,7 @@ public class PostResponseDto {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
-    this.images = post.getImages().stream().map(PostImage::getUniqueName)
+    this.images = post.getImages().stream().map(PostImage::getImageUrl)
         .collect(Collectors.toList());
     this.content = post.getContent();
     this.createDate = post.getCreatedDate();

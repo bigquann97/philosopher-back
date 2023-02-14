@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.service;
 
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.image.ImageService;
@@ -56,7 +57,7 @@ public class PostServiceImpl implements PostService {
 
     for (MultipartFile multipartFile : multipartFiles) {
       PostImage postImage = new PostImage(multipartFile.getOriginalFilename(), post);
-      imageService.upload(multipartFile, postImage.getUniqueName());
+      imageService.upload(multipartFile, postImage.getImageUrl());
       postImageRepository.save(postImage);
       postImages.add(postImage);
     }
@@ -73,6 +74,12 @@ public class PostServiceImpl implements PostService {
     List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
         Collectors.toList());
     return PostResponseDtoList;
+  }
+
+  @Override
+  public void createPost(List<String> urls, PostRequestDto postRequestDto,
+      AccountDetails accountDetails, Category category) {
+
   }
 
   private Pageable pageableSetting(int pageChoice) {

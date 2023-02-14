@@ -8,11 +8,16 @@ import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PostService {
 
   PostResponseDto getPost(Long postId);
+
+  @Transactional
+  void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
+      AccountDetails accountDetails);
 
   List<PostsResponseDto> getPosts(int pageChoice);
 
