@@ -28,7 +28,7 @@ import org.hibernate.Hibernate;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "recommendContraint",
-            columnNames = {"account", "post", "thread", "comment"}
+            columnNames = {"account_id", "post_id", "thread_id", "comment_id"}
         )
     }
 )
@@ -86,5 +86,5 @@ public class Recommend {
   public int hashCode() {
     return getClass().hashCode();
   }
-  
+
 }
