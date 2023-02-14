@@ -86,5 +86,5 @@ public class Recommend {
   public int hashCode() {
     return getClass().hashCode();
   }
-  
+
 }
