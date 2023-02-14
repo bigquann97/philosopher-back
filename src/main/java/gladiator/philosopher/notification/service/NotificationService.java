@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface NotificationService {
 
-  void notifyToRecommendersThatThreadHasStarted(Post post, List<Recommend> recommends);
+  void notifyToRecommendersThatThreadHasStarted(final Post post, final List<Recommend> recommends);
 
-  List<NotificationResponseDto> getMyNotifications(Account member);
+  List<NotificationResponseDto> getMyNotifications(final Account member);
 
 }

@@ -68,8 +68,10 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/api/comment/{commentId}")
-  public void deleteComment(@PathVariable Long commentId, CommentRequestDto commentRequestDto,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void deleteComment(
+      final @PathVariable Long commentId,
+      final CommentRequestDto commentRequestDto,
+      final @AuthenticationPrincipal AccountDetails accountDetails) {
     commentService.deleteComment(commentRequestDto, commentId, accountDetails.getAccount());
   }
 

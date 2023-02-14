@@ -72,8 +72,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional(readOnly = true)
   public Comment getCommentEntity(final Long id) {
-    Comment comment = commentRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
+    Comment comment = getCommentEntity(id);
     return comment;
   }
 
