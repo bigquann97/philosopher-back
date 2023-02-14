@@ -14,12 +14,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "recommendContraint",
+            columnNames = {"account", "post", "thread", "comment"}
+        )
+    }
+)
 public class Recommend {
 
   @Id
@@ -29,11 +39,10 @@ public class Recommend {
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "account_id", nullable = false)
-
   private Account account;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "post_id", nullable = false)
+  @JoinColumn(name = "post_id")
   private Post post;
 
   @ManyToOne(fetch = FetchType.LAZY)

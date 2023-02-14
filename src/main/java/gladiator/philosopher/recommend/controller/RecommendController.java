@@ -27,43 +27,55 @@ public class RecommendController {
   private final CommentService commentService;
 
   @PostMapping("/post/{postId}")
-  public void createRecommendPost(@PathVariable Long postId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void createRecommendPost(
+      final @PathVariable Long postId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Post post = postService.getPostEntity(postId);
     recommendService.createRecommendPost(post, accountDetails.getAccount());
   }
 
   @DeleteMapping("/post/{postId}")
-  public void deleteRecommendPost(@PathVariable Long postId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void deleteRecommendPost(
+      final @PathVariable Long postId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Post post = postService.getPostEntity(postId);
     recommendService.deleteRecommendPost(post, accountDetails.getAccount());
   }
 
   @PostMapping("/thread/{threadId}")
-  public void createRecommendThread(@PathVariable Long threadId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void createRecommendThread(
+      final @PathVariable Long threadId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Thread thread = threadService.getThreadEntity(threadId);
     recommendService.createRecommendThread(thread, accountDetails.getAccount());
   }
 
   @DeleteMapping("/thread/{threadId}")
-  public void deleteRecommendThread(@PathVariable Long threadId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void deleteRecommendThread(
+      final @PathVariable Long threadId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Thread thread = threadService.getThreadEntity(threadId);
     recommendService.deleteRecommendThread(thread, accountDetails.getAccount());
   }
 
   @PostMapping("/comment/{commentId}")
-  public void createRecommendComment(@PathVariable Long commentId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void createRecommendComment(
+      final @PathVariable Long commentId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Comment comment = commentService.getCommentEntity(commentId);
     recommendService.createRecommendComment(comment, accountDetails.getAccount());
   }
 
   @DeleteMapping("/comment/{commentId}")
-  public void deleteRecommendComment(@PathVariable Long commentId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void deleteRecommendComment(
+      final @PathVariable Long commentId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Comment comment = commentService.getCommentEntity(commentId);
     recommendService.deleteRecommendComment(comment, accountDetails.getAccount());
   }
