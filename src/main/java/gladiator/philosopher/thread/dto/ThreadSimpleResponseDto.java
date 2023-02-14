@@ -37,5 +37,5 @@ public class ThreadSimpleResponseDto {
     this.createdDate = thread.getCreatedDate();
     this.endDate = thread.getEndDate();
   }
-  
+
 }
