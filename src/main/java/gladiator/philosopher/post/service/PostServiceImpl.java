@@ -38,13 +38,8 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto, AccountDetails accountDetails) {
     List<PostImage> postImages = new ArrayList<>();
-
-    Post post = Post.builder()
-        .account(accountDetails.getAccount())
-        .title(postRequestDto.getTitle())
-        .content(postRequestDto.getContent())
-        .opinions(postRequestDto.getOpinions())
-        .build();
+    Post post = postRequestDto.toEntity(accountDetails);
+    postRepository.save(post);
 
     for (MultipartFile multipartFile : multipartFiles) {
       PostImage postImage = new PostImage(multipartFile.getOriginalFilename(), post);
@@ -52,7 +47,9 @@ public class PostServiceImpl implements PostService {
       postImageRepository.save(postImage);
       postImages.add(postImage);
     }
+
     postRepository.save(post);
+
   }
 
   @Override

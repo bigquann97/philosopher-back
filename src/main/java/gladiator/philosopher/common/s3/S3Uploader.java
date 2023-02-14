@@ -121,14 +121,13 @@ public class S3Uploader {
    * @param files
    * @return
    */
-  public boolean checkFilesExtension(List<MultipartFile> files) {
+  public void checkFilesExtension(List<MultipartFile> files) { // 이 부분 이대로 사용할 것인지, 아니면 수정할 것인지 고민해보기
     List<String> extension = new ArrayList<>();
     boolean result = true;
 
     files.forEach(multipartFile -> {
       int index = multipartFile.getOriginalFilename().lastIndexOf(".");
       extension.add(multipartFile.getOriginalFilename().substring(index + 1));
-      log.info(multipartFile.getOriginalFilename().substring(index + 1));
     });
     for (String check : extension) {
       String checkCase = check.toLowerCase(Locale.ROOT);
@@ -139,26 +138,15 @@ public class S3Uploader {
           break;
         case "jpeg":
           break;
+        case "":
+          break;
         default:
           result = false;
           break;
       }
     }
-    return result;
-  }
-
-  // 확장자가 참인지 아닌지 -
-  public void checkByFiles(List<MultipartFile> files) {
-    boolean result = checkFilesExtension(files);
-    if (result) {
-      return;
-    } else {
-      if (files.get(0).getOriginalFilename().equals("")) {
-        return;
-      } else {
-        throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
-      }
-    }
+    if(!result)
+      throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
   }
 
 }

@@ -46,17 +46,14 @@ public class PostController {
       @RequestPart("image") List<MultipartFile> multipartFiles,
       @RequestPart("dto") PostRequestDto postRequestDto,
       @AuthenticationPrincipal AccountDetails accountDetails) {
-//    log.info("file : " + multipartFiles);
-//
-//    try {
-//      List<String> urlList = s3Uploader.upLoadFile(multipartFiles, driName);
-//
-//    } catch (IOException e) {
-//      throw new RuntimeException(e);
-//    }
-
     postService.createPost(multipartFiles, postRequestDto, accountDetails);
-
+    try {
+      s3Uploader.checkFilesExtension(multipartFiles);
+      s3Uploader.upLoadFileToMulti(multipartFiles, driName);
+      postService.createPost(multipartFiles, postRequestDto, accountDetails);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   // /api/posts?page=1
