@@ -54,8 +54,9 @@ public class InitData implements ApplicationRunner {
     AccountInfo accountImage2 = new AccountInfo(account2, "jipang2.png");
     accountInfoRepository.save(accountImage2);
 
-    Account account3 = new Account(3L, "test1@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
+    Account account3 = new Account(3L, "test2@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
         "이정국", Gender.MALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
+    accountRepository.save(account3);
     AccountInfo accountImage3 = new AccountInfo(account3, "jipang3.jpg");
     accountInfoRepository.save(accountImage3);
 
@@ -87,7 +88,6 @@ public class InitData implements ApplicationRunner {
 
     Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", opinions);
     postRepository.save(post6);
-    List<PostImage> images = new ArrayList<>();
 
     // 쓰레드 부
     Thread thread2 = new Thread(post4.getTitle(), post4.getContent(), new ArrayList<>(), account4,

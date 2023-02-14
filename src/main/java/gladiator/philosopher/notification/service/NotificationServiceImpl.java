@@ -6,7 +6,6 @@ import gladiator.philosopher.notification.entity.Notification;
 import gladiator.philosopher.notification.repository.NotificationRepository;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.entity.Recommend;
-import gladiator.philosopher.report.dto.NotificationResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 import java.util.stream.Collectors;

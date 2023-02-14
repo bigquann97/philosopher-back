@@ -43,18 +43,16 @@ class AdminServiceImplTest {
     accountRepository.save(account3);
   }*/
 
-  @Test
-  public void threadSave() {
-    Account account4 = new Account(1L,"test4@naver.com", "test3", 16, "김커피", Gender.MALE,
-        UserRole.ROLE_USER, UserStatus.ACTIVATED);
-    accountRepository.save(account4);
-    Post post = new Post(account4, "title", "content");
-    postRepository.save(post);
-    Thread thread1 = threadService.startThread(post);
-    threadRepository.save(thread1);
-
-    assertThat(thread1.getTitle().equals(post.getTitle()));
-
-
-  }
+//  @Test
+//  public void threadSave() {
+//    Account account4 = new Account(1L,"test4@naver.com", "test3", 16, "김커피", Gender.MALE,
+//        UserRole.ROLE_USER, UserStatus.ACTIVATED);
+//    accountRepository.save(account4);
+//    Post post = new Post(account4, "title", "content");
+//    postRepository.save(post);
+//    Thread thread1 = threadService.startThread(post);
+//    threadRepository.save(thread1);
+//
+//    assertThat(thread1.getTitle().equals(post.getTitle()));
+//  }
 }

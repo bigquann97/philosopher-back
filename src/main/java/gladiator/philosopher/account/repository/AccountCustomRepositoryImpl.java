@@ -6,7 +6,6 @@ import static org.springframework.util.StringUtils.hasText;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.dto.AccountSearchCondition;
-import gladiator.philosopher.account.entity.QAccountImage;
 import gladiator.philosopher.admin.dto.QUserInfoResponseDto;
 import gladiator.philosopher.admin.dto.UserInfoResponseDto;
 import gladiator.philosopher.common.enums.Gender;
@@ -15,11 +14,11 @@ import gladiator.philosopher.common.enums.UserStatus;
 import java.util.List;
 import javax.persistence.EntityManager;
 
-public class AccountCustomRepositoryImpl implements AccountCustomRepository{
+public class AccountCustomRepositoryImpl implements AccountCustomRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public AccountCustomRepositoryImpl(EntityManager em){
+  public AccountCustomRepositoryImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
   }
 
@@ -43,14 +42,14 @@ public class AccountCustomRepositoryImpl implements AccountCustomRepository{
   }
 
   private BooleanExpression userGenderEqual(String userGender) {
-    return hasText(userGender)?account.gender.eq(Gender.valueOf(userGender)):null;
+    return hasText(userGender) ? account.gender.eq(Gender.valueOf(userGender)) : null;
   }
 
   private BooleanExpression userStatsEqual(String userStatus) {
-    return hasText(userStatus)?account.status.eq(UserStatus.valueOf(userStatus)):null;
+    return hasText(userStatus) ? account.status.eq(UserStatus.valueOf(userStatus)) : null;
   }
 
   private BooleanExpression userTypeEqual(String userType) {
-    return hasText(userType)?account.type.eq(UserRole.valueOf(userType)):null;
+    return hasText(userType) ? account.type.eq(UserRole.valueOf(userType)) : null;
   }
 }
