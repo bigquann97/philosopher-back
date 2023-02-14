@@ -1,6 +1,7 @@
 package gladiator.philosopher.mention.entity;
 
 import gladiator.philosopher.comment.entity.Comment;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 @Entity
 @Getter
@@ -32,9 +34,25 @@ public class Mention {
   private Comment mentionedComment;
 
   @Builder
-  public Mention(Comment mentioningComment, Comment mentionedComment) {
+  public Mention(final Comment mentioningComment, final Comment mentionedComment) {
     this.mentioningComment = mentioningComment;
     this.mentionedComment = mentionedComment;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Mention mention = (Mention) o;
+    return id != null && Objects.equals(id, mention.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }
