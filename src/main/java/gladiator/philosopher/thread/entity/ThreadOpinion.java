@@ -33,4 +33,5 @@ public class ThreadOpinion {
     this.thread = thread;
     this.opinion = opinion;
   }
+  
 }

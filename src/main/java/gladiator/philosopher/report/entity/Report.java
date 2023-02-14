@@ -1,6 +1,7 @@
 package gladiator.philosopher.report.entity;
 
 import gladiator.philosopher.account.entity.Account;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 @Entity
 @Getter
@@ -68,4 +70,21 @@ public class Report {
     this.threadId = threadId;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Report report = (Report) o;
+    return id != null && Objects.equals(id, report.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+  
 }

@@ -1,6 +1,7 @@
 package gladiator.philosopher.post.dto;
 
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public class PostResponseDto {
 
   private final List<String> images;
 
-  private final long recommendCount;
+  private final int recommendCount;
 
   private final List<String> opinions;
 
@@ -28,11 +29,12 @@ public class PostResponseDto {
 
   private final LocalDateTime modifiedDate;
 
-  public PostResponseDto(Post post, long recommendCount, List<String> postImage) {
+  public PostResponseDto(Post post, int recommendCount) {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
-    this.images = postImage;
+    this.images = post.getImages().stream().map(PostImage::getUniqueName)
+        .collect(Collectors.toList());
     this.content = post.getContent();
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();

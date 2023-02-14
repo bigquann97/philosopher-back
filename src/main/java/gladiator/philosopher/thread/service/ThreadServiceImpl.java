@@ -5,13 +5,13 @@ import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.post.entity.PostImage;
-import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
+import gladiator.philosopher.thread.entity.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class ThreadServiceImpl implements ThreadService {
 
+  private final ThreadOpinionRepository threadOpinionRepository;
+
   private final ThreadRepository threadRepository;
   private final ThreadImageRepository threadImageRepository;
   private final NotificationService notificationService;
@@ -42,9 +44,6 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional
   public Thread startThread(final Post post) {
-    List<String> images = post.getImages().stream().map(PostImage::getImageUrl)
-        .collect(Collectors.toList());
-
     Thread thread = Thread.builder()
         .account(post.getAccount())
         .title(post.getTitle())
@@ -52,11 +51,19 @@ public class ThreadServiceImpl implements ThreadService {
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
-    for (String imageUrl : images) {
-      threadImageRepository.save(new ThreadImage(imageUrl, thread));
-    }
-    List<Recommend> recommends = post.getRecommends();
-    notificationService.notifyToRecommendersThatThreadHasStarted(post, recommends);
+    List<ThreadImage> images = post.getImages().stream()
+        .map(x -> new ThreadImage(x.getUniqueName(), thread)).
+        collect(Collectors.toList());
+
+    threadImageRepository.saveAll(images);
+
+    List<ThreadOpinion> opinions = post.getOpinions().stream()
+        .map(o -> new ThreadOpinion(thread, o.getOpinion()))
+        .collect(Collectors.toList());
+
+    threadOpinionRepository.saveAll(opinions);
+
+    notificationService.notifyToRecommendersThatThreadHasStarted(post, post.getRecommends());
 
     return threadRepository.save(thread);
   }
@@ -82,7 +89,7 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Thread getThreadEntity(Long id) {
+  public Thread getThreadEntity(final Long id) {
     return threadRepository.findById(id)
         .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
   }
@@ -108,7 +115,7 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> selectActiveThreads(ThreadSearchCond cond) {
+  public Page<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
     return threadRepository.selectActiveThreadsWithCond(cond);
   }
 
@@ -120,7 +127,7 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> selectArchivedThreads(ThreadSearchCond cond) {
+  public Page<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond cond) {
     return threadRepository.selectArchivedThreadWithCond(cond);
   }
 

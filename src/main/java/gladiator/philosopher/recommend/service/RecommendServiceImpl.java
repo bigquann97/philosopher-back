@@ -63,7 +63,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
-  public long getPostRecommends(final Post post) {
+  public long getPostRecommendCount(final Post post) {
     return recommendRepository.countByPost(post);
   }
 
@@ -89,7 +89,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   private void makeThreadIfRecommendCountSatisfied(final Post post) {
-    if (getPostRecommends(post) >= COUNT_FOR_MAKE_THREAD) {
+    if (getPostRecommendCount(post) >= COUNT_FOR_MAKE_THREAD) {
       ThreadService.startThread(post);
     }
   }

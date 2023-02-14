@@ -20,7 +20,8 @@ public class NotificationController {
   // 나에게 온 모든 알림 조회
   @GetMapping
   public List<NotificationResponseDto> getMyNotifications(
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     return notificationService.getMyNotifications(accountDetails.getAccount());
   }
 
