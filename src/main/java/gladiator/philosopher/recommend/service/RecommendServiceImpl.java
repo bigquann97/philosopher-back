@@ -70,13 +70,6 @@ public class RecommendServiceImpl implements RecommendService {
     recommendRepository.delete(recommend);
   }
 
-/*
-  public Long countRecommendPost(Long postId) {
-    Long countRecommendPost = recommendRepository.countByPostId(postId);
-    return countRecommendPost;
-  }
-*/
-
   @Override
   public List<Recommend> getPostRecommends(Post post) {
     return recommendRepository.findByPost(post);

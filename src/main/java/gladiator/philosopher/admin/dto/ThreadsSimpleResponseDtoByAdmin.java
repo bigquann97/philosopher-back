@@ -1,8 +1,8 @@
 package gladiator.philosopher.admin.dto;
 
-import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadLocation;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +29,8 @@ public class ThreadsSimpleResponseDtoByAdmin {
     this.id = thread.getId();
     this.title = thread.getTitle();
     this.content = thread.getContent();
-    this.imageUrl = thread.getPostImages().stream().map(PostImage::getOriginalName).collect(
-        Collectors.toList());
+    this.imageUrl = thread.getThreadImages().stream().map(ThreadImage::getImageUrl)
+        .collect(Collectors.toList());
     this.recommendCount = thread.getRecommends().stream().map(Recommend::getThread).count();
     this.nickname = thread.getAccount().getNickname();
     this.location = thread.getLocation();

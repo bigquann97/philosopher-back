@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public enum Sort {
   NEW("createdDate"), // 최신 순 정렬
-  VIEW("viewCount"), // 조회수 순 정렬
   RCMND("recommendation") // 좋아요 수 정렬
   ;
 

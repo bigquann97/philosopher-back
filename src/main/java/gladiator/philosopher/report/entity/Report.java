@@ -1,9 +1,6 @@
 package gladiator.philosopher.report.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.thread.entity.Thread;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +21,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "reportConstraint",
+            columnNames = {"postId", "threadId", "commentId", "report_account_id"}
+        )
+    }
+)
 public class Report {
 
   @Id
@@ -29,59 +36,36 @@ public class Report {
   @Column(name = "report_id", nullable = false)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "report_account_id", nullable = false)
-  private Account reporter; // 널이면 안되고
+  private String content;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "reported_account_id", nullable = false)
-  private Account reported; // 이친구도 널이면 안되고
+  private Long postId;
+
+  private Long threadId;
+
+  private Long commentId;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private ReportCategory category; // 널이면 안되고
+  private ReportCategory category;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "post_id")
-  private Post post; // 널이어도 되고
-
-  private String content;
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "thread_id")
-  private Thread thread;
+  @JoinColumn(name = "report_account_id", nullable = false)
+  private Account reporter;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "comment_id")
-  private Comment comment;
+  @JoinColumn(name = "reported_account_id", nullable = false)
+  private Account reported;
 
-  @Builder(builderMethodName = "postReport")
-  public Report(Account reporter, Account reported, ReportCategory category,
-      Post post, String content) {
+  @Builder
+  public Report(Account reporter, Account reported, ReportCategory category, Long postId,
+      Long commentId, Long threadId, String content) {
     this.reporter = reporter;
     this.reported = reported;
     this.category = category;
     this.content = content;
-    this.post = post;
-  }
-
-  @Builder(builderMethodName = "commentReport")
-  public Report(Account reporter, Account reported, ReportCategory category,
-      Comment comment, String content) {
-    this.reporter = reporter;
-    this.reported = reported;
-    this.category = category;
-    this.comment = comment;
-    this.content = content;
-  }
-
-  @Builder(builderMethodName = "threadReport")
-  public Report(Account reporter, Account reported, ReportCategory category,
-      Thread thread, String content) {
-    this.reporter = reporter;
-    this.reported = reported;
-    this.category = category;
-    this.thread = thread;
-    this.content = content;
+    this.postId = postId;
+    this.commentId = commentId;
+    this.threadId = threadId;
   }
 
 }

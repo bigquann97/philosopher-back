@@ -1,6 +1,5 @@
 package gladiator.philosopher.thread.dto;
 
-import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.thread.entity.Thread;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ThreadResponseDto {
     this.id = thread.getId();
     this.title = thread.getTitle();
     this.content = thread.getContent();
-    this.images = thread.getPostImages().stream().map(PostImage::getUniqueName)
+    this.images = thread.getThreadImages().stream().map(x -> x.getImageUrl())
         .collect(Collectors.toList());
     this.recommend = 1L;
     this.nickname = thread.getAccount().getNickname();

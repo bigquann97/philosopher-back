@@ -10,16 +10,7 @@ public interface ThreadCustomRepository {
 
   Optional<ThreadResponseDto> selectThread(Long id);
 
-  Page<ThreadSimpleResponseDto> selectActiveThreadsWithPaging(ThreadSearchCond cond);
+  Page<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond);
 
-  Page<ThreadResponseDto> getThreadsByCondition(ThreadSearchCond cond);
-
-  Page<ThreadSimpleResponseDto> selectArchivedThreadsWithPaging(ThreadSearchCond cond);
-
-  Page<ThreadResponseDto> getThreadsByRecommendation(ThreadSearchCond cond);
-
-  Page<ThreadResponseDto> getThreadsByViewCount(ThreadSearchCond cond);
-
-//  Page<Thread> getThreads(ThreadSearchCond cond);
-
+  Page<ThreadSimpleResponseDto> selectArchivedThreadWithCond(ThreadSearchCond cond);
 }

@@ -5,11 +5,11 @@ import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostStatus;
+import gladiator.philosopher.recommend.entity.Recommend;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -20,7 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,32 +41,36 @@ public class Post extends BaseEntity {
   private String title;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PostImage> images;
+  private List<PostImage> images = new ArrayList<>();
 
-  @ElementCollection
-  @Size(min = 2, max = 5)
-  private List<String> opinions = new ArrayList<>();
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Recommend> recommends = new ArrayList<>();
+
+  @OneToMany(mappedBy = "post")
+  private List<PostOpinion> opinions = new ArrayList<>();
 
   @Column(nullable = false)
   private String content;
 
   @Enumerated(EnumType.STRING)
-  private PostStatus status = PostStatus.ACTIVE;
+  private PostStatus status;
 
   @Builder
   public Post(Account account, String title, String content, List<PostImage> images,
-      List<String> opinions) {
+      List<PostOpinion> opinions) {
     this.account = account;
     this.title = title;
     this.content = content;
+    this.status = PostStatus.ACTIVE;
     this.images = images;
     this.opinions = opinions;
   }
 
-  public Post(Account account, String title, String content, List<String> opinions) {
+  public Post(Account account, String title, String content, List<PostOpinion> opinions) {
     this.account = account;
     this.title = title;
     this.content = content;
+    this.status = PostStatus.ACTIVE;
     this.opinions = opinions;
   }
 
