@@ -7,7 +7,7 @@ class MentionServiceImplTest {
 
   @Test
   void test() {
-    String str = " #36 #10 안녕하세요 #하하2 #1 ";
+    String str = " #36 #10 #55 안녕하세요 #하하2 #1 ";
     String k = str.trim().replaceAll(" ", "");
 
     Long num = parseFirstHashtagNum(k);
