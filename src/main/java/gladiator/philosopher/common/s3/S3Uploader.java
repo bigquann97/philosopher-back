@@ -28,8 +28,10 @@ public class S3Uploader {
   private final AmazonS3Client amazonS3Client;
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
+  public String upLoadFileToSingle(MultipartFile multipartFile, String dirName){
 
-  public List<String> upLoadFile(List<MultipartFile> multipartFiles, String dirName)
+  }
+  public List<String> upLoadFileToMulti(List<MultipartFile> multipartFiles, String dirName)
       throws IOException {
     List<String> resultUrlList = new ArrayList<>();
 
@@ -38,8 +40,7 @@ public class S3Uploader {
       objectMetadata.setContentLength(multipartFile.getSize());
       objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
 
-      String fileName =
-          dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+      String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
       String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
           objectMetadata); // s3로 업로드
       log.info("url : " + uploadImageUrl);
@@ -49,6 +50,8 @@ public class S3Uploader {
     }
     return resultUrlList;
   }
+
+
 
   // S3로 업로드
   private String putS3(InputStream file, String fileName, ObjectMetadata objectMetadata) {

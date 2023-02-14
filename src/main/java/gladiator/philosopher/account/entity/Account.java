@@ -65,8 +65,6 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-
-
 //  public void changeProfile(String nickname, AccountImage accountImage) {
 //    this.nickname = nickname;
 //    if (!accountImage.getOriginalName().equals("default_image.jpg")) {
