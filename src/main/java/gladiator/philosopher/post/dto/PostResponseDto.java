@@ -19,7 +19,7 @@ public class PostResponseDto {
 
   private final List<String> images;
 
-  private final int recommendCount;
+  private final long recommendCount;
 
   private final List<String> opinions;
 
@@ -29,7 +29,7 @@ public class PostResponseDto {
 
   private final LocalDateTime modifiedDate;
 
-  public PostResponseDto(Post post, int recommendCount) {
+  public PostResponseDto(Post post, long recommendCount) {
     this.postId = post.getId();
     this.nickname = post.getAccount().getNickname();
     this.title = post.getTitle();
