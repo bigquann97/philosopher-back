@@ -1,15 +1,12 @@
 package gladiator.philosopher.thread.entity;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.recommend.entity.Recommend;
-import gladiator.philosopher.thread.dto.ThreadStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,35 +37,40 @@ public class Thread extends BaseEntity {
 
   private String content;
 
-  @OneToMany(mappedBy = "thread")
-  private List<PostImage> postImages;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "account_id")
-  private Account account;
+  private LocalDateTime endDate;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private ThreadLocation location;
 
   @Enumerated(EnumType.STRING)
-  private ThreadStatus status = ThreadStatus.ACTIVE;
+  @Column(nullable = false)
+  private ThreadStatus status;
 
-  private LocalDateTime endDate;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "account_id")
+  private Account account;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private Set<Recommend> recommends = new LinkedHashSet<>();
+  private List<ThreadImage> threadImages = new ArrayList<>();
+
+  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
+  private List<Recommend> recommends = new ArrayList<>();
 
   @Builder
-  public Thread(String title, String content, List<PostImage> postImages, Account account,
-      LocalDateTime endDate) {
+  public Thread(String title, String content, Account account, LocalDateTime endDate,
+      Category category) {
     this.title = title;
     this.content = content;
-    this.postImages = postImages != null ? postImages : new ArrayList<>(); // null일 경우 빈 List 객체를 생성
-    this.postImages.iterator().forEachRemaining(x -> x.addThread(this));
     this.account = account;
-    this.location = ThreadLocation.CONTINUE;
     this.endDate = endDate;
+    this.category = category;
+    this.status = ThreadStatus.ACTIVE;
+    this.location = ThreadLocation.CONTINUE;
   }
 
   public Thread finishThread() {
@@ -77,7 +79,7 @@ public class Thread extends BaseEntity {
   }
 
   public void blind() {
-    this.status = ThreadStatus.BLINDEND;
+    this.status = ThreadStatus.BLINDED;
   }
 
   public void releaseBlind() {

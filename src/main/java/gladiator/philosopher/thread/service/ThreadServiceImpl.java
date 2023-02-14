@@ -10,11 +10,13 @@ import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadLocation;
+import gladiator.philosopher.thread.entity.ThreadImage;
+import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ThreadServiceImpl implements ThreadService {
 
   private final ThreadRepository threadRepository;
+  private final ThreadImageRepository threadImageRepository;
   private final NotificationService notificationService;
 
   /**
@@ -38,16 +41,21 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional
   public Thread startThread(final Post post) {
-    List<PostImage> images = post.getImages();
+    List<String> images = post.getImages().stream().map(PostImage::getUniqueName)
+        .collect(Collectors.toList());
+
     Thread thread = Thread.builder()
         .account(post.getAccount())
         .title(post.getTitle())
         .content(post.getContent())
-        .postImages(images)
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
-    
-    notificationService.notifyToRecommendersThatThreadHasStarted(post, thread);
+
+    for (String imageUrl : images) {
+      threadImageRepository.save(new ThreadImage(imageUrl, thread));
+    }
+
+    notificationService.notifyToRecommendersThatThreadHasStarted(post);
 
     return threadRepository.save(thread);
   }
@@ -99,9 +107,8 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> selectActiveThreadsWithPaging(ThreadSearchCond cond) {
-    return threadRepository.selectActiveThreadsWithPaging(
-        cond);
+  public Page<ThreadSimpleResponseDto> selectActiveThreads(ThreadSearchCond cond) {
+    return threadRepository.selectActiveThreadsWithCond(cond);
   }
 
   /**
@@ -112,10 +119,8 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> getArchivedThreads(ThreadSearchCond cond) {
-    Page<Thread> threads = threadRepository.findByStatus(ThreadLocation.ARCHIVED,
-        cond.getPageable());
-    return threads.map(thread -> ThreadSimpleResponseDto.builder().thread(thread).build());
+  public Page<ThreadSimpleResponseDto> selectArchivedThreads(ThreadSearchCond cond) {
+    return threadRepository.selectArchivedThreadWithCond(cond);
   }
 
 
