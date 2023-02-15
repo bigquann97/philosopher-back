@@ -46,35 +46,39 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
   @Override
   public Optional<ThreadResponseDto> selectThread(Long id) {
-    List<String> images = jpaQueryFactory
-        .select(threadImage.imageUrl)
-        .from(threadImage)
-        .where(threadImage.thread.id.eq(id))
-        .fetch();
+//    List<String> images = jpaQueryFactory
+//        .select(threadImage.imageUrl)
+//        .from(threadImage)
+//        .where(threadImage.thread.id.eq(id))
+//        .fetch();
 
     ThreadResponseDto dto = jpaQueryFactory
-        .select(Projections.constructor(ThreadResponseDto.class,
+        .select(Projections.constructor(
+            ThreadResponseDto.class,
             thread.id,
             thread.title,
             thread.content,
             thread.createdDate,
             thread.endDate,
             recommend.count(),
+            Projections.list(threadImage.imageUrl),
             account.nickname
         ))
         .from(thread)
+        .leftJoin(thread.threadImages, threadImage)
         .leftJoin(thread.recommends, recommend)
         .leftJoin(thread.account, account)
         .groupBy(thread.id)
         .where(thread.id.eq(id))
         .fetchOne();
 
-    if (dto != null) {
-      dto.addImage(images);
-      return Optional.of(dto);
-    } else {
-      return Optional.empty();
-    }
+    return Optional.of(dto);
+//    if (dto != null) {
+//      dto.addImage(images);
+//      return Optional.of(dto);
+//    } else {
+//      return Optional.empty();
+//    }
   }
 
   @Override

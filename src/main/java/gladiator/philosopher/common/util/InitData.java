@@ -153,12 +153,20 @@ public class InitData implements ApplicationRunner {
 
     Comment comment = new Comment(account1, thread2, "내용", "의견1");
     Comment comment2 = new Comment(account2, thread2, "내용", "의견2");
+    Comment comment3 = new Comment(account2, thread2, "내용", "의견2");
+    Comment comment4 = new Comment(account2, thread2, "내용", "의견2");
 
     commentRepository.save(comment);
     commentRepository.save(comment2);
+    commentRepository.save(comment3);
+    commentRepository.save(comment4);
 
-    Mention mention = new Mention(comment, comment2);
-    mentionRepository.saveAndFlush(mention);
+    Mention mention1 = new Mention(comment, comment2);
+    Mention mention2 = new Mention(comment3, comment2);
+    Mention mention3 = new Mention(comment4, comment2);
+    mentionRepository.saveAndFlush(mention1);
+    mentionRepository.saveAndFlush(mention2);
+    mentionRepository.saveAndFlush(mention3);
 
     Recommend recommend1 = new Recommend(comment, account1);
     Recommend recommend2 = new Recommend(comment, account1);

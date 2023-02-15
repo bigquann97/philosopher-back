@@ -28,11 +28,11 @@ public class CommentResponseDto {
 
   private CommentStatus status;
 
-  private int recommendCount;
+  private Long recommendCount;
 
   @Builder
   public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
-      LocalDateTime createDate, CommentStatus status, int recommendCount,
+      LocalDateTime createDate, CommentStatus status, Long recommendCount,
       List<Long> mentioningCommentIds, List<Long> mentionedCommentIds) {
     this.commentId = commentId;
     this.nickname = nickname;
@@ -42,6 +42,20 @@ public class CommentResponseDto {
     this.status = status;
     this.mentioningCommentIds = mentioningCommentIds;
     this.mentionedCommentIds = mentionedCommentIds;
+    this.recommendCount = recommendCount;
+  }
+
+  public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
+      List<Long> mentioningCommentIds, List<Long> mentionedCommentIds, LocalDateTime createDate,
+      CommentStatus status, Long recommendCount) {
+    this.commentId = commentId;
+    this.nickname = nickname;
+    this.opinion = opinion;
+    this.content = content;
+    this.mentioningCommentIds = mentioningCommentIds;
+    this.mentionedCommentIds = mentionedCommentIds;
+    this.createDate = createDate;
+    this.status = status;
     this.recommendCount = recommendCount;
   }
 
@@ -59,7 +73,7 @@ public class CommentResponseDto {
                 Collectors.toList()))
         .createDate(comment.getCreatedDate())
         .status(comment.getStatus())
-        .recommendCount(comment.getRecommends().size())
+        .recommendCount((long) comment.getRecommends().size())
         .build();
   }
 

@@ -1,10 +1,10 @@
 package gladiator.philosopher.comment.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
-import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.entity.QComment;
 import gladiator.philosopher.mention.entity.QMention;
 import gladiator.philosopher.recommend.entity.QRecommend;
@@ -38,32 +38,46 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
   @Transactional
   public Page<CommentResponseDto> selectCommentsWithPaging(Pageable pageable) {
 
-    List<Comment> comments = jpaQueryFactory
-        .selectFrom(comment)
-        .join(comment.account, account)
+    List<CommentResponseDto> dtos = jpaQueryFactory
+        .select(
+            Projections.constructor(
+                CommentResponseDto.class,
+                comment.id,
+                account.nickname,
+                comment.opinion,
+                comment.content,
+                Projections.list(mention.mentioningComment.id),
+                Projections.list(mention.mentionedComment.id),
+                comment.createdDate,
+                comment.status,
+                recommend.count()
+            )
+        )
+        .from(comment)
+        .leftJoin(comment.account, account)
+        .leftJoin(comment.mentionings, mention).on(mention.mentioningComment.id.eq(comment.id))
+        .leftJoin(comment.mentioneds, mention).on(mention.mentionedComment.id.eq(comment.id))
         .leftJoin(comment.recommends, recommend)
-        .leftJoin(comment.mentionings, mention)
-        .leftJoin(comment.mentioneds, mention)
         .groupBy(comment.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .orderBy(comment.id.desc())
         .fetch();
 
-    Long count = jpaQueryFactory
+    Long total = jpaQueryFactory
         .select(Wildcard.count)
         .from(comment)
         .leftJoin(comment.account, account)
-        .leftJoin(comment.recommends, recommend)
-        .leftJoin(comment.mentionings, mention)
-        .leftJoin(comment.mentioneds, mention)
+        .leftJoin(comment.mentionings, mention).on(mention.mentioningComment.id.eq(comment.id))
+        .leftJoin(comment.mentioneds, mention).on(mention.mentionedComment.id.eq(comment.id))
         .groupBy(comment.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .orderBy(comment.id.desc())
         .fetch().get(0);
 
-    return new PageImpl<>(CommentResponseDto.of(comments), pageable, count);
+    return new PageImpl<>(dtos, pageable, total);
+
   }
 
 

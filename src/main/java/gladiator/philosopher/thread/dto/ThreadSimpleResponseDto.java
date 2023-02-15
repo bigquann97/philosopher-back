@@ -13,12 +13,12 @@ public class ThreadSimpleResponseDto {
 
   private final Long id;
   private final String title;
-  private final Integer recommend;
+  private final Long recommend;
   private final String nickname;
   private final LocalDateTime createdDate;
   private final LocalDateTime endDate;
 
-  public ThreadSimpleResponseDto(Long id, String title, Integer recommend, String nickname,
+  public ThreadSimpleResponseDto(Long id, String title, Long recommend, String nickname,
       LocalDateTime createdDate, LocalDateTime endDate) {
     this.id = id;
     this.title = title;
@@ -29,7 +29,7 @@ public class ThreadSimpleResponseDto {
   }
 
   @Builder
-  public ThreadSimpleResponseDto(Thread thread, Integer recommendCount) {
+  public ThreadSimpleResponseDto(Thread thread, Long recommendCount) {
     this.id = thread.getId();
     this.title = thread.getTitle();
     this.recommend = recommendCount;
