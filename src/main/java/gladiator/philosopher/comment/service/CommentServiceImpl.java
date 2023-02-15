@@ -35,24 +35,15 @@ public class CommentServiceImpl implements CommentService {
   @Transactional
   public void createComment(
       final CommentRequestDto commentRequestDto,
-      final Thread threada,
+      final Thread thread,
       final Account account
   ) {
-    Thread thread = threadService.getThreadEntity(threada.getId());
-    Comment comment = commentRequestDto.toEntity(thread, account);
-    checkIfThreadHasOpinion(thread, commentRequestDto);
+    Thread foundThread = threadService.getThreadEntity(thread.getId());
+    checkIfThreadIsArchived(foundThread);
+    checkIfThreadHasOpinion(foundThread, commentRequestDto);
+    Comment comment = commentRequestDto.toEntity(foundThread, account);
     mentionService.mentionComment(comment);
     commentRepository.save(comment);
-  }
-
-  @Transactional
-  public void checkIfThreadHasOpinion(Thread thread, CommentRequestDto commentRequestDto) {
-    boolean threadHasOpinion = thread.getOpinions().stream()
-        .anyMatch(x -> x.getOpinion().equals(commentRequestDto.getOpinion()));
-
-    if (!threadHasOpinion) {
-      throw new IllegalArgumentException("논제에 없는 의견입니다.");
-    }
   }
 
   @Override
@@ -110,5 +101,22 @@ public class CommentServiceImpl implements CommentService {
     }
   }
 
+  private void checkIfThreadIsArchived(Thread thread) {
+    if (thread.isArchived()) {
+      throw new IllegalArgumentException("토론 종료된 쓰레드 입니다.");
+    }
+  }
+
+  private void checkIfThreadHasOpinion(
+      final Thread thread,
+      final CommentRequestDto commentRequestDto
+  ) {
+    boolean threadHasOpinion = thread.getOpinions().stream()
+        .anyMatch(x -> x.getOpinion().equals(commentRequestDto.getOpinion()));
+
+    if (!threadHasOpinion) {
+      throw new IllegalArgumentException("논제에 없는 의견입니다.");
+    }
+  }
 
 }

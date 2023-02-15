@@ -86,15 +86,15 @@ public class InitData implements ApplicationRunner {
     accountRepository.save(account5);
 
     // 카테고리
-    Category category1 = new Category(1L, "철학");
+    Category category1 = new Category("철학");
     categoryRepository.save(category1);
-    Category category2 = new Category(2L, "인문");
+    Category category2 = new Category("인문");
     categoryRepository.save(category2);
-    Category category3 = new Category(3L, "사회");
+    Category category3 = new Category("사회");
     categoryRepository.save(category3);
-    Category category4 = new Category(4L, "연애");
+    Category category4 = new Category("연애");
     categoryRepository.save(category4);
-    Category category5 = new Category(5L, "논쟁");
+    Category category5 = new Category("논쟁");
     categoryRepository.save(category5);
 
     // 게시글 부
@@ -200,8 +200,7 @@ public class InitData implements ApplicationRunner {
     Recommend recommend1 = new Recommend(comment, account1);
     Recommend recommend2 = new Recommend(comment, account1);
     recommendRepository.save(recommend1);
-    recommendRepository.save(recommend2);
-
+//    recommendRepository.save(recommend2);
 
   }
 

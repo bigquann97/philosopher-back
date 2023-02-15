@@ -90,7 +90,7 @@ public class Thread extends BaseEntity {
   public void releaseBlind() {
     this.status = ThreadStatus.ACTIVE;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -106,6 +106,10 @@ public class Thread extends BaseEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  public boolean isArchived() {
+    return this.location.equals(ThreadLocation.ARCHIVED);
   }
 
 }

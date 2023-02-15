@@ -33,22 +33,6 @@ public class MentionServiceImpl implements MentionService {
     mentionRepository.deleteByMentioningComment(mentioningComment);
   }
 
-  // 파라미터 댓글이 MentioningComment 인 모든 Mention 가져오기
-  // 해당 댓글이 멘션중인 모든 댓글 가져오기
-  @Override
-  @Transactional
-  public List<Mention> getMentioningList(Comment mentioningComment) {
-    return mentionRepository.findByMentioningComment(mentioningComment);
-  }
-
-  // 파라미터 댓글이 MentionedComment 인 모든 Mention 가져오기
-  // 해당 댓글을 멘션한 모든 댓글 가져오기
-  @Override
-  @Transactional
-  public List<Mention> getMentionedList(Comment mentionedComment) {
-    return mentionRepository.findByMentionedComment(mentionedComment);
-  }
-
   private List<Mention> extractMentions(Comment mentioningComment) {
     List<Mention> mentions = new ArrayList<>();
 
