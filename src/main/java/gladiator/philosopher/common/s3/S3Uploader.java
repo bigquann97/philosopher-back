@@ -75,7 +75,6 @@ public class S3Uploader {
     return resultUrlList;
   }
 
-
   /**
    * S3 업로드
    * @param file
@@ -146,5 +145,7 @@ public class S3Uploader {
     if(!result)
       throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
   }
+
+
 
 }

@@ -41,29 +41,25 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class PostController {
 
-  private final PostRepository postRepository;
-
   private final PostService postService;
   private final S3Uploader s3Uploader;
   private final String dirName = "postImg";
   private final CategoryService categoryService;
 
   // /api/posts
-  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
-      MediaType.APPLICATION_JSON_VALUE})
+  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.OK)
-  public void createPost(
-      @RequestPart("image") List<MultipartFile> multipartFiles,
-      @RequestPart("dto") PostRequestDto postRequestDto,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void createPost(@RequestPart("image") List<MultipartFile> multipartFiles, @RequestPart("dto") PostRequestDto postRequestDto, @AuthenticationPrincipal AccountDetails accountDetails) {
     List<String> FailToPostUrls = null;
+
     try {
-      postRequestDto.checkByOpinionCount();
+      postRequestDto.checkByOpinionCount(); // option 카운트 체크 -> 어차피 프론트에서 1차적으로 막을꺼임, 혹시나 해서
       s3Uploader.checkFilesExtension(multipartFiles);
       List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
       FailToPostUrls = urls.stream().collect(Collectors.toList());
       Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
       postService.createPost(urls, postRequestDto, accountDetails, Category);
+
     } catch (IOException e) {
       for (String url : FailToPostUrls) {
         String[] split = url.split("/");
@@ -78,7 +74,7 @@ public class PostController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<PostsResponseDto> getPosts(@RequestParam int page) {
-    return postService.getPosts(page);
+    return postService.SearchByQuerydsl(page);
   }
 
   // /api/posts/1
@@ -108,17 +104,9 @@ public class PostController {
 //    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
 //  }
 
-  @GetMapping("/test")
-  public List<TestPostResponseDto> searchQuerydslTest(PostSearchCondition condition,
-      Pageable pageable) {
-    List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition,
-        pageable);
-    return testPostResponseDtos;
-  }
-
   @GetMapping("/testv2")
   public List<TestPostResponseDto> gegegege(PostSearchCondition condition, Pageable pageable) {
-    return postService.getPosts(condition, pageable);
+    return postService.SearchByQuerydsl(condition, pageable);
   }
 
 }

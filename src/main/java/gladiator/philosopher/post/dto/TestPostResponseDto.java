@@ -14,20 +14,20 @@ public class TestPostResponseDto {
   private String content; // 내용
   private String category; // 카테고리
   private LocalDateTime createdDate; // 작성일자
-  private PostStatus status;
+  private PostStatus status; // 상태
 
   // account
   private String nickname; // 작성자 닉네임
 //  private List<PostImage> images;
 
 //  //  //image
-  private List<String> images;
+  private List<String> images; // 이미지리스트
 
   //recommend
   private Long recommend; // 추천수
 
   public TestPostResponseDto(Long id, String title, String content, String category,
-      LocalDateTime createdDate, PostStatus status, String nickname,
+      LocalDateTime createdDate, PostStatus status, String nickname, List<String> images,
       Long recommend) {
     this.id = id;
     this.title = title;
@@ -36,6 +36,7 @@ public class TestPostResponseDto {
     this.createdDate = createdDate;
     this.status = status;
     this.nickname = nickname;
+    this.images = images;
     this.recommend = recommend;
   }
 

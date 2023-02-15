@@ -40,13 +40,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 post.createdDate.as("createDate"),
                 post.status.as("status"),
                 account.nickname.as("nickname"),
+                Projections.list(postImage.imageUrl),
                 JPAExpressions
                     .select(Wildcard.count).from(recommend)
                     .where(post.id.eq(recommend.post.id)))
             )
         .from(post)
         .leftJoin(post.account, account)
-        .leftJoin(post.images, postImage)
+        .leftJoin(post.images, postImage).on(postImage.post.id.eq(post.id))
         .where(
             postContentEqual(condition.getContent()),
             postStatusEqual(condition.getStatus()),

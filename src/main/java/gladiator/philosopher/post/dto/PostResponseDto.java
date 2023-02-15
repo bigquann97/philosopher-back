@@ -16,25 +16,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class PostResponseDto {
 
-  // post
+
   private final Long id;
   private final String title;
-  private final Long recommend;
   private final String content;
+  private final Long recommend;
   private final LocalDateTime createDate;
   private final LocalDateTime modifiedDate;
-
-  // account
   private final String nickname;
-
-  // image ( 양방향 )
   private final List<String> images;
-
-  // opinions ( 양방향 )
   private final List<String> opinions;
-
-  // category ( 단방향 )
-  private final Category category;
+  private final String category;
 
 
   public PostResponseDto(Post post, long recommendCount) {
@@ -49,21 +41,34 @@ public class PostResponseDto {
     this.recommend = recommendCount;
     this.opinions = post.getOpinions().stream().map(PostOpinion::getOpinion)
         .collect(Collectors.toList());
-    this.category  = post.getCategory();
+    this.category = post.getCategory().getName();
   }
 
-  public PostResponseDto(Long id, String title, Long recommend, String content,
-      LocalDateTime createDate, LocalDateTime modifiedDate, String nickname, List<String> images,
-      List<String> opinions, Category category) {
-    this.id = id;
-    this.title = title;
+  public PostResponseDto(Post post, Long recommend, List<String> urls, List<String> opinions) {
+    this.id = post.getId();
+    this.title = post.getTitle();
+    this.content = post.getContent();
     this.recommend = recommend;
-    this.content = content;
-    this.createDate = createDate;
-    this.modifiedDate = modifiedDate;
-    this.nickname = nickname;
-    this.images = images;
+    this.createDate = post.getCreatedDate();
+    this.modifiedDate = post.getModifiedDate();
+    this.nickname = post.getAccount().getNickname();
+    this.images = urls;
     this.opinions = opinions;
-    this.category = category;
+    this.category = post.getCategory().toString();
   }
+
+//  public PostResponseDto(Long id, String title, Long recommend, String content,
+//      LocalDateTime createDate, LocalDateTime modifiedDate, String nickname, List<String> images,
+//      List<String> opinions, Category category) {
+//    this.id = id;
+//    this.title = title;
+//    this.recommend = recommend;
+//    this.content = content;
+//    this.createDate = createDate;
+//    this.modifiedDate = modifiedDate;
+//    this.nickname = nickname;
+//    this.images = images;
+//    this.opinions = opinions;
+//    this.category = category;
+//  }
 }

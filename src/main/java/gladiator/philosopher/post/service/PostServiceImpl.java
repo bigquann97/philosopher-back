@@ -1,7 +1,5 @@
 package gladiator.philosopher.post.service;
 
-import static gladiator.philosopher.post.entity.QPostImage.postImage;
-
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
@@ -36,40 +34,27 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
-  private final ImageService imageService;
   private final PostImageRepository postImageRepository;
   private final RecommendService recommendService;
   private final PostOpinionRepository postOpinionRepository;
 
   @Override
   @Transactional
-  public void createPost(List<MultipartFile> multipartFiles, PostRequestDto postRequestDto,
-      AccountDetails accountDetails) {
-    List<PostImage> postImages = new ArrayList<>();
-
-    Post post = Post.builder()
-        .account(accountDetails.getAccount())
-        .title(postRequestDto.getTitle())
-        .content(postRequestDto.getContent())
-        .build();
-
+  public void createPost(List<String> url, PostRequestDto postRequestDto, AccountDetails accountDetails, Category category) {
+    Post post = postRequestDto.toEntity(accountDetails.getAccount(), category);
+    for(String s : url){
+      PostImage postImage= new PostImage(s,post);
+      postImageRepository.save(postImage);
+    }
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
-
     postOpinionRepository.saveAll(opinions);
-
-    for (MultipartFile multipartFile : multipartFiles) {
-      PostImage postImage = new PostImage(multipartFile.getOriginalFilename(), post);
-      imageService.upload(multipartFile, postImage.getImageUrl());
-      postImageRepository.save(postImage);
-      postImages.add(postImage);
-    }
     postRepository.save(post);
   }
 
   @Override
   @Transactional
-  public List<PostsResponseDto> getPosts(int pageChoice) {
+  public List<PostsResponseDto> SearchByQuerydsl(int pageChoice) {
     Page<Post> posts = postRepository.findAll(pageableSetting(pageChoice));
     if (posts.isEmpty()) {
       throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
@@ -77,12 +62,6 @@ public class PostServiceImpl implements PostService {
     List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
         Collectors.toList());
     return PostResponseDtoList;
-  }
-
-  @Override
-  public void createPost(List<String> urls, PostRequestDto postRequestDto,
-      AccountDetails accountDetails, Category category) {
-
   }
 
   private Pageable pageableSetting(int pageChoice) {
@@ -98,8 +77,12 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
-    long postRecommendCount = recommendService.getPostRecommendCount(post);
-    return new PostResponseDto(post, postRecommendCount);
+    Long postRecommendCount = recommendService.getPostRecommendCount(post);
+    List<String> options = postOpinionRepository.getOptions(post.getId());
+    List<String> url = postImageRepository.getUrl(post.getId());
+
+    return new PostResponseDto(post, postRecommendCount, options, url);
+
   }
 
 
@@ -145,17 +128,6 @@ public class PostServiceImpl implements PostService {
     );
   }
 
-/*
-postId만 필요할 경우 postId 존재 확인 후 postId를 반환
-  @Override
-  public Long existsPostId(Long postId) {
-    if (postRepository.existsById(postId)) {
-      return postId;
-    }
-    throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
-  }
-*/
-
   @Override
   @Transactional
   public void modifyPostByAdmin(Long id, PostRequestDto postRequestDto) {
@@ -166,40 +138,14 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
     postRepository.save(post);
   }
 
-
   @Override
-  public List<String> getgetget(Long id) {
-    final List<String> url = postImageRepository.getUrl(id);
-    return url;
-  }
-
-//  List<PostImage> urlList = jpaQueryFactory
-//      .selectFrom(postImage)
-//      .where(postImage.post.id.in(data.stream().map(m -> m.getId()).collect(Collectors.toList())))
-//      .fetch();
-//
-//    for (int i = 0; i < data.size(); i++) { // data size 만큼만 돌고,
-//    for (PostImage url : urlList) { // 이건 url 전체 돌고
-//      if (data.get(i).getId().equals(url.getPost().getId()))  // 지금 data의 0번 인덱스 -> post 1번 게시물
-//      {
-//        results.add(new TestPostResponseDto(data.get(i), url.getImageUrl()));
-//      }
-//
-//    }
-//  }
-
-  @Override
-  public List<TestPostResponseDto> getPosts(PostSearchCondition condition, Pageable pageable) {
+  public List<TestPostResponseDto> SearchByQuerydsl(PostSearchCondition condition, Pageable pageable) {
     List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition, pageable);
-    System.out.println(testPostResponseDtos);
-
     List<TestPostResponseDto> result = new ArrayList<>();
-
-    for(int i=0; i< testPostResponseDtos.size(); i++){
+    for (int i = 0; i < testPostResponseDtos.size(); i++) {
       List<String> url = postImageRepository.getUrl(testPostResponseDtos.get(i).getId());
-      result.add(new TestPostResponseDto(testPostResponseDtos.get(i),url));
+      result.add(new TestPostResponseDto(testPostResponseDtos.get(i), url));
     }
-
     return result;
   }
 
