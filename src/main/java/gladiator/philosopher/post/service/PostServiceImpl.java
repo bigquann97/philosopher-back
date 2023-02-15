@@ -162,10 +162,10 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
     post.modifyPost(postRequestDto);
     postRepository.save(post);
   }
-
-  @Override
-  public List<TestPostResponseDto> getPostAndAccount(Long id) {
-    return postRepository.getPost(id);
-  }
+//
+//  @Override
+//  public List<TestPostResponseDto> getPostAndAccount(Long id) {
+//    return postRepository.getPost(id);
+//  }
 
 }

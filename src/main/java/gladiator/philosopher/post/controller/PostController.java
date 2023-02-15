@@ -8,8 +8,11 @@ import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
+import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.post.service.PostService;
 import java.io.IOException;
 import java.util.List;
@@ -38,6 +41,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/posts")
 @Slf4j
 public class PostController {
+
+  private final PostRepository postRepository;
 
   private final PostService postService;
   private final S3Uploader s3Uploader;
@@ -99,9 +104,15 @@ public class PostController {
     postService.deletePost(postId, accountDetails);
   }
 
-  @GetMapping("/test/{id}")
-  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
-    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
+//  @GetMapping("/test/{id}")
+//  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
+//    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
+//  }
+
+  @GetMapping("/test")
+  public List<TestPostResponseDto> searchQuerydslTest(PostSearchCondition condition){
+    final List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition);
+    return testPostResponseDtos;
   }
 
 }

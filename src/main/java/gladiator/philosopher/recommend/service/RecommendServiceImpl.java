@@ -22,7 +22,7 @@ public class RecommendServiceImpl implements RecommendService {
   @Transactional
   public void createRecommendPost(final Post post, final Account account) {
     checkIfUserAlreadyLiked(post, account);
-    Recommend recommend = new Recommend(post, account);
+    Recommend recommend = new Recommend(account,post);
     recommendRepository.save(recommend);
     makeThreadIfRecommendCountSatisfied(post);
   }

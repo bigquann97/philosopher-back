@@ -27,7 +27,7 @@ import org.hibernate.Hibernate;
 @Table(
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "recommendContraint",
+            name = "recommendConstraint",
             columnNames = {"account_id", "post_id", "thread_id", "comment_id"}
         )
     }
@@ -55,7 +55,7 @@ public class Recommend {
   @JoinColumn(name = "comment_id")
   private Comment comment;
 
-  public Recommend(Post post, Account account) {
+  public Recommend(Account account, Post post) {
     this.post = post;
     this.account = account;
   }

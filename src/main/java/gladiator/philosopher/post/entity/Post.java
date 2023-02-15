@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;

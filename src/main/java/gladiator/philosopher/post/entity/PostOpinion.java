@@ -1,6 +1,8 @@
 package gladiator.philosopher.post.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,7 +23,7 @@ public class PostOpinion {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id")
   private Post post;
 

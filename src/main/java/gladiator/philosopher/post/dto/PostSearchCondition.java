@@ -10,5 +10,4 @@ public class PostSearchCondition {
   private String category;
   private String status;
 
-
 }

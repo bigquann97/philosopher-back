@@ -118,6 +118,43 @@ public class InitData implements ApplicationRunner {
     Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null, category5);
     postRepository.save(post6);
 
+    // 회원 1~5 // 게시글 1~6
+    // 댓글부
+    Recommend recommend17 = new Recommend(account1, post1);
+    recommendRepository.save(recommend17);
+
+    Recommend recommend16 = new Recommend(account1, post3);
+    recommendRepository.save(recommend16);
+
+    Recommend recommend3 = new Recommend(account1, post4);
+    recommendRepository.save(recommend3);
+    Recommend recommend4 = new Recommend(account2, post2);
+    recommendRepository.save(recommend4);
+    Recommend recommend5 = new Recommend(account2, post4);
+    recommendRepository.save(recommend5);
+    Recommend recommend6 = new Recommend(account2, post6);
+    recommendRepository.save(recommend6);
+    Recommend recommend7 = new Recommend(account3, post1);
+    recommendRepository.save(recommend7);
+    Recommend recommend8 = new Recommend(account3, post5);
+    recommendRepository.save(recommend8);
+    Recommend recommend9 = new Recommend(account3, post5);
+    recommendRepository.save(recommend9);
+    Recommend recommend10 = new Recommend(account4, post2);
+    recommendRepository.save(recommend10);
+    Recommend recommend11 = new Recommend(account4, post6);
+    recommendRepository.save(recommend11);
+    Recommend recommend12 = new Recommend(account4, post4);
+    recommendRepository.save(recommend12);
+    Recommend recommend13 = new Recommend(account5, post2);
+    recommendRepository.save(recommend13);
+
+    Recommend recommend14 = new Recommend(account5, post3);
+    recommendRepository.save(recommend14);
+
+    Recommend recommend15 = new Recommend(account5, post4);
+    recommendRepository.save(recommend15);
+
     List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
         .collect(Collectors.toList());
     List<PostOpinion> list2 = opinions.stream().map(x -> new PostOpinion(post2, x))
