@@ -46,6 +46,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
   @Override
   public Optional<ThreadResponseDto> selectThread(Long id) {
+
     List<String> images = jpaQueryFactory
         .select(threadImage.imageUrl)
         .from(threadImage)
@@ -75,6 +76,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     } else {
       return Optional.empty();
     }
+
   }
 
   @Override

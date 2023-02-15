@@ -66,14 +66,11 @@ public class S3Uploader {
       ObjectMetadata objectMetadata = new ObjectMetadata();
       objectMetadata.setContentLength(multipartFile.getSize());
       objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
-
       String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
       String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
           objectMetadata); // s3로 업로드
       log.info("upfile url is :" + uploadImageUrl);
-
       resultUrlList.add(uploadImageUrl);
-
     }
     return resultUrlList;
   }

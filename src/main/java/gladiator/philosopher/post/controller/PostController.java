@@ -11,7 +11,6 @@ import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
-import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.post.service.PostService;
 import java.io.IOException;
@@ -19,9 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +67,7 @@ public class PostController {
     } catch (IOException e) {
       for (String url : FailToPostUrls) {
         String[] split = url.split("/");
-        String filename = dirName +"/" + split[split.length - 1];
+        String filename = dirName + "/" + split[split.length - 1];
         s3Uploader.deleteS3(filename);
       }
       throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
@@ -110,9 +109,16 @@ public class PostController {
 //  }
 
   @GetMapping("/test")
-  public List<TestPostResponseDto> searchQuerydslTest(PostSearchCondition condition){
-    final List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition);
+  public List<TestPostResponseDto> searchQuerydslTest(PostSearchCondition condition,
+      Pageable pageable) {
+    List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition,
+        pageable);
     return testPostResponseDtos;
+  }
+
+  @GetMapping("/testv2")
+  public List<TestPostResponseDto> gegegege(PostSearchCondition condition, Pageable pageable) {
+    return postService.getPosts(condition, pageable);
   }
 
 }

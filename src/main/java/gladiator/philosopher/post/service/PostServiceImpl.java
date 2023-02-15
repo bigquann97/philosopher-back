@@ -1,5 +1,7 @@
 package gladiator.philosopher.post.service;
 
+import static gladiator.philosopher.post.entity.QPostImage.postImage;
+
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
@@ -7,6 +9,7 @@ import gladiator.philosopher.common.image.ImageService;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
@@ -162,10 +165,43 @@ postId만 필요할 경우 postId 존재 확인 후 postId를 반환
     post.modifyPost(postRequestDto);
     postRepository.save(post);
   }
+
+
+  @Override
+  public List<String> getgetget(Long id) {
+    final List<String> url = postImageRepository.getUrl(id);
+    return url;
+  }
+
+//  List<PostImage> urlList = jpaQueryFactory
+//      .selectFrom(postImage)
+//      .where(postImage.post.id.in(data.stream().map(m -> m.getId()).collect(Collectors.toList())))
+//      .fetch();
 //
-//  @Override
-//  public List<TestPostResponseDto> getPostAndAccount(Long id) {
-//    return postRepository.getPost(id);
+//    for (int i = 0; i < data.size(); i++) { // data size 만큼만 돌고,
+//    for (PostImage url : urlList) { // 이건 url 전체 돌고
+//      if (data.get(i).getId().equals(url.getPost().getId()))  // 지금 data의 0번 인덱스 -> post 1번 게시물
+//      {
+//        results.add(new TestPostResponseDto(data.get(i), url.getImageUrl()));
+//      }
+//
+//    }
 //  }
+
+  @Override
+  public List<TestPostResponseDto> getPosts(PostSearchCondition condition, Pageable pageable) {
+    List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition, pageable);
+    System.out.println(testPostResponseDtos);
+
+    List<TestPostResponseDto> result = new ArrayList<>();
+
+    for(int i=0; i< testPostResponseDtos.size(); i++){
+      List<String> url = postImageRepository.getUrl(testPostResponseDtos.get(i).getId());
+      result.add(new TestPostResponseDto(testPostResponseDtos.get(i),url));
+    }
+
+    return result;
+  }
+
 
 }

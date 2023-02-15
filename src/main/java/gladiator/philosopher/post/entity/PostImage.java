@@ -1,11 +1,6 @@
 package gladiator.philosopher.post.entity;
 
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.thread.entity.Thread;
-import java.util.Arrays;
-import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +25,7 @@ public class PostImage extends BaseEntity {
 
   private String imageUrl;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "post_id")
   private Post post;
 
