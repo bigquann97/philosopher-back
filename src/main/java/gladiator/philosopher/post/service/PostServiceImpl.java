@@ -40,14 +40,18 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public void createPost(List<String> url, PostRequestDto postRequestDto,
       AccountDetails accountDetails, Category category) {
+
     Post post = postRequestDto.toEntity(accountDetails.getAccount(), category);
+
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
     }
+
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
     postOpinionRepository.saveAll(opinions);
+
     postRepository.save(post);
   }
 

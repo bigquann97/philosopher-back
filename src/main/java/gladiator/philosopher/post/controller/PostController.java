@@ -58,6 +58,7 @@ public class PostController {
       List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
       FailToPostUrls = urls.stream().collect(Collectors.toList());
       Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
+
       postService.createPost(urls, postRequestDto, accountDetails, Category);
 
     } catch (IOException e) {

@@ -1,5 +1,6 @@
 package gladiator.philosopher.account.entity;
 
+import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
@@ -61,16 +62,6 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-//  public void changeProfile(String nickname, AccountImage accountImage) {
-//    this.nickname = nickname;
-//    if (!accountImage.getOriginalName().equals("default_image.jpg")) {
-//      this.accountImage = accountImage;
-//    }
-//  }
-//
-//  public boolean hasDefaultAccountImage() {
-//    return this.accountImage.getUniqueName().equals("default_image.jpg");
-//  }
 
   // testcode
   public Account(Long id,String email, String password, int age, String nickname,
@@ -87,6 +78,10 @@ public class Account extends BaseEntity {
 
   public void UpdateAccountRole(UserRole role){
     this.type = role;
+  }
+
+  public void UpdateAccountInfo(ModifyProfileRequestDto modifyProfileRequestDto){
+    this.nickname = modifyProfileRequestDto.getNickname();
   }
 
 }

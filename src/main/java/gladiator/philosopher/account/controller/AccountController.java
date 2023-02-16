@@ -40,5 +40,4 @@ public class AccountController {
     accountService.modifyInfo(accountDetails.getAccount(), modifyProfileRequestDto);
   }
 
-
 }

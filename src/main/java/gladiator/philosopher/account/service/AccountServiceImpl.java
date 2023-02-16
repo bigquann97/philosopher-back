@@ -59,6 +59,7 @@ public class AccountServiceImpl implements AccountService{
   @Override
   @Transactional
   public void modifyInfo(Account account, ModifyProfileRequestDto modifyProfileRequestDto) {
-
+    account.UpdateAccountInfo(modifyProfileRequestDto);
   }
+
 }
