@@ -14,7 +14,7 @@ public class UserInfoResponseDto {
   private final Gender gender;
   private final UserStatus userStatus;
 
-  public UserInfoResponseDto(Account account) {
+  public UserInfoResponseDto(final Account account) {
     this.email = account.getEmail();
     this.age = account.getAge();
     this.nickname = account.getNickname();

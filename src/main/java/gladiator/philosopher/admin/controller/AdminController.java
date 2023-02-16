@@ -1,7 +1,7 @@
 package gladiator.philosopher.admin.controller;
 
-import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.account.dto.AccountSearchCondition;
+import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
@@ -43,7 +43,7 @@ public class AdminController {
   }
 
   @GetMapping("/accountsV2")
-  public List<UserInfoByAdminResponseDto> getAccountsV2(AccountSearchCondition condition){
+  public List<UserInfoByAdminResponseDto> getAccountsV2(final AccountSearchCondition condition) {
     return adminService.getAccounts(condition);
   }
 
@@ -54,7 +54,7 @@ public class AdminController {
    */
   @PatchMapping("/modify/account/role/{id}")
   @PreAuthorize("hasRole('ROLE_MASTER')")
-  public void modifyUserRole(@PathVariable("id") Long id) {
+  public void modifyUserRole(final @PathVariable("id") Long id) {
     adminService.modifyUserRole(accountService.getAccount(id));
   }
 
@@ -64,7 +64,7 @@ public class AdminController {
    * @param id
    */
   @DeleteMapping("post/{id}")
-  public void deletePostByAdmin(@PathVariable("id") Long id) {
+  public void deletePostByAdmin(final @PathVariable("id") Long id) {
     postService.deletePostByAdmin(id);
   }
 
@@ -75,8 +75,10 @@ public class AdminController {
    * @param postRequestDto
    */
   @PatchMapping("post/{id}")
-  public void modifyPostByAdmin(@PathVariable("id") Long id,
-      @RequestBody PostRequestDto postRequestDto) {
+  public void modifyPostByAdmin(
+      final @PathVariable("id") Long id,
+      final @RequestBody PostRequestDto postRequestDto
+  ) {
     postService.modifyPostByAdmin(id, postRequestDto);
   }
 
@@ -89,11 +91,15 @@ public class AdminController {
   public List<ReportResponseDto> getReports() {
     return adminService.getReports();
   }
+
   /**
    * 댓글 수정
    */
   @PatchMapping("comment/{id}")
-  public void modifyCommentByAdmin(@PathVariable("id")Long id, @RequestBody CommentRequestDto commentRequestDto){
+  public void modifyCommentByAdmin(
+      final @PathVariable("id") Long id,
+      final @RequestBody CommentRequestDto commentRequestDto
+  ) {
     commentService.modifyCommentByAdmin(id, commentRequestDto);
   }
 
@@ -101,7 +107,7 @@ public class AdminController {
    * 댓글 삭제
    */
   @DeleteMapping("comment/{id}")
-  public void deleteCommentByAdmin(@PathVariable("id")Long id){
+  public void deleteCommentByAdmin(final @PathVariable("id") Long id) {
     commentService.deleteCommentByAdmin(id);
   }
 
@@ -109,10 +115,9 @@ public class AdminController {
    * 쓰레드 목록 조회
    */
   @GetMapping("/threadsV2")
-  public ResponseEntity<List<ThreadsSimpleResponseDtoByAdmin>> getThreadsV2(){
+  public ResponseEntity<List<ThreadsSimpleResponseDtoByAdmin>> getThreadsV2() {
     return ResponseEntity.status(200).body(adminService.getThreadsV2());
   }
-
 
   /**
    * 아카이브 목록 조회

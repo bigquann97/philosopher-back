@@ -1,7 +1,7 @@
 package gladiator.philosopher.account.controller;
 
-import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
+import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.common.security.AccountDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,22 +21,27 @@ public class AccountController {
 
   /**
    * 내 정보 가지고 오기 -> 내용 더 추가할 것.
+   *
    * @param accountDetails
    */
-  @GetMapping("")
+  @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public void getMyInfo(@AuthenticationPrincipal AccountDetails accountDetails){
+  public void getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
     accountService.getMyInfo(accountDetails.getAccount());
   }
 
   /**
    * 내 정보 수정
+   *
    * @param accountDetails
    * @param modifyProfileRequestDto
    */
-  @PatchMapping("")
+  @PatchMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public void modifyMyInfo(@AuthenticationPrincipal AccountDetails accountDetails, ModifyProfileRequestDto modifyProfileRequestDto){
+  public void modifyMyInfo(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final ModifyProfileRequestDto modifyProfileRequestDto
+  ) {
     accountService.modifyInfo(accountDetails.getAccount(), modifyProfileRequestDto);
   }
 

@@ -24,19 +24,19 @@ public class PostRequestDto {
     this.opinions = opinions;
     this.category = category;
   }
-
-
-  public Post toEntity(Account account, Category category){
-  return Post.builder()
-      .account(account)
-      .title(this.title)
-      .content(this.content)
-      .category(category)
-      .build();
+  
+  public Post toEntity(Account account, Category category) {
+    return Post.builder()
+        .account(account)
+        .title(this.title)
+        .content(this.content)
+        .category(category)
+        .build();
   }
 
-  public void checkByOpinionCount(){
-    if(this.getOpinions().size()>5)
+  public void checkByOpinionCount() {
+    if (this.getOpinions().size() > 5) {
       throw new CustomException(ExceptionStatus.TO_MUCH_INPUTDATAS);
+    }
   }
 }

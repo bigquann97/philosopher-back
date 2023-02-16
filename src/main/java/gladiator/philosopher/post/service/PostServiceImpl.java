@@ -1,9 +1,9 @@
 package gladiator.philosopher.post.service;
 
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
@@ -38,9 +38,13 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(List<String> url, PostRequestDto postRequestDto,
-      AccountDetails accountDetails, Category category) {
-    Post post = postRequestDto.toEntity(accountDetails.getAccount(), category);
+  public void createPost(
+      final List<String> url,
+      final PostRequestDto postRequestDto,
+      final Account account,
+      final Category category
+  ) {
+    Post post = postRequestDto.toEntity(account, category);
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
@@ -53,8 +57,8 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public List<PostsResponseDto> SearchByQuerydsl(int pageChoice) {
-    Page<Post> posts = postRepository.findAll(pageableSetting(pageChoice));
+  public List<PostsResponseDto> SearchByQuerydsl(final int page) {
+    Page<Post> posts = postRepository.findAll(pageableSetting(page));
     if (posts.isEmpty()) {
       throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
     }
@@ -63,36 +67,32 @@ public class PostServiceImpl implements PostService {
     return PostResponseDtoList;
   }
 
-  private Pageable pageableSetting(int pageChoice) {
+  private Pageable pageableSetting(final int pageChoice) {
     Sort.Direction direction = Sort.Direction.DESC;
     Sort sort = Sort.by(direction, "id");
-    Pageable pageable = PageRequest.of(pageChoice - 1, 4, sort);
-    return pageable;
+    return PageRequest.of(pageChoice - 1, 4, sort);
   }
 
   @Override
   @Transactional
-  public PostResponseDto getPost(Long postId) {
-    Post post = postRepository.findById(postId).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
-    );
+  public PostResponseDto getPost(final Long postId) {
+    Post post = getPostEntity(postId);
     Long postRecommendCount = recommendService.getPostRecommendCount(post);
     List<String> options = postOpinionRepository.getOptions(post.getId());
     List<String> url = postImageRepository.getUrl(post.getId());
-
-    return new PostResponseDto(post, postRecommendCount, options, url);
-
+    return new PostResponseDto(post, postRecommendCount, url, options);
   }
 
 
   @Override
   @Transactional
-  public PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
-      AccountDetails accountDetails) {
-    Post post = postRepository.findById(postId).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
-    );
-    if (!post.isWriter(accountDetails)) {
+  public PostResponseDto modifyPost(
+      final Long postId,
+      final PostRequestDto postRequestDto,
+      final Account account
+  ) {
+    Post post = getPostEntity(postId);
+    if (!post.isWriter(account)) {
       throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
     post.modifyPost(postRequestDto);
@@ -103,25 +103,22 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void deletePost(Long postId, AccountDetails accountDetails) {
-    Post post = postRepository.findById(postId).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
-    );
-    if (!post.isWriter(accountDetails)) {
+  public void deletePost(final Long postId, final Account account) {
+    Post post = getPostEntity(postId);
+    if (!post.isWriter(account)) {
       throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
     postRepository.delete(post);
   }
 
   @Override // 여기서 필요한 작업은 -> 해당 DB단말고 파일 데이터도 지워야 함
-  public void deletePostByAdmin(Long id) {
-    Post post = postRepository.findById(id).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
+  public void deletePostByAdmin(final Long postId) {
+    Post post = getPostEntity(postId);
     postRepository.delete(post);
   }
 
   @Override
-  public Post getPostEntity(Long postId) {
+  public Post getPostEntity(final Long postId) {
     return postRepository.findById(postId).orElseThrow(
         () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
     );
@@ -129,17 +126,17 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void modifyPostByAdmin(Long id, PostRequestDto postRequestDto) {
-    Post post = postRepository.findById(id).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
-    );
+  public void modifyPostByAdmin(final Long postId, final PostRequestDto postRequestDto) {
+    Post post = getPostEntity(postId);
     post.modifyPost(postRequestDto);
     postRepository.save(post);
   }
 
   @Override
-  public List<TestPostResponseDto> SearchByQuerydsl(PostSearchCondition condition,
-      Pageable pageable) {
+  public List<TestPostResponseDto> SearchByQuerydsl(
+      final PostSearchCondition condition,
+      final Pageable pageable
+  ) {
     List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition, pageable);
     List<TestPostResponseDto> result = new ArrayList<>();
     for (int i = 0; i < testPostResponseDtos.size(); i++) {
