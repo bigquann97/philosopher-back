@@ -11,7 +11,6 @@ import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
-import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.post.service.PostService;
 import java.io.IOException;
 import java.util.List;
@@ -47,9 +46,16 @@ public class PostController {
   private final CategoryService categoryService;
 
   // /api/posts
-  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @PostMapping(
+      value = "",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}
+  )
   @ResponseStatus(HttpStatus.OK)
-  public void createPost(@RequestPart("image") List<MultipartFile> multipartFiles, @RequestPart("dto") PostRequestDto postRequestDto, @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void createPost(
+      final @RequestPart("image") List<MultipartFile> multipartFiles,
+      final @RequestPart("dto") PostRequestDto postRequestDto,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     List<String> FailToPostUrls = null;
 
     try {
@@ -58,8 +64,7 @@ public class PostController {
       List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
       FailToPostUrls = urls.stream().collect(Collectors.toList());
       Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
-
-      postService.createPost(urls, postRequestDto, accountDetails, Category);
+      postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
 
     } catch (IOException e) {
       for (String url : FailToPostUrls) {
@@ -74,30 +79,34 @@ public class PostController {
   // /api/posts?page=1
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<PostsResponseDto> getPosts(@RequestParam int page) {
+  public List<PostsResponseDto> getPosts(final @RequestParam int page) {
     return postService.SearchByQuerydsl(page);
   }
 
   // /api/posts/1
   @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
-  public PostResponseDto getPost(@PathVariable Long postId) {
+  public PostResponseDto getPost(final @PathVariable Long postId) {
     return postService.getPost(postId);
   }
 
   @PutMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
-  public PostResponseDto modifyPost(@PathVariable Long postId,
-      @RequestBody PostRequestDto postRequestDto,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
-    return postService.modifyPost(postId, postRequestDto, accountDetails);
+  public PostResponseDto modifyPost(
+      final @PathVariable Long postId,
+      final @RequestBody PostRequestDto postRequestDto,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
+    return postService.modifyPost(postId, postRequestDto, accountDetails.getAccount());
   }
 
   @DeleteMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
-  public void deletePost(@PathVariable Long postId,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
-    postService.deletePost(postId, accountDetails);
+  public void deletePost(
+      final @PathVariable Long postId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
+    postService.deletePost(postId, accountDetails.getAccount());
   }
 
 //  @GetMapping("/test/{id}")
@@ -106,7 +115,10 @@ public class PostController {
 //  }
 
   @GetMapping("/testv2")
-  public List<TestPostResponseDto> gegegege(PostSearchCondition condition, Pageable pageable) {
+  public List<TestPostResponseDto> gegegege(
+      final PostSearchCondition condition,
+      final Pageable pageable
+  ) {
     return postService.SearchByQuerydsl(condition, pageable);
   }
 

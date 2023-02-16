@@ -37,11 +37,15 @@ public class AuthController {
   /**
    * 회원가입
    */
-  @PostMapping(value = "/sign-up", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
-      MediaType.APPLICATION_JSON_VALUE})
+  @PostMapping(
+      value = "/sign-up",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}
+  )
   @ResponseStatus(HttpStatus.CREATED)
-  public void signUp(@RequestPart("image") MultipartFile multipartFiles,
-      @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto)  {
+  public void signUp(
+      final @RequestPart("image") MultipartFile multipartFiles,
+      final @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto
+  ) {
     try {
       s3Uploader.checkFileExtension(multipartFiles);
       final String imageUrl = s3Uploader.upLoadFileToSingle(multipartFiles, dirName);
@@ -56,10 +60,13 @@ public class AuthController {
    */
   @PostMapping("/sign-in")
   @ResponseStatus(HttpStatus.OK)
-  public SignInResponseDto login(@RequestBody SignInRequestDto signInRequestDto,
-      HttpServletResponse response) {
+  public SignInResponseDto login(
+      final @RequestBody SignInRequestDto signInRequestDto,
+      final HttpServletResponse response
+  ) {
     return authService.signIn(signInRequestDto, response);
   }
+
   /**
    * 로그아웃 -> redis 속 리프레시 토큰 삭제
    *
@@ -67,8 +74,7 @@ public class AuthController {
    */
   @DeleteMapping("/sign-out")
   @ResponseStatus(HttpStatus.OK)
-  public void signOut(@AuthenticationPrincipal AccountDetails accountDetails) {
-    System.out.println(accountDetails.getAccount());
+  public void signOut(final @AuthenticationPrincipal AccountDetails accountDetails) {
     authService.signOut(accountDetails.getAccount());
   }
 
@@ -81,30 +87,34 @@ public class AuthController {
    */
   @PostMapping("/re-issue")
   @ResponseStatus(HttpStatus.OK)
-  public SignInResponseDto reissue(@RequestBody TokenRequestDto tokenRequestDto,
-      HttpServletResponse response) {
+  public SignInResponseDto reissue(
+      final @RequestBody TokenRequestDto tokenRequestDto,
+      final HttpServletResponse response
+  ) {
     return authService.reissue(tokenRequestDto, response);
   }
 
   /**
    * 비밀번호 재설정 이메일 전송
+   *
    * @param email
    */
   @PostMapping("/mail")
   @ResponseStatus(HttpStatus.OK)
-  public void verify(@RequestParam String email) {
+  public void verify(final @RequestParam String email) {
     authService.sendVerificationMail(email);
   }
 
 
   /**
    * 인증링크 확인
+   *
    * @param email
    * @param code
    */
   @PostMapping("/mail/{code}")
   @ResponseStatus(HttpStatus.OK)
-  public void getVerify(@RequestParam String email, @PathVariable String code) {
+  public void getVerify(final @RequestParam String email, final @PathVariable String code) {
     authService.verifyEmail(email, code);
   }
 
