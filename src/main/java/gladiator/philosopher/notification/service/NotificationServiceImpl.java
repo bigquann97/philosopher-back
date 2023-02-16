@@ -1,6 +1,6 @@
 package gladiator.philosopher.notification.service;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.notification.entity.Notification;
 import gladiator.philosopher.notification.repository.NotificationRepository;

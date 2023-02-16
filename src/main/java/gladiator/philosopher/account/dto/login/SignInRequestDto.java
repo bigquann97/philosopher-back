@@ -1,4 +1,4 @@
-package gladiator.philosopher.Account.dto.login;
+package gladiator.philosopher.account.dto.login;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;

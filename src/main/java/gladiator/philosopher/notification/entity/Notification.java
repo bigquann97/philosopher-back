@@ -1,6 +1,6 @@
 package gladiator.philosopher.notification.entity;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
 import java.util.Objects;
 import javax.persistence.Entity;

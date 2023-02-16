@@ -1,8 +1,8 @@
 package gladiator.philosopher.auth.controller;
 
-import gladiator.philosopher.Account.dto.login.SignInRequestDto;
-import gladiator.philosopher.Account.dto.login.SignInResponseDto;
-import gladiator.philosopher.Account.dto.login.SignUpRequestDto;
+import gladiator.philosopher.account.dto.login.SignInRequestDto;
+import gladiator.philosopher.account.dto.login.SignInResponseDto;
+import gladiator.philosopher.account.dto.login.SignUpRequestDto;
 import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.s3.S3Uploader;

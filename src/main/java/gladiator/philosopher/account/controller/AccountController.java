@@ -1,7 +1,7 @@
-package gladiator.philosopher.Account.controller;
+package gladiator.philosopher.account.controller;
 
-import gladiator.philosopher.Account.service.AccountService;
-import gladiator.philosopher.Account.dto.ModifyProfileRequestDto;
+import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
 import gladiator.philosopher.common.security.AccountDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,5 +39,6 @@ public class AccountController {
   public void modifyMyInfo(@AuthenticationPrincipal AccountDetails accountDetails, ModifyProfileRequestDto modifyProfileRequestDto){
     accountService.modifyInfo(accountDetails.getAccount(), modifyProfileRequestDto);
   }
+
 
 }

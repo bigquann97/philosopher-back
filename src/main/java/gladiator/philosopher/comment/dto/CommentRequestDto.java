@@ -1,6 +1,6 @@
 package gladiator.philosopher.comment.dto;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.thread.entity.Thread;
 import lombok.Getter;

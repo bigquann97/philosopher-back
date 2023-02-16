@@ -1,11 +1,11 @@
-package gladiator.philosopher.Account.repository;
+package gladiator.philosopher.account.repository;
 
 import static gladiator.philosopher.auth.entity.QAccount.account;
 import static org.springframework.util.StringUtils.hasText;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import gladiator.philosopher.Account.dto.AccountSearchCondition;
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.admin.dto.QUserInfoResponseDto;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.common.enums.Gender;

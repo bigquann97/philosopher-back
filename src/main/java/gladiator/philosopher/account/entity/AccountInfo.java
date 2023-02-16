@@ -1,4 +1,4 @@
-package gladiator.philosopher.Account.entity;
+package gladiator.philosopher.account.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

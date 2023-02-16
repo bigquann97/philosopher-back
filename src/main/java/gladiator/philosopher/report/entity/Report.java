@@ -1,6 +1,6 @@
 package gladiator.philosopher.report.entity;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;

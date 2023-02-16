@@ -2,7 +2,7 @@ package gladiator.philosopher.admin.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gladiator.philosopher.Account.repository.AccountRepository;
+import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import gladiator.philosopher.thread.service.ThreadService;

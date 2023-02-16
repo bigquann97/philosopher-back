@@ -1,12 +1,12 @@
 package gladiator.philosopher.auth.service;
 
-import gladiator.philosopher.Account.dto.login.SignInRequestDto;
-import gladiator.philosopher.Account.dto.login.SignInResponseDto;
-import gladiator.philosopher.Account.dto.login.SignUpRequestDto;
-import gladiator.philosopher.Account.entity.Account;
-import gladiator.philosopher.Account.entity.AccountInfo;
-import gladiator.philosopher.Account.repository.AccountInfoRepository;
-import gladiator.philosopher.Account.repository.AccountRepository;
+import gladiator.philosopher.account.dto.login.SignInRequestDto;
+import gladiator.philosopher.account.dto.login.SignInResponseDto;
+import gladiator.philosopher.account.dto.login.SignUpRequestDto;
+import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.repository.AccountInfoRepository;
+import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;

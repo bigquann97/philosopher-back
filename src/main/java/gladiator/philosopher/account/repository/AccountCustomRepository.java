@@ -1,6 +1,6 @@
-package gladiator.philosopher.Account.repository;
+package gladiator.philosopher.account.repository;
 
-import gladiator.philosopher.Account.dto.AccountSearchCondition;
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import java.util.List;
 

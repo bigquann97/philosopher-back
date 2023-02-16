@@ -1,4 +1,4 @@
-package gladiator.philosopher.Account.entity;
+package gladiator.philosopher.account.entity;
 
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.enums.Gender;

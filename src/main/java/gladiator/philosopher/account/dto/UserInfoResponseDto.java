@@ -1,6 +1,6 @@
-package gladiator.philosopher.Account.dto;
+package gladiator.philosopher.account.dto;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserStatus;
 import lombok.Getter;

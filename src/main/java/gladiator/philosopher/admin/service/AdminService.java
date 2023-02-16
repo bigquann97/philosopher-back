@@ -1,7 +1,7 @@
 package gladiator.philosopher.admin.service;
 
-import gladiator.philosopher.Account.dto.AccountSearchCondition;
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.dto.AccountSearchCondition;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;

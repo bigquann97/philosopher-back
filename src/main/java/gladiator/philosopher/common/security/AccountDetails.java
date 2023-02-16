@@ -1,6 +1,6 @@
 package gladiator.philosopher.common.security;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.enums.UserRole;
 import java.util.ArrayList;
 import java.util.Collection;

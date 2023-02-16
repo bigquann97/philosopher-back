@@ -1,10 +1,10 @@
-package gladiator.philosopher.Account.service;
+package gladiator.philosopher.account.service;
 
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.Account.dto.ModifyProfileRequestDto;
-import gladiator.philosopher.Account.dto.UserInfoResponseDto;
-import gladiator.philosopher.Account.entity.Account;
-import gladiator.philosopher.Account.repository.AccountRepository;
+import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
+import gladiator.philosopher.account.dto.UserInfoResponseDto;
+import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.exception.CustomException;

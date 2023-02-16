@@ -1,9 +1,9 @@
-package gladiator.philosopher.Account.service;
+package gladiator.philosopher.account.service;
 
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.Account.dto.ModifyProfileRequestDto;
-import gladiator.philosopher.Account.dto.UserInfoResponseDto;
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
+import gladiator.philosopher.account.dto.UserInfoResponseDto;
+import gladiator.philosopher.account.entity.Account;
 import java.util.List;
 
 public interface AccountService {

@@ -1,6 +1,6 @@
-package gladiator.philosopher.Account.dto.login;
+package gladiator.philosopher.account.dto.login;
 
-import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserStatus;
 import gladiator.philosopher.common.enums.UserRole;
