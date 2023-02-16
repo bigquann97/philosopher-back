@@ -1,5 +1,6 @@
 package gladiator.philosopher.thread.dto;
 
+import gladiator.philosopher.thread.entity.Sort;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

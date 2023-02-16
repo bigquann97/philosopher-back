@@ -1,6 +1,7 @@
 package gladiator.philosopher.comment.dto;
 
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.comment.entity.CommentStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

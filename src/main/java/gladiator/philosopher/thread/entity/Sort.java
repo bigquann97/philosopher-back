@@ -1,4 +1,4 @@
-package gladiator.philosopher.thread.dto;
+package gladiator.philosopher.thread.entity;
 
 import lombok.Getter;
 
