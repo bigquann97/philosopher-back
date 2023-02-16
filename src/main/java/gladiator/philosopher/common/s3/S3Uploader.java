@@ -99,6 +99,14 @@ public class S3Uploader {
     amazonS3Client.deleteObject(request);
   }
 
+  public void newDeleteS3(String url,String dirName){
+    final String[] split = url.split("/");
+    final String fileName = dirName + "/" + split[split.length - 1];
+    DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+    log.info("delete url : "+request);
+    amazonS3Client.deleteObject(request);
+  }
+
   /**
    * 단일 파일 확장자 검사
    * @param file

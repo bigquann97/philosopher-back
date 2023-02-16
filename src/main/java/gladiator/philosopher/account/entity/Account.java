@@ -1,6 +1,5 @@
 package gladiator.philosopher.account.entity;
 
-import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
@@ -80,8 +79,12 @@ public class Account extends BaseEntity {
     this.type = role;
   }
 
-  public void UpdateAccountInfo(ModifyProfileRequestDto modifyProfileRequestDto){
-    this.nickname = modifyProfileRequestDto.getNickname();
+  public void UpdateNickname(String nickname){
+    this.nickname = nickname;
+  }
+
+  public void UpdatePassword(String password){
+    this.password = password;
   }
 
 }

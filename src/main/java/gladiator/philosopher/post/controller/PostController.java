@@ -57,9 +57,8 @@ public class PostController {
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
     List<String> FailToPostUrls = null;
-
     try {
-      postRequestDto.checkByOpinionCount(); // option 카운트 체크 -> 어차피 프론트에서 1차적으로 막을꺼임, 혹시나 해서
+      postRequestDto.checkByOpinionCount();
       s3Uploader.checkFilesExtension(multipartFiles);
       List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
       FailToPostUrls = urls.stream().collect(Collectors.toList());
@@ -68,10 +67,7 @@ public class PostController {
 
     } catch (IOException e) {
       for (String url : FailToPostUrls) {
-        String[] split = url.split("/");
-        String filename = dirName + "/" + split[split.length - 1];
-        s3Uploader.deleteS3(filename);
-      }
+        s3Uploader.newDeleteS3(url,dirName);}
       throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
   }

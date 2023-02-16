@@ -24,9 +24,13 @@ public class AccountInfo {
   @JoinColumn(name = "accout_id")
   private Account account;
 
-  public AccountInfo( Account account, String imageUrl) {
+  public AccountInfo(Account account, String imageUrl) {
     this.imageUrl = imageUrl;
     this.account = account;
+  }
+
+  public void updateImageUrl(String url){
+    this.imageUrl = url;
   }
 
 }
