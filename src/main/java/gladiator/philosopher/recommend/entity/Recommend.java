@@ -52,7 +52,7 @@ public class Recommend {
   @JoinColumn(name = "comment_id")
   private Comment comment;
 
-  public Recommend(Post post, Account account) {
+  public Recommend(Account account, Post post) {
     this.post = post;
     this.account = account;
   }

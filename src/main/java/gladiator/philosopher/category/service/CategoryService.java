@@ -16,4 +16,5 @@ public interface CategoryService {
   void modifyCategory(final Long id, final CategoryRequestDto dto);
 
   Category getCategoryEntity(Long category);
+
 }

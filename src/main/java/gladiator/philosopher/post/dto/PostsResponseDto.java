@@ -16,4 +16,5 @@ public class PostsResponseDto {
     this.title = post.getTitle();
     this.createDate = post.getCreatedDate();
   }
+
 }

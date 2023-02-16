@@ -8,17 +8,19 @@ import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
+import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.post.service.PostService;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,25 +47,23 @@ public class PostController {
   private final CategoryService categoryService;
 
   // /api/posts
-  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
-      MediaType.APPLICATION_JSON_VALUE})
+  @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.OK)
-  public void createPost(
-      @RequestPart("image") List<MultipartFile> multipartFiles,
-      @RequestPart("dto") PostRequestDto postRequestDto,
-      @AuthenticationPrincipal AccountDetails accountDetails) {
+  public void createPost(@RequestPart("image") List<MultipartFile> multipartFiles, @RequestPart("dto") PostRequestDto postRequestDto, @AuthenticationPrincipal AccountDetails accountDetails) {
     List<String> FailToPostUrls = null;
+
     try {
-      postRequestDto.checkByOpinionCount();
+      postRequestDto.checkByOpinionCount(); // option 카운트 체크 -> 어차피 프론트에서 1차적으로 막을꺼임, 혹시나 해서
       s3Uploader.checkFilesExtension(multipartFiles);
       List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
       FailToPostUrls = urls.stream().collect(Collectors.toList());
       Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
       postService.createPost(urls, postRequestDto, accountDetails, Category);
+
     } catch (IOException e) {
       for (String url : FailToPostUrls) {
         String[] split = url.split("/");
-        String filename = dirName +"/" + split[split.length - 1];
+        String filename = dirName + "/" + split[split.length - 1];
         s3Uploader.deleteS3(filename);
       }
       throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
@@ -74,7 +74,7 @@ public class PostController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<PostsResponseDto> getPosts(@RequestParam int page) {
-    return postService.getPosts(page);
+    return postService.SearchByQuerydsl(page);
   }
 
   // /api/posts/1
@@ -99,9 +99,14 @@ public class PostController {
     postService.deletePost(postId, accountDetails);
   }
 
-  @GetMapping("/test/{id}")
-  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
-    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
+//  @GetMapping("/test/{id}")
+//  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
+//    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
+//  }
+
+  @GetMapping("/testv2")
+  public List<TestPostResponseDto> gegegege(PostSearchCondition condition, Pageable pageable) {
+    return postService.SearchByQuerydsl(condition, pageable);
   }
 
 }

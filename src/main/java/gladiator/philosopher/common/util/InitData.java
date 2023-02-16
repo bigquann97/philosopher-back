@@ -14,6 +14,7 @@ import gladiator.philosopher.common.enums.UserStatus;
 import gladiator.philosopher.mention.entity.Mention;
 import gladiator.philosopher.mention.repository.MentionRepository;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
@@ -117,6 +118,58 @@ public class InitData implements ApplicationRunner {
 
     Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null, category5);
     postRepository.save(post6);
+
+    // 포스트 이미지
+    PostImage postImage = new PostImage("jipang2.png",post1);
+    postImageRepository.save(postImage);
+    PostImage postImage2 = new PostImage("test2.png",post2);
+    postImageRepository.save(postImage2);
+    PostImage postImage3 = new PostImage("test3.png",post2);
+    postImageRepository.save(postImage3);
+    PostImage postImage4 = new PostImage("test4.png",post3);
+    postImageRepository.save(postImage4);
+    PostImage postImage5 = new PostImage("test5.png",post5);
+    postImageRepository.save(postImage5);
+
+    // 회원 1~5 // 게시글 1~6
+    // 댓글부
+    Recommend recommend17 = new Recommend(account1, post1);
+    recommendRepository.save(recommend17);
+
+    Recommend recommend16 = new Recommend(account1, post3);
+    recommendRepository.save(recommend16);
+
+    Recommend recommend3 = new Recommend(account1, post4);
+    recommendRepository.save(recommend3);
+    Recommend recommend4 = new Recommend(account2, post2);
+    recommendRepository.save(recommend4);
+    Recommend recommend5 = new Recommend(account2, post4);
+    recommendRepository.save(recommend5);
+    Recommend recommend6 = new Recommend(account2, post6);
+    recommendRepository.save(recommend6);
+    Recommend recommend7 = new Recommend(account3, post1);
+    recommendRepository.save(recommend7);
+
+    Recommend recommend8 = new Recommend(account3, post5);
+    recommendRepository.save(recommend8);
+
+    Recommend recommend9 = new Recommend(account3, post6);
+    recommendRepository.save(recommend9);
+
+    Recommend recommend10 = new Recommend(account4, post2);
+    recommendRepository.save(recommend10);
+    Recommend recommend11 = new Recommend(account4, post6);
+    recommendRepository.save(recommend11);
+    Recommend recommend12 = new Recommend(account4, post4);
+    recommendRepository.save(recommend12);
+    Recommend recommend13 = new Recommend(account5, post2);
+    recommendRepository.save(recommend13);
+
+    Recommend recommend14 = new Recommend(account5, post3);
+    recommendRepository.save(recommend14);
+
+    Recommend recommend15 = new Recommend(account5, post4);
+    recommendRepository.save(recommend15);
 
     List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
         .collect(Collectors.toList());

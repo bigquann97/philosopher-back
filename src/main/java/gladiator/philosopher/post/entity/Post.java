@@ -72,7 +72,8 @@ public class Post extends BaseEntity {
   }
 
   // 테스트 생성자
-  public Post(Account account, String title, String content, List<PostOpinion> opinions, Category category) {
+  public Post(Account account, String title, String content, List<PostOpinion> opinions,
+      Category category) {
     this.account = account;
     this.title = title;
     this.content = content;

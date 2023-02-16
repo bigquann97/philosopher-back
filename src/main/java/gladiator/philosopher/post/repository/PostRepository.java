@@ -9,12 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface PostRepository extends JpaRepository<Post, Long>{
+public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRepository{
   @Override
   Page<Post> findAll(Pageable pageable);
 
-  @Query("select new gladiator.philosopher.post.dto.TestPostResponseDto(p.id,p.title,p.content,p.account) from Post p join p.account")
-  List<TestPostResponseDto> getPost(Long id);
+//  @Query("select new gladiator.philosopher.post.dto.TestPostResponseDto(p.id,p.title,p.content,p.account) from Post p join p.account")
+//  List<TestPostResponseDto> getPost(Long id);
 
 
 

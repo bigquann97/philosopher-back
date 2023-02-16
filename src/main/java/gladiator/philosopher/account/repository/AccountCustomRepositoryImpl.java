@@ -52,4 +52,6 @@ public class AccountCustomRepositoryImpl implements AccountCustomRepository {
   private BooleanExpression userTypeEqual(String userType) {
     return hasText(userType) ? account.type.eq(UserRole.valueOf(userType)) : null;
   }
+
+
 }
