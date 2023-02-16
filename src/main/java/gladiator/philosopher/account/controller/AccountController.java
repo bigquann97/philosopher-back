@@ -78,15 +78,11 @@ public class AccountController {
       final @RequestPart("image") MultipartFile multipartFile,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-    try {
       final String oldUrl = accountService.getOldUrl(accountDetails.getAccount());
       s3Uploader.checkFileExtension(multipartFile);
       final String newUrl = s3Uploader.upLoadFileToSingle(multipartFile, dirName);
       accountService.modifyAccountImage(accountDetails.getAccount(),newUrl);
       s3Uploader.newDeleteS3(oldUrl,dirName);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
 

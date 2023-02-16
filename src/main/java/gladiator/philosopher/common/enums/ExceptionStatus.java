@@ -24,7 +24,8 @@ public enum ExceptionStatus {
   ACCOUNT_NICKNAME_IS_EXIST(409, " 이미 사용중인 닉네임 입니다. "),
 
   // 500 -> INTERNAL SERVER ERROR : 서버에러
-  FAIL_TO_ACCOUT(400," 회원가입을 다시 시도해주세요.");
+  FAIL_TO_SIGN_IN(500," 회원가입을 다시 시도해주세요."),
+  FAIL_TO_POSTING(500," 게시글 작성을 잠시 후 시도해주세요");
 
   private final int statusCode;
   private final String message;
