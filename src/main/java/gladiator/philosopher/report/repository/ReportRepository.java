@@ -1,6 +1,6 @@
 package gladiator.philosopher.report.repository;
 
-import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.Account.entity.Account;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.entity.Report;
 import java.util.List;

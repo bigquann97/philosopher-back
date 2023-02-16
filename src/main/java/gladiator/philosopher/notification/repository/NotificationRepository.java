@@ -1,6 +1,6 @@
 package gladiator.philosopher.notification.repository;
 
-import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.Account.entity.Account;
 import gladiator.philosopher.notification.entity.Notification;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

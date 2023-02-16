@@ -1,18 +1,11 @@
 package gladiator.philosopher.admin.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.repository.AccountRepository;
-import gladiator.philosopher.common.enums.Gender;
-import gladiator.philosopher.common.enums.UserRole;
-import gladiator.philosopher.common.enums.UserStatus;
-import gladiator.philosopher.post.entity.Post;
+
+import gladiator.philosopher.Account.repository.AccountRepository;
 import gladiator.philosopher.post.repository.PostRepository;
-import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import gladiator.philosopher.thread.service.ThreadService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;

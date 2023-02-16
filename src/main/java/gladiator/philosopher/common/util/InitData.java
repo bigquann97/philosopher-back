@@ -1,9 +1,9 @@
 package gladiator.philosopher.common.util;
 
-import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.entity.AccountInfo;
-import gladiator.philosopher.account.repository.AccountInfoRepository;
-import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.Account.entity.AccountInfo;
+import gladiator.philosopher.Account.repository.AccountInfoRepository;
+import gladiator.philosopher.Account.repository.AccountRepository;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.repository.CategoryRepository;
 import gladiator.philosopher.comment.entity.Comment;

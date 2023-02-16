@@ -1,6 +1,6 @@
 package gladiator.philosopher.comment.entity;
 
-import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.Account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.mention.entity.Mention;
 import gladiator.philosopher.recommend.entity.Recommend;

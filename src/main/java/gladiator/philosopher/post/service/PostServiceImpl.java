@@ -3,7 +3,6 @@ package gladiator.philosopher.post.service;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.image.ImageService;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
@@ -27,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +38,11 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(List<String> url, PostRequestDto postRequestDto, AccountDetails accountDetails, Category category) {
+  public void createPost(List<String> url, PostRequestDto postRequestDto,
+      AccountDetails accountDetails, Category category) {
     Post post = postRequestDto.toEntity(accountDetails.getAccount(), category);
-    for(String s : url){
-      PostImage postImage= new PostImage(s,post);
+    for (String s : url) {
+      PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
     }
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
@@ -139,7 +138,8 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<TestPostResponseDto> SearchByQuerydsl(PostSearchCondition condition, Pageable pageable) {
+  public List<TestPostResponseDto> SearchByQuerydsl(PostSearchCondition condition,
+      Pageable pageable) {
     List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition, pageable);
     List<TestPostResponseDto> result = new ArrayList<>();
     for (int i = 0; i < testPostResponseDtos.size(); i++) {

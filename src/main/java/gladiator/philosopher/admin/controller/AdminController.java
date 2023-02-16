@@ -1,16 +1,15 @@
 package gladiator.philosopher.admin.controller;
 
-import gladiator.philosopher.account.dto.AccountSearchCondition;
-import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.Account.service.AccountService;
+import gladiator.philosopher.Account.dto.AccountSearchCondition;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
-import gladiator.philosopher.admin.dto.UserInfoResponseDto;
+import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +38,12 @@ public class AdminController {
    * @return
    */
   @GetMapping("/accounts")
-  public List<UserInfoResponseDto> getAccounts() {
+  public List<UserInfoByAdminResponseDto> getAccounts() {
     return adminService.getUsersInfoList();
   }
 
   @GetMapping("/accountsV2")
-  public List<UserInfoResponseDto> getAccountsV2(AccountSearchCondition condition){
+  public List<UserInfoByAdminResponseDto> getAccountsV2(AccountSearchCondition condition){
     return adminService.getAccounts(condition);
   }
 

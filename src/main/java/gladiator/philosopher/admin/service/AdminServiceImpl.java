@@ -1,19 +1,16 @@
 package gladiator.philosopher.admin.service;
 
-import gladiator.philosopher.account.dto.AccountSearchCondition;
-import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.repository.AccountRepository;
-import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.Account.service.AccountService;
+import gladiator.philosopher.Account.dto.AccountSearchCondition;
+import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.Account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
-import gladiator.philosopher.admin.dto.UserInfoResponseDto;
+import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.service.ReportService;
-import gladiator.philosopher.thread.dto.ThreadSearchCond;
-import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,11 +22,11 @@ public class AdminServiceImpl implements AdminService {
   private final AccountRepository accountRepository;
 
   @Override
-  public List<UserInfoResponseDto> getUsersInfoList() {
+  public List<UserInfoByAdminResponseDto> getUsersInfoList() {
     return accountService.selectAccountsInfo();}
 
   @Override
-  public List<UserInfoResponseDto> getAccounts(AccountSearchCondition condition) {
+  public List<UserInfoByAdminResponseDto> getAccounts(AccountSearchCondition condition) {
     return accountRepository.searchAccount(condition);
   }
 

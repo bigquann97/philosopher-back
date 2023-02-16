@@ -1,6 +1,6 @@
 package gladiator.philosopher.recommend.service;
 
-import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.Account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.entity.Recommend;

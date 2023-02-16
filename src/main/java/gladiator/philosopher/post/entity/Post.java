@@ -1,6 +1,6 @@
 package gladiator.philosopher.post.entity;
 
-import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.Account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.security.AccountDetails;

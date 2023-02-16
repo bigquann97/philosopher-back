@@ -1,7 +1,7 @@
 package gladiator.philosopher.common.security;
 
-import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.Account.entity.Account;
+import gladiator.philosopher.Account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

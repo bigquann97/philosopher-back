@@ -1,8 +1,7 @@
 package gladiator.philosopher.post.repository;
 
-import static gladiator.philosopher.account.entity.QAccount.account;
+import static gladiator.philosopher.auth.entity.QAccount.account;
 import static gladiator.philosopher.post.entity.QPost.post;
-import static gladiator.philosopher.post.entity.QPostImage.postImage;
 import static gladiator.philosopher.recommend.entity.QRecommend.recommend;
 import static org.springframework.util.StringUtils.hasText;
 
