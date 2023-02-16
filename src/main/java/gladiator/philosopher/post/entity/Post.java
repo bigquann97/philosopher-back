@@ -3,7 +3,6 @@ package gladiator.philosopher.post.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostStatus;
 import gladiator.philosopher.recommend.entity.Recommend;
@@ -95,8 +94,8 @@ public class Post extends BaseEntity {
     this.status = PostStatus.ACTIVE;
   }
 
-  public boolean isWriter(AccountDetails memberDetails) {
-    if (this.account.getEmail().equals(memberDetails.getUsername())) {
+  public boolean isWriter(Account account) {
+    if (this.account.equals(account)) {
       return true;
     } else {
       return false;

@@ -1,7 +1,7 @@
 package gladiator.philosopher.post.service;
 
+import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
-import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
@@ -15,26 +15,29 @@ public interface PostService {
 
   /**
    * 게시글 생성
+   *
    * @param urls
    * @param postRequestDto
    * @param accountDetails
    * @param category
    */
   void createPost(List<String> urls, PostRequestDto postRequestDto,
-      AccountDetails accountDetails, Category category);
+      Account accountDetails, Category category);
 
   /**
    * 게시물 단건 조회
+   *
    * @param postId
    * @return
    */
   PostResponseDto getPost(Long postId);
+
   List<PostsResponseDto> SearchByQuerydsl(int pageChoice);
 
   PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
-      AccountDetails accountDetails);
+      Account accountDetails);
 
-  void deletePost(Long postId, AccountDetails accountDetails);
+  void deletePost(Long postId, Account accountDetails);
 
   Post getPostEntity(Long postId);
 
