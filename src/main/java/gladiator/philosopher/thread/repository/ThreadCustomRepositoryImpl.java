@@ -42,17 +42,17 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
   @Override
   public Optional<ThreadResponseDto> selectThread(Long id) {
-    Thread thread = jpaQueryFactory
-        .select(this.thread)
-        .from(this.thread)
-        .leftJoin(this.thread.threadImages).fetchJoin()
-        .leftJoin(this.thread.recommends).fetchJoin()
-        .leftJoin(this.thread.account).fetchJoin()
-        .leftJoin(this.thread.opinions).fetchJoin()
-        .where(this.thread.id.eq(id))
+    Thread resultThread = jpaQueryFactory
+        .select(thread)
+        .from(thread)
+        .leftJoin(thread.threadImages).fetchJoin()
+        .leftJoin(thread.recommends).fetchJoin()
+        .leftJoin(thread.account).fetchJoin()
+        .leftJoin(thread.opinions).fetchJoin()
+        .where(thread.id.eq(id))
         .fetchOne();
-    System.out.println(thread);
-    ThreadResponseDto dto = ThreadResponseDto.of(thread);
+    System.out.println(resultThread);
+    ThreadResponseDto dto = ThreadResponseDto.of(resultThread);
     return Optional.ofNullable(dto);
   }
 
