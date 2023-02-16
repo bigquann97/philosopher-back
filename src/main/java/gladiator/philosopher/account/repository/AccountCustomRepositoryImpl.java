@@ -1,12 +1,12 @@
 package gladiator.philosopher.account.repository;
 
-import static gladiator.philosopher.auth.entity.QAccount.account;
+import static gladiator.philosopher.account.entity.QAccount.account;
 import static org.springframework.util.StringUtils.hasText;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.dto.AccountSearchCondition;
-import gladiator.philosopher.admin.dto.QUserInfoResponseDto;
+import gladiator.philosopher.admin.dto.QUserInfoByAdminResponseDto;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
@@ -24,7 +24,7 @@ public class AccountCustomRepositoryImpl implements AccountCustomRepository {
 
   @Override
   public List<UserInfoByAdminResponseDto> searchAccount(AccountSearchCondition condition) {
-    return jpaQueryFactory.select(new QUserInfoResponseDto(
+    return jpaQueryFactory.select(new QUserInfoByAdminResponseDto(
             account.id,
             account.email,
             account.age,
