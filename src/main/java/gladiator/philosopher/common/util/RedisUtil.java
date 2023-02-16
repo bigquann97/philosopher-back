@@ -40,8 +40,10 @@ public class RedisUtil {
     return valueOperation.isMember(key, value);
   }
 
-  public void addSetData(String key, String value) {
+  public void addSetDataExpire(String key, String value, long duration) {
     SetOperations<String, Object> valueOperations = redisTemplate.opsForSet();
+    Duration expireDuration = Duration.ofSeconds(duration);
+    valueOperations.getOperations().expire(key, expireDuration);
     valueOperations.add(key, value);
   }
 

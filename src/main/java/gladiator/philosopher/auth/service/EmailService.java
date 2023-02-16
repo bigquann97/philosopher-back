@@ -47,7 +47,7 @@ public class EmailService {
     if (!code.equals(validCode)) {
       throw new IllegalArgumentException("코드 번호가 일치하지 않습니다.");
     }
-    redisUtil.addSetData(WHITELIST_KEY_PREFIX, email);
+    redisUtil.addSetDataExpire(WHITELIST_KEY_PREFIX, email, 60 * 60 * 24L); // 1일 이메일 화이트리스트 유지
     redisUtil.deleteData(VERIFY_KEY_PREFIX + email);
   }
 
