@@ -1,4 +1,4 @@
-package gladiator.philosopher.account.dto;
+package gladiator.philosopher.account.dto.login;
 
 import lombok.AccessLevel;
 import lombok.Getter;

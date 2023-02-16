@@ -1,4 +1,4 @@
-package gladiator.philosopher.common.filter;
+package gladiator.philosopher.common.jwt;
 
 
 import java.io.IOException;

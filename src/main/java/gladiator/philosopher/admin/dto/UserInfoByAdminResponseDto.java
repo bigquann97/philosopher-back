@@ -7,7 +7,7 @@ import gladiator.philosopher.common.enums.UserRole;
 import lombok.Getter;
 
 @Getter
-public class UserInfoResponseDto {
+public class UserInfoByAdminResponseDto {
 
   private final Long id;
   private final String email;
@@ -18,7 +18,7 @@ public class UserInfoResponseDto {
   private final UserStatus userStatus;
 
   @QueryProjection
-  public UserInfoResponseDto(Long id, String email, int age, String nickname,
+  public UserInfoByAdminResponseDto(Long id, String email, int age, String nickname,
       Gender gender, UserRole userRole,
       UserStatus userStatus) {
     this.id = id;
