@@ -1,10 +1,10 @@
 package gladiator.philosopher.thread.controller;
 
 
-import gladiator.philosopher.thread.dto.Sort;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
+import gladiator.philosopher.thread.entity.Sort;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

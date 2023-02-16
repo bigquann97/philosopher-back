@@ -24,14 +24,11 @@ import org.hibernate.Hibernate;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "recommendContraint",
-            columnNames = {"account_id", "post_id", "thread_id", "comment_id"}
-        )
-    }
-)
+@Table(uniqueConstraints = {
+    @UniqueConstraint(name = "pstCnst", columnNames = {"account_id", "post_id"}),
+    @UniqueConstraint(name = "thdCnst", columnNames = {"account_id", "thread_id"}),
+    @UniqueConstraint(name = "cmtCnst", columnNames = {"account_id", "comment_id"})
+})
 public class Recommend {
 
   @Id
@@ -39,7 +36,7 @@ public class Recommend {
   @Column(name = "recommend_id")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
 
@@ -47,11 +44,11 @@ public class Recommend {
   @JoinColumn(name = "post_id")
   private Post post;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "thread_id")
   private Thread thread;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "comment_id")
   private Comment comment;
 

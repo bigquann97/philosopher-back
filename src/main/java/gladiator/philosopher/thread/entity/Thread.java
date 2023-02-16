@@ -5,9 +5,9 @@ import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.recommend.entity.Recommend;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,13 +58,13 @@ public class Thread extends BaseEntity {
   private Category category;
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private List<ThreadImage> threadImages = new ArrayList<>();
+  private Set<ThreadImage> threadImages = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private List<Recommend> recommends = new ArrayList<>();
+  private Set<Recommend> recommends = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private List<ThreadOpinion> opinions = new ArrayList<>();
+  private Set<ThreadOpinion> opinions = new LinkedHashSet<>();
 
   @Builder
   public Thread(String title, String content, Account account, LocalDateTime endDate,
@@ -90,7 +90,7 @@ public class Thread extends BaseEntity {
   public void releaseBlind() {
     this.status = ThreadStatus.ACTIVE;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -106,6 +106,10 @@ public class Thread extends BaseEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  public boolean isArchived() {
+    return this.location.equals(ThreadLocation.ARCHIVED);
   }
 
 }

@@ -1,13 +1,13 @@
 package gladiator.philosopher.comment.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.comment.dto.CommentStatus;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.mention.entity.Mention;
+import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.entity.Thread;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -32,6 +32,11 @@ public class Comment extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
+  private String content;
+
+  private String opinion;
+
   @ManyToOne
   @JoinColumn(name = "account_Id")
   private Account account;
@@ -40,24 +45,25 @@ public class Comment extends BaseEntity {
   @JoinColumn(name = "thread_Id")
   private Thread thread;
 
-  @Column(nullable = false)
-  private String content;
-
   @Enumerated(EnumType.STRING)
   private CommentStatus status;
 
   @OneToMany(mappedBy = "mentioningComment")
-  private List<Mention> mentioningSet = new ArrayList<>();
+  private Set<Mention> mentionings = new HashSet<>();
 
   @OneToMany(mappedBy = "mentionedComment")
-  private List<Mention> mentionedSet = new ArrayList<>();
+  private Set<Mention> mentioneds = new HashSet<>();
+
+  @OneToMany(mappedBy = "comment")
+  private Set<Recommend> recommends = new HashSet<>();
 
   @Builder
-  public Comment(Long id, Account account, Thread thread, String content) {
-    this.id = id;
+  public Comment(Account account, Thread thread, String content, String opinion) {
     this.account = account;
     this.thread = thread;
     this.content = content;
+    this.status = CommentStatus.ACTIVE;
+    this.opinion = opinion;
   }
 
   public void modifyComment(String content) {
@@ -71,7 +77,6 @@ public class Comment extends BaseEntity {
   public void releaseBlind() {
     this.status = CommentStatus.ACTIVE;
   }
-
 
   public boolean isWriter(Account account) {
     return this.account.equals(account);

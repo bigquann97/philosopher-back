@@ -9,9 +9,10 @@ import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.mention.service.MentionService;
 import gladiator.philosopher.thread.entity.Thread;
-import java.util.List;
-import java.util.stream.Collectors;
+import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +22,13 @@ public class CommentServiceImpl implements CommentService {
 
   private final CommentRepository commentRepository;
   private final MentionService mentionService;
+  private final ThreadService threadService;
 
   @Override
   @Transactional(readOnly = true)
-  public List<CommentResponseDto> getComments(final Thread thread) {
-    List<Comment> comments = commentRepository.findAllByThread(thread);
-    return comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
+  public Page<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page) {
+    PageRequest pageable = PageRequest.of(page, 10);
+    return commentRepository.selectCommentsWithPaging(pageable, threadId);
   }
 
   @Override
@@ -36,7 +38,10 @@ public class CommentServiceImpl implements CommentService {
       final Thread thread,
       final Account account
   ) {
-    Comment comment = commentRequestDto.toEntity(thread, account);
+    Thread foundThread = threadService.getThreadEntity(thread.getId());
+    checkIfThreadIsArchived(foundThread);
+    checkIfThreadHasOpinion(foundThread, commentRequestDto);
+    Comment comment = commentRequestDto.toEntity(foundThread, account);
     mentionService.mentionComment(comment);
     commentRepository.save(comment);
   }
@@ -96,5 +101,22 @@ public class CommentServiceImpl implements CommentService {
     }
   }
 
+  private void checkIfThreadIsArchived(Thread thread) {
+    if (thread.isArchived()) {
+      throw new IllegalArgumentException("토론 종료된 쓰레드 입니다.");
+    }
+  }
+
+  private void checkIfThreadHasOpinion(
+      final Thread thread,
+      final CommentRequestDto commentRequestDto
+  ) {
+    boolean threadHasOpinion = thread.getOpinions().stream()
+        .anyMatch(x -> x.getOpinion().equals(commentRequestDto.getOpinion()));
+
+    if (!threadHasOpinion) {
+      throw new IllegalArgumentException("논제에 없는 의견입니다.");
+    }
+  }
 
 }
