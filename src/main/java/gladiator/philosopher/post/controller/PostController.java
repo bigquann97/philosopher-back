@@ -47,7 +47,6 @@ public class PostController {
 
   // /api/posts
   @PostMapping(
-      value = "",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}
   )
   @ResponseStatus(HttpStatus.OK)
@@ -117,8 +116,7 @@ public class PostController {
   @GetMapping("/testv2")
   public List<TestPostResponseDto> gegegege(
       final PostSearchCondition condition,
-      final Pageable pageable
-  ) {
+      final Pageable pageable) {
     return postService.SearchByQuerydsl(condition, pageable);
   }
 

@@ -16,8 +16,8 @@ public class EmailService {
   private final JavaMailSender emailSender;
   private final RedisUtil redisUtil;
 
-  private static final String VERIFY_KEY_PREFIX = "EMAIL:VERIFY:"; // EMAIL:VERIFY:email - A3GA1E
-  private static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED"; // EMAIL:VERIFIED - email, email ...
+  public static final String VERIFY_KEY_PREFIX = "EMAIL:VERIFY:"; // EMAIL:VERIFY:email - A3GA1E
+  public static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED"; // EMAIL:VERIFIED - email, email ...
 
   public void sendMail(
       final String to,

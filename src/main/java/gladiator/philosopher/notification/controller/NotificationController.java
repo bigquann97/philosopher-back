@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/notification")
+@RequestMapping("/api/notifications")
 public class NotificationController {
 
   private final NotificationService notificationService;

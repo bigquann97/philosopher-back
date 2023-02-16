@@ -119,6 +119,12 @@ public class ThreadServiceImpl implements ThreadService {
     return threadRepository.selectActiveThreadsWithCond(cond);
   }
 
+  @Override
+  public ThreadResponseDto selectArchivedThread(Long threadId) {
+    return threadRepository.selectThread(threadId)
+        .orElseThrow(() -> new IllegalArgumentException("없는 쓰레드"));
+  }
+
   /**
    * 아카이브된 쓰레드 가지고 오기
    *

@@ -17,12 +17,12 @@ public class RecommendServiceImpl implements RecommendService {
 
   private final static int COUNT_FOR_MAKE_THREAD = 2;
   private final RecommendRepository recommendRepository;
-  private final ThreadService ThreadService;
+  private final ThreadService threadService;
 
   @Transactional
   public void createRecommendPost(final Post post, final Account account) {
     checkIfUserAlreadyLiked(post, account);
-    Recommend recommend = new Recommend(account,post);
+    Recommend recommend = new Recommend(account, post);
     recommendRepository.save(recommend);
     makeThreadIfRecommendCountSatisfied(post);
   }
@@ -63,6 +63,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
+  @Transactional
   public long getPostRecommendCount(final Post post) {
     return recommendRepository.countByPost(post);
   }
@@ -88,11 +89,11 @@ public class RecommendServiceImpl implements RecommendService {
     }
   }
 
-  private void makeThreadIfRecommendCountSatisfied(final Post post) {
+  @Transactional
+  public void makeThreadIfRecommendCountSatisfied(final Post post) {
     if (getPostRecommendCount(post) >= COUNT_FOR_MAKE_THREAD) {
-      ThreadService.startThread(post);
+      threadService.startThread(post);
     }
   }
-
 
 }
