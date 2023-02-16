@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 
 public interface CommentService {
 
-  Page<CommentResponseDto> selectCommentsWithPaging(final Thread threadId, int page);
+  Page<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page);
 
   void createComment(
       final CommentRequestDto commentRequestDto,

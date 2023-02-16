@@ -1,6 +1,8 @@
 package gladiator.philosopher.thread.dto;
 
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadImage;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,47 +18,34 @@ public class ThreadResponseDto {
   private final Long id;
   private final String title;
   private final String content;
+  private final String nickname;
   private final LocalDateTime createdDate;
   private final LocalDateTime endDate;
   private final Long recommend;
-  private List<String> images;
-  private final String nickname;
-
-  public ThreadResponseDto(Long id, String title, String content, LocalDateTime createdDate,
-      LocalDateTime endDate, Long recommend, List<String> images, String nickname) {
-    this.id = id;
-    this.title = title;
-    this.content = content;
-    this.createdDate = createdDate;
-    this.endDate = endDate;
-    this.recommend = recommend;
-    this.images = images;
-    this.nickname = nickname;
-  }
+  private final List<String> images;
+  private final List<String> opinions;
 
   @Builder
   public ThreadResponseDto(final Thread thread) {
     this.id = thread.getId();
     this.title = thread.getTitle();
     this.content = thread.getContent();
-    this.images = thread.getThreadImages().stream().map(x -> x.getImageUrl())
+    this.images = thread.getThreadImages().stream().map(ThreadImage::getImageUrl)
         .collect(Collectors.toList());
-    this.recommend = 1L;
+    this.recommend = (long) thread.getRecommends().size();
     this.nickname = thread.getAccount().getNickname();
-    this.endDate = thread.getEndDate();
     this.createdDate = thread.getCreatedDate();
+    this.endDate = thread.getEndDate();
+    this.opinions = thread.getOpinions().stream().map(ThreadOpinion::getOpinion)
+        .collect(Collectors.toList());
   }
 
   public static ThreadResponseDto of(Thread thread) {
-    return new ThreadResponseDto(thread);
+    return ThreadResponseDto.builder().thread(thread).build();
   }
 
   public static List<ThreadResponseDto> of(List<Thread> threads) {
     return threads.stream().map(ThreadResponseDto::of).collect(Collectors.toList());
-  }
-
-  public void addImage(List<String> images) {
-    this.images = images;
   }
 
 }

@@ -26,9 +26,9 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<CommentResponseDto> selectCommentsWithPaging(final Thread thread, int page) {
+  public Page<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page) {
     PageRequest pageable = PageRequest.of(page, 10);
-    return commentRepository.selectCommentsWithPaging(pageable);
+    return commentRepository.selectCommentsWithPaging(pageable, threadId);
   }
 
   @Override
