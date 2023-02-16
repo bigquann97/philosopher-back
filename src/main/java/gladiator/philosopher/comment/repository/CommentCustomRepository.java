@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentCustomRepository {
 
-  Page<CommentResponseDto> selectCommentsWithPaging(Pageable pageable);
+  Page<CommentResponseDto> selectCommentsWithPaging(Pageable pageable, Long id);
 }

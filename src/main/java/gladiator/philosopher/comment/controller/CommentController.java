@@ -41,8 +41,7 @@ public class CommentController {
       final @PathVariable Long threadId,
       final @RequestParam(required = false, defaultValue = "1") int page
   ) {
-    Thread thread = threadService.getThreadEntity(threadId);
-    return commentService.selectCommentsWithPaging(thread, page - 1);
+    return commentService.selectCommentsWithPaging(threadId, page - 1);
   }
 
   /**

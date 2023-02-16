@@ -1,4 +1,4 @@
-package gladiator.philosopher.comment.dto;
+package gladiator.philosopher.comment.entity;
 
 public enum CommentStatus {
   ACTIVE, DELETED, BLINDED

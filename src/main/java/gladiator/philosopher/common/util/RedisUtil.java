@@ -2,6 +2,8 @@ package gladiator.philosopher.common.util;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RedisUtil {
 
+  private final RedisTemplate<String, Object> redisTemplate;
   private final StringRedisTemplate stringRedisTemplate;
 
   public String getData(String key) {
@@ -31,5 +34,16 @@ public class RedisUtil {
   public void deleteData(String key) {
     stringRedisTemplate.delete(key);
   }
+
+  public void addSetData(String key, String value) {
+    SetOperations<String, Object> valueOperations = redisTemplate.opsForSet();
+    valueOperations.add(key, value);
+  }
+
+  public void deleteSetData(String key, String value) {
+    SetOperations<String, Object> valueOperation = redisTemplate.opsForSet();
+    valueOperation.remove(key, value);
+  }
+
 
 }

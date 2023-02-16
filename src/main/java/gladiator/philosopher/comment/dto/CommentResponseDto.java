@@ -1,6 +1,7 @@
 package gladiator.philosopher.comment.dto;
 
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.comment.entity.CommentStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,39 +29,27 @@ public class CommentResponseDto {
 
   private CommentStatus status;
 
-  private int recommendCount;
+  private Long recommendCount;
 
   @Builder
-  public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
-      LocalDateTime createDate, CommentStatus status, int recommendCount,
-      List<Long> mentioningCommentIds, List<Long> mentionedCommentIds) {
-    this.commentId = commentId;
-    this.nickname = nickname;
-    this.opinion = opinion;
-    this.content = content;
-    this.createDate = createDate;
-    this.status = status;
-    this.mentioningCommentIds = mentioningCommentIds;
-    this.mentionedCommentIds = mentionedCommentIds;
-    this.recommendCount = recommendCount;
+  public CommentResponseDto(Comment comment) {
+    this.commentId = comment.getId();
+    this.nickname = comment.getAccount().getNickname();
+    this.opinion = comment.getOpinion();
+    this.content = comment.getContent();
+    this.mentioningCommentIds = comment.getMentionings().stream()
+        .map(x -> x.getMentionedComment().getId()).collect(
+            Collectors.toList());
+    this.mentionedCommentIds = comment.getMentioneds().stream()
+        .map(x -> x.getMentioningComment().getId()).collect(
+            Collectors.toList());
+    this.createDate = comment.getCreatedDate();
+    this.status = comment.getStatus();
+    this.recommendCount = (long) comment.getRecommends().size();
   }
 
   public static CommentResponseDto of(Comment comment) {
-    return CommentResponseDto.builder()
-        .commentId(comment.getId())
-        .nickname(comment.getAccount().getNickname())
-        .opinion(comment.getOpinion())
-        .content(comment.getContent())
-        .mentioningCommentIds(
-            comment.getMentionings().stream().map(x -> x.getMentionedComment().getId()).collect(
-                Collectors.toList()))
-        .mentionedCommentIds(
-            comment.getMentioneds().stream().map(x -> x.getMentioningComment().getId()).collect(
-                Collectors.toList()))
-        .createDate(comment.getCreatedDate())
-        .status(comment.getStatus())
-        .recommendCount(comment.getRecommends().size())
-        .build();
+    return CommentResponseDto.builder().comment(comment).build();
   }
 
   public static List<CommentResponseDto> of(List<Comment> comments) {

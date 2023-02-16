@@ -1,14 +1,13 @@
 package gladiator.philosopher.comment.entity;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.comment.dto.CommentStatus;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.mention.entity.Mention;
 import gladiator.philosopher.recommend.entity.Recommend;
 import gladiator.philosopher.thread.entity.Thread;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -50,13 +49,13 @@ public class Comment extends BaseEntity {
   private CommentStatus status;
 
   @OneToMany(mappedBy = "mentioningComment")
-  private List<Mention> mentionings = new ArrayList<>();
+  private Set<Mention> mentionings = new HashSet<>();
 
   @OneToMany(mappedBy = "mentionedComment")
-  private List<Mention> mentioneds = new ArrayList<>();
+  private Set<Mention> mentioneds = new HashSet<>();
 
   @OneToMany(mappedBy = "comment")
-  private List<Recommend> recommends = new ArrayList<>();
+  private Set<Recommend> recommends = new HashSet<>();
 
   @Builder
   public Comment(Account account, Thread thread, String content, String opinion) {

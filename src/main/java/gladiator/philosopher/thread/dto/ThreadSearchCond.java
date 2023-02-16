@@ -1,5 +1,6 @@
 package gladiator.philosopher.thread.dto;
 
+import gladiator.philosopher.thread.entity.Sort;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +40,9 @@ public class ThreadSearchCond {
     page = (page == null) || (page <= 0) ? 0 : page - 1;
     sort = sort == null ? Sort.NEW : sort;
     word = (word == null) ? "" : word;
-    pageable = PageRequest.of(page, 10, Direction.DESC, sort.getOption());
+    org.springframework.data.domain.Sort sorted = org.springframework.data.domain.Sort.by(
+        Direction.DESC, sort.name());
+    pageable = PageRequest.of(page, 10, sorted);
 
     return ThreadSearchCond.builder()
         .page(page)
