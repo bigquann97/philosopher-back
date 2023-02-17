@@ -2,7 +2,7 @@ package gladiator.philosopher.post.repository;
 
 import static gladiator.philosopher.account.entity.QAccount.account;
 import static gladiator.philosopher.post.entity.QPost.post;
-import static gladiator.philosopher.post.entity.QPostImage.postImage;
+import static gladiator.philosopher.recommend.entity.QPostRecommend.postRecommend;
 import static gladiator.philosopher.recommend.entity.QRecommend.recommend;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -10,13 +10,10 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostStatus;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
-import gladiator.philosopher.post.entity.PostImage;
-import gladiator.philosopher.post.entity.QPostImage;
 import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +42,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 account.nickname.as("nickname"),
                 JPAExpressions
                     .select(Wildcard.count).from(recommend)
-                    .where(post.id.eq(recommend.post.id)))
+                    .where(post.id.eq(postRecommend.post.id)))
             )
         .from(post)
         .leftJoin(post.account, account)

@@ -3,11 +3,12 @@ package gladiator.philosopher.comment.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.mention.entity.Mention;
-import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.recommend.entity.CommentRecommend;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -48,14 +49,14 @@ public class Comment extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private CommentStatus status;
 
-  @OneToMany(mappedBy = "mentioningComment")
+  @OneToMany(mappedBy = "mentioningComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Mention> mentionings = new HashSet<>();
 
-  @OneToMany(mappedBy = "mentionedComment")
+  @OneToMany(mappedBy = "mentionedComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Mention> mentioneds = new HashSet<>();
 
-  @OneToMany(mappedBy = "comment")
-  private Set<Recommend> recommends = new HashSet<>();
+  @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CommentRecommend> recommends = new HashSet<>();
 
   @Builder
   public Comment(Account account, Thread thread, String content, String opinion) {
@@ -66,7 +67,8 @@ public class Comment extends BaseEntity {
     this.opinion = opinion;
   }
 
-  public void modifyComment(String content) {
+  public void modifyComment(String content, String opinion) {
+    this.opinion = opinion;
     this.content = content;
   }
 

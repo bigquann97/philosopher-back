@@ -3,7 +3,7 @@ package gladiator.philosopher.thread.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -61,7 +61,7 @@ public class Thread extends BaseEntity {
   private Set<ThreadImage> threadImages = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private Set<Recommend> recommends = new LinkedHashSet<>();
+  private Set<ThreadRecommend> recommends = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
   private Set<ThreadOpinion> opinions = new LinkedHashSet<>();
