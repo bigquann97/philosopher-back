@@ -109,4 +109,8 @@ public class Post extends BaseEntity {
   public void makeThread() {
     this.isThreaded = true;
   }
+
+  public boolean isBlinded() {
+    return this.status == PostStatus.BLINDED;
+  }
 }

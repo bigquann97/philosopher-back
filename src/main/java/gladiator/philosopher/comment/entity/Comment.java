@@ -100,4 +100,8 @@ public class Comment extends BaseEntity {
   public int hashCode() {
     return getClass().hashCode();
   }
+
+  public boolean isBlinded() {
+    return this.status == CommentStatus.BLINDED;
+  }
 }
