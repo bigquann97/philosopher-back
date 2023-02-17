@@ -1,8 +1,11 @@
 package gladiator.philosopher.account.service;
 
-import gladiator.philosopher.account.dto.ModifyProfileRequestDto;
+import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
+import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
 import gladiator.philosopher.account.dto.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.common.enums.ExceptionStatus;
@@ -11,6 +14,7 @@ import gladiator.philosopher.common.exception.CustomException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountServiceImpl implements AccountService {
 
   private final AccountRepository accountRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final AccountInfoRepository accountInfoRepository;
+
 
   @Override
   @Transactional(readOnly = true)
@@ -29,7 +36,6 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public void AdminCheck() {
-
   }
 
   /**
@@ -60,11 +66,40 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   @Transactional
-  public void modifyInfo(
+  public void modifyMyNickname(
       final Account account,
-      final ModifyProfileRequestDto modifyProfileRequestDto
+      final ModifyNicknameRequestDto modifynicknameRequestDto
   ) {
+    log.info("account name is : " + account.getNickname());
+    account.UpdateNickname(modifynicknameRequestDto.getNickname());
+    accountRepository.saveAndFlush(account);
+    log.info("new account name is : " + account.getNickname());
+  }
 
+  @Override
+  @Transactional
+  public void modifyAccountImage(Account account, String newUrl) {
+    final AccountInfo accountInfo = accountInfoRepository.getAccountInfoByAccountId(account.getId());
+    accountInfo.updateImageUrl(newUrl);
+    accountInfoRepository.saveAndFlush(accountInfo);
+  }
+
+  @Override
+  @Transactional
+  public void modifyMyPassword(final Account account,
+      final ModifyPasswordRequestDto modifyPasswordRequestDto
+  ) {
+    log.info("my password is : " + account.getPassword());
+    String password = passwordEncoder.encode(modifyPasswordRequestDto.getPassword());
+    account.UpdatePassword(password);
+    accountRepository.saveAndFlush(account);
+    log.info("new password is : " + account.getPassword());
+  }
+
+  @Override
+  public String getOldUrl(Account account) {
+    AccountInfo accountInfo = accountInfoRepository.getAccountInfoByAccountId(account.getId());
+    return accountInfo.getImageUrl();
   }
 
 }

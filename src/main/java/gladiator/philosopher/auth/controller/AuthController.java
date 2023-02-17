@@ -46,13 +46,9 @@ public class AuthController {
       final @RequestPart("image") MultipartFile multipartFiles,
       final @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto
   ) {
-    try {
       s3Uploader.checkFileExtension(multipartFiles);
       final String imageUrl = s3Uploader.upLoadFileToSingle(multipartFiles, dirName);
       authService.signUp(imageUrl, signUpRequestDto);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   /**

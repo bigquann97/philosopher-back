@@ -63,17 +63,6 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-//  public void changeProfile(String nickname, AccountImage accountImage) {
-//    this.nickname = nickname;
-//    if (!accountImage.getOriginalName().equals("default_image.jpg")) {
-//      this.accountImage = accountImage;
-//    }
-//  }
-//
-//  public boolean hasDefaultAccountImage() {
-//    return this.accountImage.getUniqueName().equals("default_image.jpg");
-//  }
-
   // testcode
   public Account(Long id, String email, String password, int age, String nickname,
       Gender gender, UserRole type, UserStatus status) {
@@ -87,7 +76,7 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-  public void UpdateAccountRole(UserRole role) {
+  public void UpdateAccountRole(UserRole role){
     this.type = role;
   }
 
@@ -106,6 +95,14 @@ public class Account extends BaseEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  public void UpdateNickname(String nickname){
+    this.nickname = nickname;
+  }
+
+  public void UpdatePassword(String password){
+    this.password = password;
   }
 
 }

@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class ModifyProfileRequestDto {
+public class ModifyPasswordRequestDto {
 
-  private final String nickname;
+  private final String password;
 
 }

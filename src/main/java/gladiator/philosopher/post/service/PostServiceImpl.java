@@ -4,6 +4,7 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
@@ -49,9 +50,11 @@ public class PostServiceImpl implements PostService {
       PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
     }
+
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
     postOpinionRepository.saveAll(opinions);
+
     postRepository.save(post);
   }
 

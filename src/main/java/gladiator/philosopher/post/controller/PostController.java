@@ -12,7 +12,6 @@ import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.service.PostService;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -56,22 +55,18 @@ public class PostController {
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
     List<String> FailToPostUrls = null;
-
+    postRequestDto.checkByOpinionCount();
+    s3Uploader.checkFilesExtension(multipartFiles);
+    List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+    FailToPostUrls = urls.stream().collect(Collectors.toList());
+    Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
     try {
-      postRequestDto.checkByOpinionCount(); // option 카운트 체크 -> 어차피 프론트에서 1차적으로 막을꺼임, 혹시나 해서
-      s3Uploader.checkFilesExtension(multipartFiles);
-      List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-      FailToPostUrls = urls.stream().collect(Collectors.toList());
-      Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
       postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
-
-    } catch (IOException e) {
+    }catch (Exception e) {
       for (String url : FailToPostUrls) {
-        String[] split = url.split("/");
-        String filename = dirName + "/" + split[split.length - 1];
-        s3Uploader.deleteS3(filename);
+        s3Uploader.newDeleteS3(url, dirName);
       }
-      throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+      throw new CustomException(ExceptionStatus.FAIL_TO_POSTING);
     }
   }
 

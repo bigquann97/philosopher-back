@@ -38,7 +38,8 @@ public class S3Uploader {
    * @return
    * @throws IOException
    */
-  public String upLoadFileToSingle(MultipartFile multipartFile, String dirName)throws IOException {
+  public String upLoadFileToSingle(MultipartFile multipartFile, String dirName) {
+    try{
     ObjectMetadata objectMetadata = new ObjectMetadata();
     objectMetadata.setContentLength(multipartFile.getSize());
     objectMetadata.setContentType(multipartFile.getContentType());
@@ -47,8 +48,10 @@ public class S3Uploader {
     String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
         objectMetadata); // s3로 업로드
     log.info("url : " + uploadImageUrl);
-
-    return uploadImageUrl;
+    return uploadImageUrl;}
+    catch (IOException e){
+      throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+    }
   }
 
   /**
@@ -59,20 +62,25 @@ public class S3Uploader {
    * @throws IOException
    */
   public List<String> upLoadFileToMulti(List<MultipartFile> multipartFiles, String dirName)
-      throws IOException {
-    List<String> resultUrlList = new ArrayList<>();
+       {
+         try {
+           List<String> resultUrlList = new ArrayList<>();
 
-    for (MultipartFile multipartFile : multipartFiles) {
-      ObjectMetadata objectMetadata = new ObjectMetadata();
-      objectMetadata.setContentLength(multipartFile.getSize());
-      objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
-      String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
-      String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
-          objectMetadata); // s3로 업로드
-      log.info("upfile url is :" + uploadImageUrl);
-      resultUrlList.add(uploadImageUrl);
-    }
-    return resultUrlList;
+           for (MultipartFile multipartFile : multipartFiles) {
+             ObjectMetadata objectMetadata = new ObjectMetadata();
+             objectMetadata.setContentLength(multipartFile.getSize());
+             objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
+             String fileName =
+                 dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+             String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
+                 objectMetadata); // s3로 업로드
+             log.info("upfile url is :" + uploadImageUrl);
+             resultUrlList.add(uploadImageUrl);
+           }
+           return resultUrlList;
+         }catch (IOException e){
+           throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+         }
   }
 
   /**
@@ -89,11 +97,21 @@ public class S3Uploader {
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
 
+
+//  public void deleteS3(String fileName) {
+//    DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+//    log.info("delete url : "+request);
+//    amazonS3Client.deleteObject(request);
+//  }
+
   /**
-   * S3 삭제
-   * @param fileName
+   * S3 파일 삭제
+   * @param url
+   * @param dirName
    */
-  public void deleteS3(String fileName) {
+  public void newDeleteS3(String url,String dirName){
+    final String[] split = url.split("/");
+    final String fileName = dirName + "/" + split[split.length - 1];
     DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
     log.info("delete url : "+request);
     amazonS3Client.deleteObject(request);
