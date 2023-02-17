@@ -5,7 +5,9 @@ import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.report.repository.ReportRepository;
+import gladiator.philosopher.report.repository.CommentReportRepository;
+import gladiator.philosopher.report.repository.PostReportRepository;
+import gladiator.philosopher.report.repository.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,10 @@ import org.springframework.stereotype.Service;
 public class ReportServiceImpl implements ReportService {
 
   private final static int COUNT_FOR_AUTO_BLIND = 3;
-  private final ReportRepository reportRepository;
+  private final PostReportRepository postReportRepository;
+  private final ThreadReportRepository threadReportRepository;
+  private final CommentReportRepository commentReportRepository;
+
 
   @Override
   public void reportPost(
@@ -25,8 +30,11 @@ public class ReportServiceImpl implements ReportService {
       final Account reporter
   ) {
     checkIfReporterAlreadyReportedObject(post, reporter);
-    reportRepository.save(dto.toEntity(post, reporter));
-    if (reportRepository.countByPostId(post.getId()) >= COUNT_FOR_AUTO_BLIND) {
+    postReportRepository.save(dto.toEntity(post, reporter));
+    if (postReportRepository.countByPostId(post.getId()) >= COUNT_FOR_AUTO_BLIND) {
+      if (post.isBlinded()) {
+        return;
+      }
       post.blind();
     }
   }
@@ -38,8 +46,11 @@ public class ReportServiceImpl implements ReportService {
       final Account reporter
   ) {
     checkIfReporterAlreadyReportedObject(comment, reporter);
-    reportRepository.save(dto.toEntity(comment, reporter));
-    if (reportRepository.countByCommentId(comment.getId()) >= COUNT_FOR_AUTO_BLIND) {
+    commentReportRepository.save(dto.toEntity(comment, reporter));
+    if (commentReportRepository.countByCommentId(comment.getId()) >= COUNT_FOR_AUTO_BLIND) {
+      if (comment.isBlinded()) {
+        return;
+      }
       comment.blind();
     }
   }
@@ -51,31 +62,35 @@ public class ReportServiceImpl implements ReportService {
       final Account reporter
   ) {
     checkIfReporterAlreadyReportedObject(thread, reporter);
-    reportRepository.save(dto.toEntity(thread, reporter));
-    if (reportRepository.countByThreadId(thread.getId()) >= COUNT_FOR_AUTO_BLIND) {
+    threadReportRepository.save(dto.toEntity(thread, reporter));
+    if (threadReportRepository.countByThreadId(thread.getId()) >= COUNT_FOR_AUTO_BLIND) {
+      if (thread.isBlinded()) {
+        return;
+      }
       thread.blind();
     }
   }
 
   @Override
   public List<ReportResponseDto> getReports() {
-    return reportRepository.getReports();
+    // TODO: 2023/02/17 reportRepository삭제 
+    return null;
   }
-  
+
   private void checkIfReporterAlreadyReportedObject(Object obj, Account reporter) {
     if (obj instanceof Post) {
       Post post = (Post) obj;
-      if (reportRepository.existsByReporterAndPostId(reporter, post.getId())) {
+      if (postReportRepository.existsByReporterAndPostId(reporter, post.getId())) {
         throw new IllegalArgumentException("이미 신고한 게시물");
       }
     } else if (obj instanceof Thread) {
       Thread thread = (Thread) obj;
-      if (reportRepository.existsByReporterAndThreadId(reporter, thread.getId())) {
+      if (threadReportRepository.existsByReporterAndThreadId(reporter, thread.getId())) {
         throw new IllegalArgumentException("이미 신고한 게시물");
       }
     } else if (obj instanceof Comment) {
       Comment comment = (Comment) obj;
-      if (reportRepository.existsByReporterAndCommentId(reporter, comment.getId())) {
+      if (commentReportRepository.existsByReporterAndCommentId(reporter, comment.getId())) {
         throw new IllegalArgumentException("이미 신고한 게시물");
       }
     }
