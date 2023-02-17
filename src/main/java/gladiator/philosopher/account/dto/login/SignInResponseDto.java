@@ -8,17 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class SignInResponseDto {
 
-  private final String email;
   private final String accessToken;
   private final String refreshToken;
 
-  public SignInResponseDto(String email, String accessToken, String refreshToken) {
-    this.email = email;
+  public SignInResponseDto(String accessToken, String refreshToken) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
   }
 
-  public static SignInResponseDto of(String email, String accessToken, String refreshToken) {
-    return new SignInResponseDto(email, accessToken, refreshToken);
+  public static SignInResponseDto of(String accessToken, String refreshToken) {
+    return new SignInResponseDto(accessToken, refreshToken);
   }
 }

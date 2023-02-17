@@ -1,5 +1,9 @@
 package gladiator.philosopher.auth.service;
 
+import static gladiator.philosopher.common.jwt.JwtTokenProvider.AUTHORIZATION_HEADER;
+import static gladiator.philosopher.common.jwt.JwtTokenProvider.BEARER_PREFIX;
+import static gladiator.philosopher.common.jwt.JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME;
+
 import gladiator.philosopher.account.dto.login.SignInRequestDto;
 import gladiator.philosopher.account.dto.login.SignInResponseDto;
 import gladiator.philosopher.account.dto.login.SignUpRequestDto;
@@ -45,32 +49,18 @@ public class AuthServiceImpl implements AuthService {
       final SignUpRequestDto signUpRequestDto,
       final String url
   ) {
-    checkByUserEmailDuplicated(signUpRequestDto.getEmail());
-    checkByUserNickNameDuplicated(signUpRequestDto.getNickname());
+    checkIfUserEmailDuplicated(signUpRequestDto.getEmail());
+    checkIfUserNickNameDuplicated(signUpRequestDto.getNickname());
     checkIfEmailVerified(signUpRequestDto.getEmail());
-    Account account = signUpRequestDto.toEntity(
-        passwordEncoder.encode(signUpRequestDto.getPassword()));
-    accountRepository.save(account);
-    AccountInfo accountInfo = new AccountInfo(account, url);
-    accountInfoRepository.save(accountInfo);
-    redisUtil.deleteSetData(EmailService.WHITELIST_KEY_PREFIX, signUpRequestDto.getEmail());
-  }
 
-  @Override
-  public void testSignUP(SignUpRequestDto signUpRequestDto) {
-    checkByUserEmailDuplicated(signUpRequestDto.getEmail());
-    checkByUserNickNameDuplicated(signUpRequestDto.getNickname());
     Account account = signUpRequestDto.toEntity(
         passwordEncoder.encode(signUpRequestDto.getPassword()));
     accountRepository.save(account);
+
     AccountInfo accountInfo = new AccountInfo(account, imageUrl);
     accountInfoRepository.save(accountInfo);
-  }
 
-  private void checkIfEmailVerified(String email) {
-    if (!redisUtil.checkValueExists(EmailService.WHITELIST_KEY_PREFIX, email)) {
-      throw new IllegalArgumentException("이메일 인증이 이뤄지지 않았습니다.");
-    }
+    redisUtil.deleteData(EmailService.WHITELIST_KEY_PREFIX + signUpRequestDto.getEmail());
   }
 
   /**
@@ -87,14 +77,19 @@ public class AuthServiceImpl implements AuthService {
       final HttpServletResponse response
   ) {
     Account account = findAccountByEmail(signInRequestDto.getEmail());
-    checkByMemberPassword(signInRequestDto.getPassword(), account);
+    checkIfPasswordIsCorrect(signInRequestDto.getPassword(), account);
+
+    // 토큰 발행
     Authentication authentication = jwtTokenProvider.createAuthentication(
         signInRequestDto.getEmail());
     TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
-    redisUtil.setData(authentication.getName(), tokenDto.getRefreshToken());
-    response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-    return SignInResponseDto.of(account.getEmail(), tokenDto.getAccessToken(),
-        tokenDto.getRefreshToken());
+
+    // 로그인시 Redis - key:email, value: refreshToken 저장;
+    redisUtil.setDataExpire(authentication.getName(), tokenDto.getRefreshToken(),
+        REFRESH_TOKEN_EXPIRE_TIME);
+    response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
+
+    return SignInResponseDto.of(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
   }
 
 
@@ -107,18 +102,23 @@ public class AuthServiceImpl implements AuthService {
     String email = jwtTokenProvider.getUserInfoFromToken(tokenRequestDto.getAccessToken())
         .getSubject();
     validateRefreshToken(tokenRequestDto);
-    Authentication authentication = jwtTokenProvider.createAuthentication(email);
-    String validRefreshToken = redisUtil.getData(authentication.getName());
 
-    if (validRefreshToken != null) {
+    try {
+      Authentication authentication = jwtTokenProvider.createAuthentication(email);
+      String validRefreshToken = redisUtil.getData(email);
       validateRefreshTokenOwner(validRefreshToken, tokenRequestDto);
+
+      // 새로운 토큰 발행
       TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
-      redisUtil.setData(authentication.getName(), tokenDto.getRefreshToken());
-      response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-      return SignInResponseDto.of(email, tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-    } else {
+      redisUtil.setDataExpire(authentication.getName(), tokenDto.getRefreshToken(),
+          REFRESH_TOKEN_EXPIRE_TIME);
+      response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
+
+      return SignInResponseDto.of(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+    } catch (NullPointerException e) {
       throw new IllegalArgumentException("redis DB에 토큰정보 없음");
     }
+
   }
 
   @Override
@@ -173,7 +173,7 @@ public class AuthServiceImpl implements AuthService {
    * @param password
    * @param account
    */
-  private void checkByMemberPassword(final String password, final Account account) {
+  private void checkIfPasswordIsCorrect(final String password, final Account account) {
     if (!passwordEncoder.matches(password, account.getPassword())) {
       throw new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION);
     }
@@ -185,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
    * @param email
    * @throws RuntimeException
    */
-  private void checkByUserEmailDuplicated(final String email) {
+  private void checkIfUserEmailDuplicated(final String email) {
     if (accountRepository.existsByEmail(email)) {
       throw new CustomException(ExceptionStatus.ACCOUNT_IS_EXIST);
     }
@@ -196,9 +196,19 @@ public class AuthServiceImpl implements AuthService {
    *
    * @param nickName
    */
-  private void checkByUserNickNameDuplicated(final String nickName) {
+  private void checkIfUserNickNameDuplicated(final String nickName) {
     if (accountRepository.existsByNickname(nickName)) {
       throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
+    }
+  }
+
+  private void checkIfEmailVerified(String email) {
+    try {
+      if (!redisUtil.getData(EmailService.WHITELIST_KEY_PREFIX + email).equals("true")) {
+        throw new IllegalArgumentException("인증되지 않은 이메일");
+      }
+    } catch (NullPointerException e) {
+      throw new IllegalArgumentException("인증되지 않은 이메일");
     }
   }
 
