@@ -1,7 +1,18 @@
 package gladiator.philosopher.recommend.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_RCMND_COMMENT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_RCMND_POST;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_RCMND_THREAD;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_ACCESS;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_COMMENT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_POST;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_THREAD;
+
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.common.exception.DuplicatedException;
+import gladiator.philosopher.common.exception.InvalidAccessException;
+import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.entity.CommentRecommend;
@@ -30,7 +41,7 @@ public class RecommendServiceImpl implements RecommendService {
   @Transactional
   public void createRecommendPost(final Post post, final Account account) {
     Post initializedPost = postService.getPostEntity(post.getId());
-    checkIfUserAlreadyLiked(initializedPost, account);
+    checkIfUserAlreadyLikedObject(initializedPost, account);
     PostRecommend postRecommend = new PostRecommend(account, initializedPost);
     postRecommendRepository.save(postRecommend);
     makeThreadIfRecommendCountSatisfied(initializedPost);
@@ -39,13 +50,13 @@ public class RecommendServiceImpl implements RecommendService {
   @Transactional
   public void deleteRecommendPost(final Post post, final Account account) {
     PostRecommend postRecommend = postRecommendRepository.findByPostAndAccount(post, account)
-        .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_RCMND_POST));
     postRecommendRepository.delete(postRecommend);
   }
 
   @Transactional
   public void createRecommendThread(final Thread thread, final Account account) {
-    checkIfUserAlreadyLiked(thread, account);
+    checkIfUserAlreadyLikedObject(thread, account);
     ThreadRecommend recommend = new ThreadRecommend(account, thread);
     threadRecommendRepository.save(recommend);
   }
@@ -53,13 +64,13 @@ public class RecommendServiceImpl implements RecommendService {
   @Transactional
   public void deleteRecommendThread(final Thread thread, final Account account) {
     ThreadRecommend threadRecommend = threadRecommendRepository.findByThreadAndAccount(thread,
-        account).orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
+        account).orElseThrow(() -> new NotFoundException(NOT_FOUND_RCMND_THREAD));
     threadRecommendRepository.delete(threadRecommend);
   }
 
   @Transactional
   public void createRecommendComment(final Comment comment, final Account account) {
-    checkIfUserAlreadyLiked(comment, account);
+    checkIfUserAlreadyLikedObject(comment, account);
     CommentRecommend recommend = new CommentRecommend(account, comment);
     commentRecommendRepository.save(recommend);
   }
@@ -67,7 +78,7 @@ public class RecommendServiceImpl implements RecommendService {
   @Transactional
   public void deleteRecommendComment(final Comment comment, final Account account) {
     CommentRecommend commentRecommend = commentRecommendRepository.findByCommentAndAccount(comment,
-        account).orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
+        account).orElseThrow(() -> new NotFoundException(NOT_FOUND_RCMND_COMMENT));
     commentRecommendRepository.delete(commentRecommend);
   }
 
@@ -77,24 +88,24 @@ public class RecommendServiceImpl implements RecommendService {
     return postRecommendRepository.countByPost(post);
   }
 
-  private void checkIfUserAlreadyLiked(final Object obj, final Account account) {
+  private void checkIfUserAlreadyLikedObject(final Object obj, final Account account) {
     if (obj instanceof Post) {
       Post post = (Post) obj;
       if (postRecommendRepository.existsByPostAndAccount(post, account)) {
-        throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
+        throw new DuplicatedException(DUPLICATED_RCMND_POST);
       }
     } else if (obj instanceof Thread) {
       Thread thread = (Thread) obj;
       if (threadRecommendRepository.existsByThreadAndAccount(thread, account)) {
-        throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
+        throw new DuplicatedException(DUPLICATED_RCMND_THREAD);
       }
     } else if (obj instanceof Comment) {
       Comment comment = (Comment) obj;
       if (commentRecommendRepository.existsByCommentAndAccount(comment, account)) {
-        throw new IllegalArgumentException("이미 좋아요를 누르셨습니다.");
+        throw new DuplicatedException(DUPLICATED_RCMND_COMMENT);
       }
     } else {
-      throw new IllegalArgumentException("잘못된 접근입니다.");
+      throw new InvalidAccessException(INVALID_ACCESS);
     }
   }
 

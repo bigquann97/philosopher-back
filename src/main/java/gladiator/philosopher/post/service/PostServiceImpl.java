@@ -1,5 +1,8 @@
 package gladiator.philosopher.post.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUTHORIZED_POST;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
+
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
@@ -61,7 +64,7 @@ public class PostServiceImpl implements PostService {
   public List<PostsResponseDto> SearchByQuerydsl(final int page) {
     Page<Post> posts = postRepository.findAll(pageableSetting(page));
     if (posts.isEmpty()) {
-      throw new CustomException(ExceptionStatus.POST_IS_NOT_EXIST);
+      throw new CustomException(NOT_FOUND_POST);
     }
     List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
         Collectors.toList());
@@ -118,7 +121,7 @@ public class PostServiceImpl implements PostService {
   @Override
   public Post getPostEntity(final Long postId) {
     return postRepository.findById(postId).orElseThrow(
-        () -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST)
+        () -> new CustomException(NOT_FOUND_POST)
     );
   }
 

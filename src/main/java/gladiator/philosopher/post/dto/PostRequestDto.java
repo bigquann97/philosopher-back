@@ -2,8 +2,8 @@ package gladiator.philosopher.post.dto;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
-import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.post.entity.Post;
 import java.util.List;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class PostRequestDto {
     this.opinions = opinions;
     this.category = category;
   }
-  
+
   public Post toEntity(Account account, Category category) {
     return Post.builder()
         .account(account)

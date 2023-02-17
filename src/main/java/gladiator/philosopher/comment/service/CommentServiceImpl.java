@@ -1,12 +1,18 @@
 package gladiator.philosopher.comment.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.ARCHIVED_THREAD;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUTHORIZED_COMMENT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_OPINION;
+
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
-import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.AuthException;
+import gladiator.philosopher.common.exception.InvalidAccessException;
+import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.mention.service.MentionService;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
@@ -77,7 +83,7 @@ public class CommentServiceImpl implements CommentService {
   @Transactional(readOnly = true)
   public Comment getCommentEntity(final Long id) {
     return commentRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT));
   }
 
   @Override
@@ -96,13 +102,13 @@ public class CommentServiceImpl implements CommentService {
 
   private void checkIfAccountIsWriter(final Comment comment, final Account account) {
     if (!comment.isWriter(account)) {
-      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+      throw new AuthException(NOT_AUTHORIZED_COMMENT);
     }
   }
 
   private void checkIfThreadIsArchived(Thread thread) {
     if (thread.isArchived()) {
-      throw new IllegalArgumentException("토론 종료된 쓰레드 입니다.");
+      throw new InvalidAccessException(ARCHIVED_THREAD);
     }
   }
 
@@ -114,7 +120,7 @@ public class CommentServiceImpl implements CommentService {
         .anyMatch(x -> x.getOpinion().equals(commentRequestDto.getOpinion()));
 
     if (!threadHasOpinion) {
-      throw new IllegalArgumentException("논제에 없는 의견입니다.");
+      throw new InvalidAccessException(NOT_FOUND_OPINION);
     }
   }
 

@@ -1,5 +1,12 @@
 package gladiator.philosopher.auth.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_ACCOUNT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_NICKNAME;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_EMAIL_OR_PW;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_REFRESH_TOKEN;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_ACCOUNT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_VERIFIED_EMAIL;
+import static gladiator.philosopher.common.jwt.JwtTokenProvider.ACCESS_TOKEN_EXPIRE_TIME;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.AUTHORIZATION_HEADER;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.BEARER_PREFIX;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME;
@@ -11,12 +18,14 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountInfo;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
-import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.AuthException;
+import gladiator.philosopher.common.exception.DuplicatedException;
+import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.jwt.TokenDto;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.util.RedisUtil;
+import io.jsonwebtoken.Claims;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -114,16 +123,24 @@ public class AuthServiceImpl implements AuthService {
 
       return SignInResponseDto.of(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
     } catch (NullPointerException e) {
-      throw new IllegalArgumentException("redis DB에 토큰정보 없음");
+      throw new AuthException(INVALID_REFRESH_TOKEN);
     }
 
   }
 
   @Override
   @Transactional
-  public void signOut(final Account account) {
-    String email = account.getEmail();
+  public void signOut(final TokenRequestDto dto) {
+    if (!jwtTokenProvider.validateToken(dto.getAccessToken())) {
+      throw new IllegalArgumentException("유효하지 않은 access token");
+    }
+
+    Claims claim = jwtTokenProvider.getUserInfoFromToken(dto.getAccessToken());
+    String email = claim.getSubject();
     redisUtil.deleteData(email);
+
+    redisUtil.setDataExpire("JWT:BLACK_LIST:" + dto.getAccessToken(), "TRUE",
+        ACCESS_TOKEN_EXPIRE_TIME / 1000L);
   }
 
   @Override
@@ -146,13 +163,13 @@ public class AuthServiceImpl implements AuthService {
    */
   private Account findAccountByEmail(final String email) {
     return accountRepository.findByEmail(email)
-        .orElseThrow(() -> new IllegalArgumentException("사용자 없습니다"));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_ACCOUNT));
   }
 
 
   private void validateRefreshToken(final TokenRequestDto tokenRequestDto) {
     if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
-      throw new IllegalArgumentException("유효하지 않은 리프레시 토큰");
+      throw new AuthException(INVALID_REFRESH_TOKEN);
     }
   }
 
@@ -161,7 +178,7 @@ public class AuthServiceImpl implements AuthService {
       final TokenRequestDto tokenRequestDto
   ) {
     if (!tokenRequestDto.validateToken(validRefreshToken)) {
-      throw new IllegalArgumentException("유효하지않은 토큰");
+      throw new AuthException(INVALID_REFRESH_TOKEN);
     }
   }
 
@@ -173,7 +190,7 @@ public class AuthServiceImpl implements AuthService {
    */
   private void checkIfPasswordIsCorrect(final String password, final Account account) {
     if (!passwordEncoder.matches(password, account.getPassword())) {
-      throw new CustomException(ExceptionStatus.NOT_MATCH_INFORMATION);
+      throw new AuthException(INVALID_EMAIL_OR_PW);
     }
   }
 
@@ -185,7 +202,7 @@ public class AuthServiceImpl implements AuthService {
    */
   private void checkIfUserEmailDuplicated(final String email) {
     if (accountRepository.existsByEmail(email)) {
-      throw new CustomException(ExceptionStatus.ACCOUNT_IS_EXIST);
+      throw new DuplicatedException(DUPLICATED_ACCOUNT);
     }
   }
 
@@ -196,17 +213,17 @@ public class AuthServiceImpl implements AuthService {
    */
   private void checkIfUserNickNameDuplicated(final String nickName) {
     if (accountRepository.existsByNickname(nickName)) {
-      throw new CustomException(ExceptionStatus.ACCOUNT_NICKNAME_IS_EXIST);
+      throw new DuplicatedException(DUPLICATED_NICKNAME);
     }
   }
 
   private void checkIfEmailVerified(String email) {
     try {
       if (!redisUtil.getData(EmailService.WHITELIST_KEY_PREFIX + email).equals("true")) {
-        throw new IllegalArgumentException("인증되지 않은 이메일");
+        throw new AuthException(NOT_VERIFIED_EMAIL);
       }
     } catch (NullPointerException e) {
-      throw new IllegalArgumentException("인증되지 않은 이메일");
+      throw new AuthException(NOT_VERIFIED_EMAIL);
     }
   }
 

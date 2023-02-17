@@ -6,14 +6,11 @@ import gladiator.philosopher.account.dto.login.SignUpRequestDto;
 import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.s3.S3Uploader;
-import gladiator.philosopher.common.security.AccountDetails;
-import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,12 +55,12 @@ public class AuthController {
   /**
    * 로그아웃 -> redis 속 리프레시 토큰 삭제
    *
-   * @param accountDetails
+   * @param dto
    */
   @DeleteMapping("/sign-out")
   @ResponseStatus(HttpStatus.OK)
-  public void signOut(final @AuthenticationPrincipal AccountDetails accountDetails) {
-    authService.signOut(accountDetails.getAccount());
+  public void signOut(final @RequestBody TokenRequestDto dto) {
+    authService.signOut(dto);
   }
 
   /**

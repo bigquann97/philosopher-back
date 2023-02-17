@@ -8,9 +8,9 @@ import gladiator.philosopher.account.entity.AccountInfo;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.enums.UserRole;
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
   @Override
   public Account getAccount(final Long id) {
     return accountRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.ACCOUNT_IS_NOT_EXIST));
+        .orElseThrow(() -> new NotFoundException(ExceptionStatus.NOT_FOUND_ACCOUNT));
   }
 
   @Transactional
@@ -79,7 +79,8 @@ public class AccountServiceImpl implements AccountService {
   @Override
   @Transactional
   public void modifyAccountImage(Account account, String newUrl) {
-    final AccountInfo accountInfo = accountInfoRepository.getAccountInfoByAccountId(account.getId());
+    final AccountInfo accountInfo = accountInfoRepository.getAccountInfoByAccountId(
+        account.getId());
     accountInfo.updateImageUrl(newUrl);
     accountInfoRepository.saveAndFlush(accountInfo);
   }
