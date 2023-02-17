@@ -8,7 +8,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import gladiator.philosopher.recommend.entity.QRecommend;
+import gladiator.philosopher.recommend.entity.QThreadRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
@@ -31,13 +31,13 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
   private final JPAQueryFactory jpaQueryFactory;
   private final QThread thread;
-  private final QRecommend recommend;
+  private final QThreadRecommend threadRecommend;
 
   public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
     super(Thread.class);
     this.jpaQueryFactory = jpaQueryFactory;
     this.thread = QThread.thread;
-    this.recommend = QRecommend.recommend;
+    this.threadRecommend = QThreadRecommend.threadRecommend;
   }
 
   @Override
@@ -90,7 +90,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     return jpaQueryFactory
         .select(expr)
         .from(thread)
-        .leftJoin(thread.recommends, recommend).fetchJoin()
+        .leftJoin(thread.recommends, threadRecommend).fetchJoin()
         .leftJoin(thread.account).fetchJoin()
         .where(
             threadStatusEq(location),
@@ -109,7 +109,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     return jpaQueryFactory
         .select(Wildcard.count)
         .from(thread)
-        .leftJoin(thread.recommends, recommend)
+        .leftJoin(thread.recommends, threadRecommend)
         .where(
             threadStatusEq(location),
             titleOrContentContainsWord(cond.getWord()),
@@ -127,7 +127,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     if (sort.equals(Sort.NEW)) {
       return thread.id.desc();
     } else {
-      return recommend.count().desc();
+      return threadRecommend.count().desc();
     }
   }
 
