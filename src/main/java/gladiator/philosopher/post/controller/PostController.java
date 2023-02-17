@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.controller;
 
+import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.enums.ExceptionStatus;
@@ -39,6 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class PostController {
 
+  private final AccountInfoRepository accountInfoRepository;
+
   private final PostService postService;
   private final S3Uploader s3Uploader;
   private final String dirName = "postImg";
@@ -62,7 +65,7 @@ public class PostController {
     Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
     try {
       postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
-    }catch (Exception e) {
+    } catch (Exception e) {
       for (String url : FailToPostUrls) {
         s3Uploader.newDeleteS3(url, dirName);
       }
@@ -92,13 +95,40 @@ public class PostController {
   }
 
   @PutMapping("/{postId}")
-  @ResponseStatus(HttpStatus.OK)
-  public PostResponseDto modifyPost(
+  @ResponseStatus(HttpStatus.CREATED)
+  public Long modifyPost(
       final @PathVariable Long postId,
       final @RequestBody PostRequestDto postRequestDto,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-    return postService.modifyPost(postId, postRequestDto, accountDetails.getAccount());
+    final Long PostId = postService.modifyOnlyPost(postId, postRequestDto,
+        accountDetails.getAccount());
+    return PostId;
+  }
+
+  @PutMapping("/test/{postId}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public Long modifyPostImages(
+      final @PathVariable Long postId,
+      final @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
+      final @RequestPart("dto") PostRequestDto postRequestDto,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
+
+    if (multipartFiles.get(0).getOriginalFilename().equals("")) {
+      postService.modifyOnlyPost(postId, postRequestDto, accountDetails.getAccount());
+    } else {
+      List<String> oldUrls = postService.getOldUrls(postId);
+      s3Uploader.checkFilesExtension(multipartFiles);
+      final List<String> strings = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+      try {
+        postService.modifyPostAndImage(postId, strings, postRequestDto, accountDetails.getAccount());
+        s3Uploader.DeleteS3Files(oldUrls,dirName);
+      } catch (RuntimeException e) {
+        s3Uploader.DeleteS3Files(strings,dirName);
+      }
+    }
+    return postId;
   }
 
   @DeleteMapping("/{postId}")
@@ -109,7 +139,6 @@ public class PostController {
   ) {
     postService.deletePost(postId, accountDetails.getAccount());
   }
-
-
 }
+
 

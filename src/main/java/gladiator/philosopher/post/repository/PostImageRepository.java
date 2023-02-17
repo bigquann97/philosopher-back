@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.repository;
 
+import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface PostImageRepository extends JpaRepository<PostImage, Long>,Post
 
   @Query("select p.imageUrl from PostImage p where p.post.id =:id")
   List<String> getUrl(@Param("id")Long id);
+
+  void deleteByPost(Post post);
 
 }

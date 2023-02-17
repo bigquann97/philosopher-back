@@ -96,8 +96,6 @@ public class S3Uploader {
             CannedAccessControlList.PublicRead));
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
-
-
 //  public void deleteS3(String fileName) {
 //    DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
 //    log.info("delete url : "+request);
@@ -105,7 +103,7 @@ public class S3Uploader {
 //  }
 
   /**
-   * S3 파일 삭제
+   * S3 단일 파일 삭제
    * @param url
    * @param dirName
    */
@@ -116,6 +114,22 @@ public class S3Uploader {
     log.info("delete url : "+request);
     amazonS3Client.deleteObject(request);
   }
+
+  /**
+   * S3 다중 파일 삭제
+   * @param urls
+   * @param dirName
+   */
+  public void DeleteS3Files(List<String> urls, String dirName){
+    for (String url : urls) {
+      final String[] split = url.split("/");
+      final String fileName = dirName+"/"+split[split.length-1];
+      DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+      log.info("delete url : "+request);
+      amazonS3Client.deleteObject(request);
+    }
+  }
+
 
   /**
    * 단일 파일 확장자 검사

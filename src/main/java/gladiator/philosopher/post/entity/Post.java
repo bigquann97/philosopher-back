@@ -3,6 +3,8 @@ package gladiator.philosopher.post.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
+import gladiator.philosopher.common.enums.ExceptionStatus;
+import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostStatus;
 import gladiator.philosopher.recommend.entity.PostRecommend;
@@ -85,9 +87,9 @@ public class Post extends BaseEntity {
     this.isThreaded = false;
   }
 
-  public void modifyPost(PostRequestDto postRequestDto) {
-    this.title = postRequestDto.getTitle();
-    this.content = postRequestDto.getContent();
+  public void modifyPost(String title, String content ) {
+    this.title = title;
+    this.content = content;
   }
 
   public void blind() {
@@ -98,11 +100,10 @@ public class Post extends BaseEntity {
     this.status = PostStatus.ACTIVE;
   }
 
-  public boolean isWriter(Account account) {
+  public void isWriter(Account account) {
     if (this.account.equals(account)) {
-      return true;
     } else {
-      return false;
+      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
     }
   }
 
@@ -113,4 +114,6 @@ public class Post extends BaseEntity {
   public boolean isBlinded() {
     return this.status == PostStatus.BLINDED;
   }
+
+
 }
