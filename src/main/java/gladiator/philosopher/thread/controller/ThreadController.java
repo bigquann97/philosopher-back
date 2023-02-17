@@ -44,6 +44,15 @@ public class ThreadController {
     return threadService.selectActiveThreads(ThreadSearchCond.of(page, sort, word, category));
   }
 
+  // 아카이빙 된 쓰레드 단건 조회
+  @GetMapping("/archived/{threadId}")
+  @ResponseStatus(HttpStatus.OK)
+  public ThreadResponseDto selectArchivedThread(
+      @PathVariable final Long threadId
+  ) {
+    return threadService.selectArchivedThread(threadId);
+  }
+
   // 아카이빙 된 쓰레드 조회
   @GetMapping("/archived")
   @ResponseStatus(HttpStatus.OK)

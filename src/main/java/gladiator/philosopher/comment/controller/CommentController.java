@@ -75,9 +75,8 @@ public class CommentController {
   @DeleteMapping("/{commentId}")
   public void deleteComment(
       final @PathVariable Long commentId,
-      final CommentRequestDto commentRequestDto,
       final @AuthenticationPrincipal AccountDetails accountDetails) {
-    commentService.deleteComment(commentRequestDto, commentId, accountDetails.getAccount());
+    commentService.deleteComment(commentId, accountDetails.getAccount());
   }
 
 }

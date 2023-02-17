@@ -105,7 +105,6 @@ public class AuthController {
     authService.sendVerificationMail(email);
   }
 
-
   /**
    * 인증링크 확인
    *
