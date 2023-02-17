@@ -17,7 +17,7 @@ public class EmailService {
   private final RedisUtil redisUtil;
 
   public static final String VERIFY_KEY_PREFIX = "EMAIL:VERIFY:"; // EMAIL:VERIFY:email - A3GA1E
-  public static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED"; // EMAIL:VERIFIED - email, email ...
+  public static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED:"; // EMAIL:VERIFIED - email, email ...
 
   public void sendMail(
       final String to,
@@ -47,7 +47,8 @@ public class EmailService {
     if (!code.equals(validCode)) {
       throw new IllegalArgumentException("코드 번호가 일치하지 않습니다.");
     }
-    redisUtil.addSetDataExpire(WHITELIST_KEY_PREFIX, email, 60 * 60 * 24L); // 1일 이메일 화이트리스트 유지
+    redisUtil.setDataExpire(WHITELIST_KEY_PREFIX + email, "true",
+        30L); // 1일 이메일 화이트리스트 유지
     redisUtil.deleteData(VERIFY_KEY_PREFIX + email);
   }
 
