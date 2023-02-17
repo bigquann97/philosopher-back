@@ -1,7 +1,12 @@
 package gladiator.philosopher.report.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_REPORT_COMMENT;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_REPORT_POST;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_REPORT_THREAD;
+
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
@@ -81,17 +86,17 @@ public class ReportServiceImpl implements ReportService {
     if (obj instanceof Post) {
       Post post = (Post) obj;
       if (postReportRepository.existsByReporterAndPostId(reporter, post.getId())) {
-        throw new IllegalArgumentException("이미 신고한 게시물");
+        throw new DuplicatedException(DUPLICATED_REPORT_POST);
       }
     } else if (obj instanceof Thread) {
       Thread thread = (Thread) obj;
       if (threadReportRepository.existsByReporterAndThreadId(reporter, thread.getId())) {
-        throw new IllegalArgumentException("이미 신고한 게시물");
+        throw new DuplicatedException(DUPLICATED_REPORT_THREAD);
       }
     } else if (obj instanceof Comment) {
       Comment comment = (Comment) obj;
       if (commentReportRepository.existsByReporterAndCommentId(reporter, comment.getId())) {
-        throw new IllegalArgumentException("이미 신고한 게시물");
+        throw new DuplicatedException(DUPLICATED_REPORT_COMMENT);
       }
     }
   }

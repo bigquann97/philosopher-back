@@ -2,8 +2,8 @@ package gladiator.philosopher.post.controller;
 
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
-import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
@@ -62,7 +62,7 @@ public class PostController {
     Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
     try {
       postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
-    }catch (Exception e) {
+    } catch (Exception e) {
       for (String url : FailToPostUrls) {
         s3Uploader.newDeleteS3(url, dirName);
       }

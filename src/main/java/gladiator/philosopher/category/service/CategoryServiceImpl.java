@@ -1,11 +1,12 @@
 package gladiator.philosopher.category.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_CATEGORY;
+
 import gladiator.philosopher.category.dto.CategoryRequestDto;
 import gladiator.philosopher.category.dto.CategoryResponseDto;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.repository.CategoryRepository;
-import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public void modifyCategory(final Long id, final CategoryRequestDto dto) {
     Category category = categoryRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_CATEGORY));
     Category modifiedCategory = category.modifyName(dto.getName());
     categoryRepository.save(modifiedCategory);
   }
@@ -51,6 +52,6 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public Category getCategoryEntity(Long id) {
     return categoryRepository.findById(id).orElseThrow(
-        () -> new CustomException(ExceptionStatus.CATEGORY_IS_NOT_EXIST));
+        () -> new NotFoundException(NOT_FOUND_CATEGORY));
   }
 }
