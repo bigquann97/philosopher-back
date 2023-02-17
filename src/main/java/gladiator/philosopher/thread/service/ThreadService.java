@@ -17,6 +17,8 @@ public interface ThreadService {
 
   Page<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond);
 
+  ThreadResponseDto selectArchivedThread(Long threadId);
+
   Page<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond of);
 
   Thread finishThread(final Thread thread);

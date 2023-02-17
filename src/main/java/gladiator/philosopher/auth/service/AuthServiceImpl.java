@@ -46,11 +46,19 @@ public class AuthServiceImpl implements AuthService {
   ) {
     checkByUserEmailDuplicated(registerRequestDto.getEmail());
     checkByUserNickNameDuplicated(registerRequestDto.getNickname());
+    checkIfEmailVerified(registerRequestDto.getEmail());
     Account account = registerRequestDto.toEntity(
         passwordEncoder.encode(registerRequestDto.getPassword()));
     accountRepository.save(account);
     AccountInfo accountInfo = new AccountInfo(account, imageUrl);
     accountInfoRepository.save(accountInfo);
+    redisUtil.deleteSetData(EmailService.WHITELIST_KEY_PREFIX, registerRequestDto.getEmail());
+  }
+
+  private void checkIfEmailVerified(String email) {
+    if (!redisUtil.checkValueExists(EmailService.WHITELIST_KEY_PREFIX, email)) {
+      throw new IllegalArgumentException("이메일 인증이 이뤄지지 않았습니다.");
+    }
   }
 
   /**

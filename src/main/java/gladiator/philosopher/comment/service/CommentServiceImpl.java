@@ -64,7 +64,6 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional
   public void deleteComment(
-      final CommentRequestDto commentRequestDto,
       final Long commentId,
       final Account account
   ) {
@@ -77,8 +76,8 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional(readOnly = true)
   public Comment getCommentEntity(final Long id) {
-    Comment comment = getCommentEntity(id);
-    return comment;
+    return commentRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
   }
 
   @Override

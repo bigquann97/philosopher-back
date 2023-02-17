@@ -35,8 +35,15 @@ public class RedisUtil {
     stringRedisTemplate.delete(key);
   }
 
-  public void addSetData(String key, String value) {
+  public Boolean checkValueExists(String key, String value) {
+    SetOperations<String, Object> valueOperation = redisTemplate.opsForSet();
+    return valueOperation.isMember(key, value);
+  }
+
+  public void addSetDataExpire(String key, String value, long duration) {
     SetOperations<String, Object> valueOperations = redisTemplate.opsForSet();
+    Duration expireDuration = Duration.ofSeconds(duration);
+    valueOperations.getOperations().expire(key, expireDuration);
     valueOperations.add(key, value);
   }
 

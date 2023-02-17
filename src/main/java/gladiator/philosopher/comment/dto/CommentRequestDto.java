@@ -14,6 +14,7 @@ public class CommentRequestDto {
   private String content;
 
   public CommentRequestDto(final String content, final String opinion) {
+    this.opinion = opinion;
     this.content = content;
   }
 
