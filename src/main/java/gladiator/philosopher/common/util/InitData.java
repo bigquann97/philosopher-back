@@ -24,7 +24,6 @@ import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
-import gladiator.philosopher.recommend.repository.RecommendRepository;
 import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
@@ -56,7 +55,6 @@ public class InitData implements ApplicationRunner {
   private final CategoryRepository categoryRepository;
   private final CommentRepository commentRepository;
   private final MentionRepository mentionRepository;
-  private final RecommendRepository recommendRepository;
   private final ThreadOpinionRepository threadOpinionRepository;
   private final PostRecommendRepository postRecommendRepository;
   private final CommentRecommendRepository commentRecommendRepository;

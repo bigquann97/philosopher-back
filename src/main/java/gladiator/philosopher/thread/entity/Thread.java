@@ -112,4 +112,7 @@ public class Thread extends BaseEntity {
     return this.location.equals(ThreadLocation.ARCHIVED);
   }
 
+  public boolean isBlinded() {
+    return this.status == ThreadStatus.BLINDED;
+  }
 }
