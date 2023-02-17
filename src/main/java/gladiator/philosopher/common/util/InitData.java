@@ -19,8 +19,13 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
-import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.recommend.entity.CommentRecommend;
+import gladiator.philosopher.recommend.entity.PostRecommend;
+import gladiator.philosopher.recommend.entity.ThreadRecommend;
+import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
+import gladiator.philosopher.recommend.repository.PostRecommendRepository;
 import gladiator.philosopher.recommend.repository.RecommendRepository;
+import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
@@ -53,6 +58,9 @@ public class InitData implements ApplicationRunner {
   private final MentionRepository mentionRepository;
   private final RecommendRepository recommendRepository;
   private final ThreadOpinionRepository threadOpinionRepository;
+  private final PostRecommendRepository postRecommendRepository;
+  private final CommentRecommendRepository commentRecommendRepository;
+  private final ThreadRecommendRepository threadRecommendRepository;
 
 
   @Override
@@ -120,56 +128,56 @@ public class InitData implements ApplicationRunner {
     postRepository.save(post6);
 
     // 포스트 이미지
-    PostImage postImage = new PostImage("jipang2.png",post1);
+    PostImage postImage = new PostImage("jipang2.png", post1);
     postImageRepository.save(postImage);
-    PostImage postImage2 = new PostImage("test2.png",post2);
+    PostImage postImage2 = new PostImage("test2.png", post2);
     postImageRepository.save(postImage2);
-    PostImage postImage3 = new PostImage("test3.png",post2);
+    PostImage postImage3 = new PostImage("test3.png", post2);
     postImageRepository.save(postImage3);
-    PostImage postImage4 = new PostImage("test4.png",post3);
+    PostImage postImage4 = new PostImage("test4.png", post3);
     postImageRepository.save(postImage4);
-    PostImage postImage5 = new PostImage("test5.png",post5);
+    PostImage postImage5 = new PostImage("test5.png", post5);
     postImageRepository.save(postImage5);
 
     // 회원 1~5 // 게시글 1~6
     // 댓글부
-    Recommend recommend17 = new Recommend(account1, post1);
-    recommendRepository.save(recommend17);
+    PostRecommend recommend17 = new PostRecommend(account1, post1);
+    postRecommendRepository.save(recommend17);
 
-    Recommend recommend16 = new Recommend(account1, post3);
-    recommendRepository.save(recommend16);
+    PostRecommend recommend16 = new PostRecommend(account1, post3);
+    postRecommendRepository.save(recommend16);
 
-    Recommend recommend3 = new Recommend(account1, post4);
-    recommendRepository.save(recommend3);
-    Recommend recommend4 = new Recommend(account2, post2);
-    recommendRepository.save(recommend4);
-    Recommend recommend5 = new Recommend(account2, post4);
-    recommendRepository.save(recommend5);
-    Recommend recommend6 = new Recommend(account2, post6);
-    recommendRepository.save(recommend6);
-    Recommend recommend7 = new Recommend(account3, post1);
-    recommendRepository.save(recommend7);
+    PostRecommend recommend3 = new PostRecommend(account1, post4);
+    postRecommendRepository.save(recommend3);
+    PostRecommend recommend4 = new PostRecommend(account2, post2);
+    postRecommendRepository.save(recommend4);
+    PostRecommend recommend5 = new PostRecommend(account2, post4);
+    postRecommendRepository.save(recommend5);
+    PostRecommend recommend6 = new PostRecommend(account2, post6);
+    postRecommendRepository.save(recommend6);
+    PostRecommend recommend7 = new PostRecommend(account3, post1);
+    postRecommendRepository.save(recommend7);
 
-    Recommend recommend8 = new Recommend(account3, post5);
-    recommendRepository.save(recommend8);
+    PostRecommend recommend8 = new PostRecommend(account3, post5);
+    postRecommendRepository.save(recommend8);
 
-    Recommend recommend9 = new Recommend(account3, post6);
-    recommendRepository.save(recommend9);
+    PostRecommend recommend9 = new PostRecommend(account3, post6);
+    postRecommendRepository.save(recommend9);
 
-    Recommend recommend10 = new Recommend(account4, post2);
-    recommendRepository.save(recommend10);
-    Recommend recommend11 = new Recommend(account4, post6);
-    recommendRepository.save(recommend11);
-    Recommend recommend12 = new Recommend(account4, post4);
-    recommendRepository.save(recommend12);
-    Recommend recommend13 = new Recommend(account5, post2);
-    recommendRepository.save(recommend13);
+    PostRecommend recommend10 = new PostRecommend(account4, post2);
+    postRecommendRepository.save(recommend10);
+    PostRecommend recommend11 = new PostRecommend(account4, post6);
+    postRecommendRepository.save(recommend11);
+    PostRecommend recommend12 = new PostRecommend(account4, post4);
+    postRecommendRepository.save(recommend12);
+    PostRecommend recommend13 = new PostRecommend(account5, post2);
+    postRecommendRepository.save(recommend13);
 
-    Recommend recommend14 = new Recommend(account5, post3);
-    recommendRepository.save(recommend14);
+    PostRecommend recommend14 = new PostRecommend(account5, post3);
+    postRecommendRepository.save(recommend14);
 
-    Recommend recommend15 = new Recommend(account5, post4);
-    recommendRepository.save(recommend15);
+    PostRecommend recommend15 = new PostRecommend(account5, post4);
+    postRecommendRepository.save(recommend15);
 
     List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
         .collect(Collectors.toList());
@@ -221,10 +229,13 @@ public class InitData implements ApplicationRunner {
     mentionRepository.saveAndFlush(mention2);
     mentionRepository.saveAndFlush(mention3);
 
-    Recommend recommend1 = new Recommend(comment, account1);
-    Recommend recommend2 = new Recommend(comment, account1);
-    recommendRepository.save(recommend1);
+    CommentRecommend recommend1 = new CommentRecommend(account1, comment);
+    CommentRecommend recommend2 = new CommentRecommend(account2, comment);
+    commentRecommendRepository.save(recommend1);
+    commentRecommendRepository.save(recommend2);
 //    recommendRepository.save(recommend2);
+    ThreadRecommend threadRecommend = new ThreadRecommend(account1, thread1);
+    threadRecommendRepository.save(threadRecommend);
 
   }
 

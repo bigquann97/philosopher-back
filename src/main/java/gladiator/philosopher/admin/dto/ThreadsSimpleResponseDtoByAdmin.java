@@ -1,6 +1,6 @@
 package gladiator.philosopher.admin.dto;
 
-import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadLocation;
@@ -31,7 +31,7 @@ public class ThreadsSimpleResponseDtoByAdmin {
     this.content = thread.getContent();
     this.imageUrl = thread.getThreadImages().stream().map(ThreadImage::getImageUrl)
         .collect(Collectors.toList());
-    this.recommendCount = thread.getRecommends().stream().map(Recommend::getThread).count();
+    this.recommendCount = thread.getRecommends().stream().map(ThreadRecommend::getThread).count();
     this.nickname = thread.getAccount().getNickname();
     this.location = thread.getLocation();
     this.createdDate = thread.getCreatedDate();

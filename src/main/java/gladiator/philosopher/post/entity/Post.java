@@ -5,7 +5,7 @@ import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostStatus;
-import gladiator.philosopher.recommend.entity.Recommend;
+import gladiator.philosopher.recommend.entity.PostRecommend;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -44,9 +44,9 @@ public class Post extends BaseEntity {
   private List<PostImage> images = new ArrayList<>();
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Recommend> recommends = new ArrayList<>();
+  private List<PostRecommend> recommends = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostOpinion> opinions = new ArrayList<>();
 
   @Column(nullable = false)
@@ -58,6 +58,8 @@ public class Post extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
+  private boolean isThreaded;
+
   @Builder
   public Post(Account account, String title, String content, List<PostImage> images,
       List<PostOpinion> opinions, Category category) {
@@ -68,6 +70,7 @@ public class Post extends BaseEntity {
     this.images = images;
     this.opinions = opinions;
     this.category = category;
+    this.isThreaded = false;
   }
 
   // 테스트 생성자
@@ -79,6 +82,7 @@ public class Post extends BaseEntity {
     this.status = PostStatus.ACTIVE;
     this.opinions = opinions;
     this.category = category;
+    this.isThreaded = false;
   }
 
   public void modifyPost(PostRequestDto postRequestDto) {
@@ -102,4 +106,7 @@ public class Post extends BaseEntity {
     }
   }
 
+  public void makeThread() {
+    this.isThreaded = true;
+  }
 }

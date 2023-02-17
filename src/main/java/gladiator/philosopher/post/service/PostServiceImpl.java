@@ -4,7 +4,6 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
@@ -16,7 +15,6 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
-import gladiator.philosopher.recommend.service.RecommendService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +32,6 @@ public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
   private final PostImageRepository postImageRepository;
-  private final RecommendService recommendService;
   private final PostOpinionRepository postOpinionRepository;
 
   @Override
@@ -80,7 +77,7 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public PostResponseDto getPost(final Long postId) {
     Post post = getPostEntity(postId);
-    Long postRecommendCount = recommendService.getPostRecommendCount(post);
+    Long postRecommendCount = (long) post.getRecommends().size();
     List<String> options = postOpinionRepository.getOptions(post.getId());
     List<String> url = postImageRepository.getUrl(post.getId());
     return new PostResponseDto(post, postRecommendCount, url, options);
@@ -100,7 +97,7 @@ public class PostServiceImpl implements PostService {
     }
     post.modifyPost(postRequestDto);
     postRepository.save(post);
-    long postRecommendCount = recommendService.getPostRecommendCount(post);
+    long postRecommendCount = (long) post.getRecommends().size();
     return new PostResponseDto(post, postRecommendCount);
   }
 

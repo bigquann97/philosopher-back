@@ -5,6 +5,7 @@ import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.notification.entity.Notification;
 import gladiator.philosopher.notification.repository.NotificationRepository;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.recommend.entity.Recommend;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Transactional
   public void notifyToRecommendersThatThreadHasStarted(
       final Post post,
-      final List<Recommend> recommends
+      final List<PostRecommend> recommends
   ) {
     for (Recommend recommend : recommends) {
       Account user = recommend.getAccount();
