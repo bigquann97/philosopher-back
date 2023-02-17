@@ -3,9 +3,8 @@ package gladiator.philosopher.post.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.post.dto.PostRequestDto;
+import gladiator.philosopher.common.exception.AuthException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.post.dto.PostStatus;
 import gladiator.philosopher.recommend.entity.PostRecommend;
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class Post extends BaseEntity {
     this.isThreaded = false;
   }
 
-  public void modifyPost(String title, String content ) {
+  public void modifyPost(String title, String content) {
     this.title = title;
     this.content = content;
   }
@@ -103,7 +102,7 @@ public class Post extends BaseEntity {
   public void isWriter(Account account) {
     if (this.account.equals(account)) {
     } else {
-      throw new CustomException(ExceptionStatus.UNMATCHED_USER);
+      throw new AuthException(ExceptionStatus.NOT_AUTHORIZED_COMMENT);
     }
   }
 

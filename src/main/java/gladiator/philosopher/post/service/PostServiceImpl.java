@@ -1,11 +1,9 @@
 package gladiator.philosopher.post.service;
 
-import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUTHORIZED_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
-import gladiator.philosopher.common.enums.ExceptionStatus;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
@@ -103,7 +101,6 @@ public class PostServiceImpl implements PostService {
   }
 
 
-
   @Override
   @Transactional
   public void deletePost(final Long postId, final Account account) {
@@ -155,14 +152,15 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account) {
+  public Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
+      Account account) {
     Post post = getPostEntity(postId);
     post.isWriter(account);
     post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
     postRepository.save(post);
-    postImageRepository.deleteByPost(post);
+    postImageRepository.deleteAllByPostImage(post);
     for (String url : urls) {
-      PostImage postImage = new PostImage(url,post);
+      PostImage postImage = new PostImage(url, post);
       postImageRepository.save(postImage);
     }
     return postId;

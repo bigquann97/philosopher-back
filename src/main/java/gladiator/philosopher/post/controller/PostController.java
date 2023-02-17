@@ -40,8 +40,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class PostController {
 
-  private final AccountInfoRepository accountInfoRepository;
-
   private final PostService postService;
   private final S3Uploader s3Uploader;
   private final String dirName = "postImg";
@@ -114,7 +112,6 @@ public class PostController {
       final @RequestPart("dto") PostRequestDto postRequestDto,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-
     if (multipartFiles.get(0).getOriginalFilename().equals("")) {
       postService.modifyOnlyPost(postId, postRequestDto, accountDetails.getAccount());
     } else {

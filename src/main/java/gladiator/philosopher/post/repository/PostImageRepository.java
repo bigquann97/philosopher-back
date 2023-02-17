@@ -4,8 +4,10 @@ import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface PostImageRepository extends JpaRepository<PostImage, Long>,PostCustomRepository {
 
@@ -15,6 +17,9 @@ public interface PostImageRepository extends JpaRepository<PostImage, Long>,Post
   @Query("select p.imageUrl from PostImage p where p.post.id =:id")
   List<String> getUrl(@Param("id")Long id);
 
-  void deleteByPost(Post post);
+  @Modifying
+  @Transactional
+  @Query("delete from PostImage p where p.post=:post")
+  void deleteAllByPostImage(Post post);
 
 }
