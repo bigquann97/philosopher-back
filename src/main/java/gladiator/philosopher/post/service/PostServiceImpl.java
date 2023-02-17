@@ -1,6 +1,5 @@
 package gladiator.philosopher.post.service;
 
-import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUTHORIZED_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
 
 import gladiator.philosopher.account.entity.Account;
@@ -38,7 +37,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void createPost(
+  public Long createPost(
       final List<String> url,
       final PostRequestDto postRequestDto,
       final Account account,
@@ -55,6 +54,7 @@ public class PostServiceImpl implements PostService {
     postOpinionRepository.saveAll(opinions);
 
     postRepository.save(post);
+    return post.getId();
   }
 
   @Override
@@ -88,28 +88,24 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public PostResponseDto modifyPost(
+  public Long modifyOnlyPost(
       final Long postId,
       final PostRequestDto postRequestDto,
       final Account account
   ) {
     Post post = getPostEntity(postId);
-    if (!post.isWriter(account)) {
-      throw new CustomException(NOT_AUTHORIZED_POST);
-    }
-    post.modifyPost(postRequestDto);
+    post.isWriter(account);
+    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
     postRepository.save(post);
-    long postRecommendCount = (long) post.getRecommends().size();
-    return new PostResponseDto(post, postRecommendCount);
+    return post.getId();
   }
+
 
   @Override
   @Transactional
   public void deletePost(final Long postId, final Account account) {
     Post post = getPostEntity(postId);
-    if (!post.isWriter(account)) {
-      throw new CustomException(NOT_AUTHORIZED_POST);
-    }
+    post.isWriter(account);
     postRepository.delete(post);
   }
 
@@ -128,10 +124,11 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public void modifyPostByAdmin(final Long postId, final PostRequestDto postRequestDto) {
+  public Long modifyPostByAdmin(final Long postId, final PostRequestDto postRequestDto) {
     Post post = getPostEntity(postId);
-    post.modifyPost(postRequestDto);
+    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
     postRepository.save(post);
+    return post.getId();
   }
 
   @Override
@@ -148,5 +145,25 @@ public class PostServiceImpl implements PostService {
     return result;
   }
 
+  @Override
+  public List<String> getOldUrls(Long id) {
+    return postImageRepository.getUrl(getPostEntity(id).getId());
+  }
+
+  @Override
+  @Transactional
+  public Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
+      Account account) {
+    Post post = getPostEntity(postId);
+    post.isWriter(account);
+    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
+    postRepository.save(post);
+    postImageRepository.deleteAllByPostImage(post);
+    for (String url : urls) {
+      PostImage postImage = new PostImage(url, post);
+      postImageRepository.save(postImage);
+    }
+    return postId;
+  }
 
 }

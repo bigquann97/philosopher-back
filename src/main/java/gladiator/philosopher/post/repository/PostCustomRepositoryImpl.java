@@ -56,12 +56,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
-
+//
 //    List<PostImage> postImages= jpaQueryFactory.selectFrom(postImage)
 //        .where(postImage.post.id.eq(post.id)).fetch();
 //
 //    for (TestPostResponseDto testPostResponseDto : data) {
+
 //    }
+
 
     return data;
   }

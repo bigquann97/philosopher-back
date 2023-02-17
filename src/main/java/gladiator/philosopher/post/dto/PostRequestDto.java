@@ -39,4 +39,5 @@ public class PostRequestDto {
       throw new CustomException(ExceptionStatus.TO_MUCH_INPUTDATAS);
     }
   }
+
 }

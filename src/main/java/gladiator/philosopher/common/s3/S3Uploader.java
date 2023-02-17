@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.FileException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +53,7 @@ public class S3Uploader {
       log.info("url : " + uploadImageUrl);
       return uploadImageUrl;
     } catch (IOException e) {
-      throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+      throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
   }
 
@@ -81,7 +82,7 @@ public class S3Uploader {
       }
       return resultUrlList;
     } catch (IOException e) {
-      throw new CustomException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+      throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
   }
 
@@ -100,15 +101,8 @@ public class S3Uploader {
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
 
-//  public void deleteS3(String fileName) {
-//    DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
-//    log.info("delete url : "+request);
-//    amazonS3Client.deleteObject(request);
-//  }
-
   /**
-   * S3 파일 삭제
-   *
+   * S3 단일 파일 삭제
    * @param url
    * @param dirName
    */
@@ -119,6 +113,22 @@ public class S3Uploader {
     log.info("delete url : " + request);
     amazonS3Client.deleteObject(request);
   }
+
+  /**
+   * S3 다중 파일 삭제
+   * @param urls
+   * @param dirName
+   */
+  public void DeleteS3Files(List<String> urls, String dirName){
+    for (String url : urls) {
+      final String[] split = url.split("/");
+      final String fileName = dirName+"/"+split[split.length-1];
+      DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+      log.info("delete url : "+request);
+      amazonS3Client.deleteObject(request);
+    }
+  }
+
 
   /**
    * 단일 파일 확장자 검사
@@ -132,7 +142,7 @@ public class S3Uploader {
     boolean b = Arrays.stream(Extension).anyMatch(check -> check.equalsIgnoreCase(substring));
     System.out.println(b);
     if (!b) {
-      throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
+      throw new FileException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
     }
   }
 
@@ -168,9 +178,10 @@ public class S3Uploader {
       }
     }
     if (!result) {
-      throw new CustomException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
+      throw new FileException(ExceptionStatus.UNSUPPORTED_IMAGE_TYPE);
     }
   }
+
 
 
 }

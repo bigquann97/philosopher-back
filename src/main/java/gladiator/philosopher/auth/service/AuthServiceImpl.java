@@ -45,30 +45,29 @@ public class AuthServiceImpl implements AuthService {
   private final JwtTokenProvider jwtTokenProvider;
   private final EmailService emailService;
   private final RedisUtil redisUtil;
+  private final String imageUrl = "default_image.jpg";
 
   /**
    * 회원가입
    *
-   * @param registerRequestDto
+   * @param signUpRequestDto
    */
   @Transactional
   @Override
-  public void signUp(
-      final String imageUrl,
-      final SignUpRequestDto registerRequestDto
-  ) {
-    checkIfUserEmailDuplicated(registerRequestDto.getEmail());
-    checkIfUserNickNameDuplicated(registerRequestDto.getNickname());
-    checkIfEmailVerified(registerRequestDto.getEmail());
+  public void signUp(final SignUpRequestDto signUpRequestDto) {
 
-    Account account = registerRequestDto.toEntity(
-        passwordEncoder.encode(registerRequestDto.getPassword()));
+    checkIfUserEmailDuplicated(signUpRequestDto.getEmail());
+    checkIfUserNickNameDuplicated(signUpRequestDto.getNickname());
+    checkIfEmailVerified(signUpRequestDto.getEmail());
+
+    Account account = signUpRequestDto.toEntity(
+        passwordEncoder.encode(signUpRequestDto.getPassword()));
     accountRepository.save(account);
 
     AccountInfo accountInfo = new AccountInfo(account, imageUrl);
     accountInfoRepository.save(accountInfo);
 
-    redisUtil.deleteData(EmailService.WHITELIST_KEY_PREFIX + registerRequestDto.getEmail());
+    redisUtil.deleteData(EmailService.WHITELIST_KEY_PREFIX + signUpRequestDto.getEmail());
   }
 
   /**

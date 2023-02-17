@@ -21,7 +21,7 @@ public interface PostService {
    * @param accountDetails
    * @param category
    */
-  void createPost(List<String> urls, PostRequestDto postRequestDto,
+  Long createPost(List<String> urls, PostRequestDto postRequestDto,
       Account accountDetails, Category category);
 
   /**
@@ -34,22 +34,19 @@ public interface PostService {
 
   List<PostsResponseDto> SearchByQuerydsl(int pageChoice);
 
-  PostResponseDto modifyPost(Long postId, PostRequestDto postRequestDto,
-      Account accountDetails);
+  Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
+  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
 
   void deletePost(Long postId, Account accountDetails);
 
   Post getPostEntity(Long postId);
 
   void deletePostByAdmin(Long id);
-
-  void modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
+  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
 
   //  List<PostResponseDto> searchPost(PostSearchCondition condition, Pageable pageable);
 
   List<TestPostResponseDto> SearchByQuerydsl(PostSearchCondition condition, Pageable pageable);
 
-//  List<TestPostResponseDto> getPostAndAccount(Long id);
-// postId만 필요할 경우 postId 존재 확인 후 postId를 반환
-
+  List<String> getOldUrls(Long id);
 }
