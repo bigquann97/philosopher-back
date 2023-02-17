@@ -1,7 +1,7 @@
 package gladiator.philosopher.common.jwt;
 
-import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.security.AccountDetailsServiceImpl;
+import gladiator.philosopher.common.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +10,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -33,12 +35,13 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class JwtTokenProvider {
 
+  private final RedisUtil redisUtil;
   private final AccountDetailsServiceImpl accountDetailsServiceImpl;
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String AUTHORIZATION_KEY = "auth";
   public static final String BEARER_PREFIX = "Bearer ";
-  public static final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1000 * 3000L;
-  public static final long REFRESH_TOKEN_EXPIRE_TIME = 60 * 60 * 1000 * 3000L;
+  public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 2;
+  public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 4;
 
 
   @Value("${spring.jwt.secretKey}")
@@ -62,19 +65,6 @@ public class JwtTokenProvider {
     return null;
   }
 
-  public String createToken(String username, UserRole role) {
-    Date date = new Date();
-    return BEARER_PREFIX +
-        Jwts.builder()
-            .setSubject(username)
-            .claim(AUTHORIZATION_KEY, role)
-            .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
-            .setIssuedAt(date)
-            .signWith(key, signatureAlgorithm)
-            .compact();
-  }
-
-  //
   public TokenDto createTokenDto(Authentication authentication) {
     String authorities = authentication.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
@@ -107,6 +97,11 @@ public class JwtTokenProvider {
   public boolean validateToken(String token) {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+
+      if (redisUtil.hasKey("JWT:BLACK_LIST:" + token)) {
+        return false;
+      }
+
       return true;
     } catch (SecurityException | MalformedJwtException e) {
       log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -132,6 +127,18 @@ public class JwtTokenProvider {
   public Authentication createAuthentication(String username) {
     UserDetails userDetails = accountDetailsServiceImpl.loadUserByUsername(username);
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+  }
+
+  public Long getExpiration(String token) {
+    long expiration = Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token)
+        .getBody()
+        .getExpiration().getTime();
+    LocalDateTime origin = LocalDateTime.of(1970, 1, 1, 0, 0);
+    long now = origin.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+    return now - expiration;
   }
 
 }

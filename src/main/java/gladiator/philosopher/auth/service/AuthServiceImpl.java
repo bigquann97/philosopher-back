@@ -6,6 +6,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_REFRESH_TOKEN;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_ACCOUNT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_VERIFIED_EMAIL;
+import static gladiator.philosopher.common.jwt.JwtTokenProvider.ACCESS_TOKEN_EXPIRE_TIME;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.AUTHORIZATION_HEADER;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.BEARER_PREFIX;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME;
@@ -24,6 +25,7 @@ import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.jwt.TokenDto;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
 import gladiator.philosopher.common.util.RedisUtil;
+import io.jsonwebtoken.Claims;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,9 +131,17 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   @Transactional
-  public void signOut(final Account account) {
-    String email = account.getEmail();
+  public void signOut(final TokenRequestDto dto) {
+    if (!jwtTokenProvider.validateToken(dto.getAccessToken())) {
+      throw new IllegalArgumentException("유효하지 않은 access token");
+    }
+
+    Claims claim = jwtTokenProvider.getUserInfoFromToken(dto.getAccessToken());
+    String email = claim.getSubject();
     redisUtil.deleteData(email);
+
+    redisUtil.setDataExpire("JWT:BLACK_LIST:" + dto.getAccessToken(), "TRUE",
+        ACCESS_TOKEN_EXPIRE_TIME / 1000L);
   }
 
   @Override
