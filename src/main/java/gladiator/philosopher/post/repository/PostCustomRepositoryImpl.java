@@ -2,6 +2,7 @@ package gladiator.philosopher.post.repository;
 
 import static gladiator.philosopher.account.entity.QAccount.account;
 import static gladiator.philosopher.post.entity.QPost.post;
+import static gladiator.philosopher.post.entity.QPostImage.postImage;
 import static gladiator.philosopher.recommend.entity.QRecommend.recommend;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -9,10 +10,13 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostStatus;
 import gladiator.philosopher.post.dto.TestPostResponseDto;
+import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.entity.QPostImage;
 import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -56,10 +60,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         .limit(pageable.getPageSize())
         .fetch();
 
+//    List<PostImage> postImages= jpaQueryFactory.selectFrom(postImage)
+//        .where(postImage.post.id.eq(post.id)).fetch();
+//
+//    for (TestPostResponseDto testPostResponseDto : data) {
+//    }
+
     return data;
-
-    // postimage 속에 있는 post id를 가지고
-
   }
 
   private BooleanExpression postStatusEqual(String status) {

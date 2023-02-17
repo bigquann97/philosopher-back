@@ -27,7 +27,7 @@ public class TestPostResponseDto {
   private Long recommend; // 추천수
 
   public TestPostResponseDto(Long id, String title, String content, String category,
-      LocalDateTime createdDate, PostStatus status, String nickname, List<String> images,
+      LocalDateTime createdDate, PostStatus status, String nickname,
       Long recommend) {
     this.id = id;
     this.title = title;
@@ -36,7 +36,6 @@ public class TestPostResponseDto {
     this.createdDate = createdDate;
     this.status = status;
     this.nickname = nickname;
-    this.images = images;
     this.recommend = recommend;
   }
 
