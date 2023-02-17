@@ -1,7 +1,10 @@
 package gladiator.philosopher.mention.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
+
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
+import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.mention.entity.Mention;
 import gladiator.philosopher.mention.repository.MentionRepository;
 import java.util.ArrayList;
@@ -46,7 +49,7 @@ public class MentionServiceImpl implements MentionService {
       }
 
       Comment mentionedComment = commentRepository.findById(mentionedCommentId)
-          .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글"));
+          .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT));
       Mention mention = Mention.builder()
           .mentionedComment(mentionedComment)
           .mentioningComment(mentioningComment)

@@ -4,12 +4,12 @@ import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import lombok.Getter;
 
 @Getter
-public class DuplicatedException extends RuntimeException {
+public class InvalidAccessException extends RuntimeException {
 
   private final int code;
   private final String message;
 
-  public DuplicatedException(ExceptionStatus status) {
+  public InvalidAccessException(ExceptionStatus status) {
     this.code = status.getStatusCode();
     this.message = status.getMessage();
   }

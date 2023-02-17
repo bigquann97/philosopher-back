@@ -1,5 +1,9 @@
 package gladiator.philosopher.auth.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_CODE;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_EMAIL_OR_PW;
+
+import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.util.EmailMessage;
 import gladiator.philosopher.common.util.RedisUtil;
 import java.util.UUID;
@@ -34,7 +38,7 @@ public class EmailService {
   @Transactional
   public void sendVerificationMail(final String email) {
     if (email == null) {
-      throw new IllegalArgumentException("멤버가 조회되지 않음");
+      throw new AuthException(INVALID_EMAIL_OR_PW);
     }
     String code = UUID.randomUUID().toString().substring(0, 7).toUpperCase();
     redisUtil.setDataExpire(VERIFY_KEY_PREFIX + email, code, 60 * 3L); // 3분 인증 시간
@@ -45,7 +49,7 @@ public class EmailService {
   public void verifyEmail(final String email, final String code) {
     String validCode = redisUtil.getData(VERIFY_KEY_PREFIX + email);
     if (!code.equals(validCode)) {
-      throw new IllegalArgumentException("코드 번호가 일치하지 않습니다.");
+      throw new AuthException(INVALID_CODE);
     }
     redisUtil.setDataExpire(WHITELIST_KEY_PREFIX + email, "true",
         30L); // 1일 이메일 화이트리스트 유지

@@ -1,8 +1,10 @@
 package gladiator.philosopher.thread.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
+
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
-import gladiator.philosopher.common.enums.ExceptionStatus;
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
@@ -91,7 +93,7 @@ public class ThreadServiceImpl implements ThreadService {
   @Transactional
   public Thread getThreadEntity(final Long id) {
     return threadRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }
 
   /**
@@ -104,7 +106,7 @@ public class ThreadServiceImpl implements ThreadService {
   @Transactional
   public ThreadResponseDto selectThread(final Long threadId) {
     return threadRepository.selectThread(threadId)
-        .orElseThrow(() -> new CustomException(ExceptionStatus.POST_IS_NOT_EXIST));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_POST));
   }
 
   /**
@@ -122,7 +124,7 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   public ThreadResponseDto selectArchivedThread(Long threadId) {
     return threadRepository.selectThread(threadId)
-        .orElseThrow(() -> new IllegalArgumentException("없는 쓰레드"));
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }
 
   /**
