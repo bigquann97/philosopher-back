@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class AccountDetails implements UserDetails {
 
+  private String email;
   private final Account account;
 
   public Account getAccount() {
@@ -17,6 +18,7 @@ public class AccountDetails implements UserDetails {
   }
 
   public AccountDetails(Account account) {
+    this.email = account.getEmail();
     this.account = account;
   }
 
@@ -37,7 +39,7 @@ public class AccountDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    return null;
+    return email;
   }
 
   @Override

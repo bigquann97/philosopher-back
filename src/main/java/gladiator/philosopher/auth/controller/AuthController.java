@@ -37,27 +37,10 @@ public class AuthController {
   /**
    * 회원가입
    */
-  @PostMapping(
-      value = "/sign-up",
-      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}
-  )
+  @PostMapping("/sign-up")
   @ResponseStatus(HttpStatus.CREATED)
-  public void signUp(
-      final @RequestPart("image") MultipartFile multipartFiles,
-      final @Valid @RequestPart("dto") SignUpRequestDto signUpRequestDto
-  ) {
-      s3Uploader.checkFileExtension(multipartFiles);
-      final String imageUrl = s3Uploader.upLoadFileToSingle(multipartFiles, dirName);
-      authService.signUp(signUpRequestDto, imageUrl);
-  }
-
-  /**
-   * 회원가입(테스트)
-   * @param signUpRequestDto
-   */
-  @PostMapping("test")
-  public void  signTest(final @Valid @RequestBody SignUpRequestDto signUpRequestDto){
-    authService.testSignUP(signUpRequestDto);
+  public void signUp(final @Valid @RequestBody SignUpRequestDto signUpRequestDto) {
+      authService.signUp(signUpRequestDto);
   }
 
   /**

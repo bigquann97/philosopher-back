@@ -77,6 +77,13 @@ public class PostController {
     return postService.SearchByQuerydsl(page);
   }
 
+  @GetMapping("/")
+  public List<TestPostResponseDto> search(
+      final PostSearchCondition condition,
+      final Pageable pageable) {
+    return postService.SearchByQuerydsl(condition, pageable);
+  }
+
   // /api/posts/1
   @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
@@ -103,17 +110,6 @@ public class PostController {
     postService.deletePost(postId, accountDetails.getAccount());
   }
 
-//  @GetMapping("/test/{id}")
-//  public ResponseEntity<List<TestPostResponseDto>> startTest(@PathVariable("id") Long id) {
-//    return ResponseEntity.status(200).body(postService.getPostAndAccount(id));
-//  }
-
-  @GetMapping("/testv2")
-  public List<TestPostResponseDto> gegegege(
-      final PostSearchCondition condition,
-      final Pageable pageable) {
-    return postService.SearchByQuerydsl(condition, pageable);
-  }
 
 }
 

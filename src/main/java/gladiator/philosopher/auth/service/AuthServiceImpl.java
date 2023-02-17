@@ -45,10 +45,8 @@ public class AuthServiceImpl implements AuthService {
    */
   @Transactional
   @Override
-  public void signUp(
-      final SignUpRequestDto signUpRequestDto,
-      final String url
-  ) {
+  public void signUp(final SignUpRequestDto signUpRequestDto) {
+
     checkIfUserEmailDuplicated(signUpRequestDto.getEmail());
     checkIfUserNickNameDuplicated(signUpRequestDto.getNickname());
     checkIfEmailVerified(signUpRequestDto.getEmail());
