@@ -3,7 +3,6 @@ package gladiator.philosopher.common.util;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -30,27 +29,12 @@ public class RedisUtil {
     Duration expireDuration = Duration.ofSeconds(duration);
     valueOperations.set(key, value, expireDuration);
   }
-
+  
   public void deleteData(String key) {
     stringRedisTemplate.delete(key);
   }
 
-  public Boolean checkValueExists(String key, String value) {
-    SetOperations<String, Object> valueOperation = redisTemplate.opsForSet();
-    return valueOperation.isMember(key, value);
+  public boolean hasKey(String key) {
+    return stringRedisTemplate.hasKey(key);
   }
-
-  public void addSetDataExpire(String key, String value, long duration) {
-    SetOperations<String, Object> valueOperations = redisTemplate.opsForSet();
-    Duration expireDuration = Duration.ofSeconds(duration);
-    valueOperations.getOperations().expire(key, expireDuration);
-    valueOperations.add(key, value);
-  }
-
-  public void deleteSetData(String key, String value) {
-    SetOperations<String, Object> valueOperation = redisTemplate.opsForSet();
-    valueOperation.remove(key, value);
-  }
-
-
 }
