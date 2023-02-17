@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface AuthService {
 
-  void signUp(String imageUrl, SignUpRequestDto signUpRequestDto); // 회원가입
+  void signUp(SignUpRequestDto signUpRequestDto, String url); // 회원가입
+  void testSignUP(SignUpRequestDto signUpRequestDto);
 
   SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response); // 로그인
 

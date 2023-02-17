@@ -32,27 +32,39 @@ public class AuthServiceImpl implements AuthService {
   private final JwtTokenProvider jwtTokenProvider;
   private final EmailService emailService;
   private final RedisUtil redisUtil;
+  private final String imageUrl = "default_image.jpg";
 
   /**
    * 회원가입
    *
-   * @param registerRequestDto
+   * @param signUpRequestDto
    */
   @Transactional
   @Override
   public void signUp(
-      final String imageUrl,
-      final SignUpRequestDto registerRequestDto
+      final SignUpRequestDto signUpRequestDto,
+      final String url
   ) {
-    checkByUserEmailDuplicated(registerRequestDto.getEmail());
-    checkByUserNickNameDuplicated(registerRequestDto.getNickname());
-    checkIfEmailVerified(registerRequestDto.getEmail());
-    Account account = registerRequestDto.toEntity(
-        passwordEncoder.encode(registerRequestDto.getPassword()));
+    checkByUserEmailDuplicated(signUpRequestDto.getEmail());
+    checkByUserNickNameDuplicated(signUpRequestDto.getNickname());
+    checkIfEmailVerified(signUpRequestDto.getEmail());
+    Account account = signUpRequestDto.toEntity(
+        passwordEncoder.encode(signUpRequestDto.getPassword()));
+    accountRepository.save(account);
+    AccountInfo accountInfo = new AccountInfo(account, url);
+    accountInfoRepository.save(accountInfo);
+    redisUtil.deleteSetData(EmailService.WHITELIST_KEY_PREFIX, signUpRequestDto.getEmail());
+  }
+
+  @Override
+  public void testSignUP(SignUpRequestDto signUpRequestDto) {
+    checkByUserEmailDuplicated(signUpRequestDto.getEmail());
+    checkByUserNickNameDuplicated(signUpRequestDto.getNickname());
+    Account account = signUpRequestDto.toEntity(
+        passwordEncoder.encode(signUpRequestDto.getPassword()));
     accountRepository.save(account);
     AccountInfo accountInfo = new AccountInfo(account, imageUrl);
     accountInfoRepository.save(accountInfo);
-    redisUtil.deleteSetData(EmailService.WHITELIST_KEY_PREFIX, registerRequestDto.getEmail());
   }
 
   private void checkIfEmailVerified(String email) {

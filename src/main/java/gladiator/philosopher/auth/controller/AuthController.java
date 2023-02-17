@@ -48,7 +48,16 @@ public class AuthController {
   ) {
       s3Uploader.checkFileExtension(multipartFiles);
       final String imageUrl = s3Uploader.upLoadFileToSingle(multipartFiles, dirName);
-      authService.signUp(imageUrl, signUpRequestDto);
+      authService.signUp(signUpRequestDto, imageUrl);
+  }
+
+  /**
+   * 회원가입(테스트)
+   * @param signUpRequestDto
+   */
+  @PostMapping("test")
+  public void  signTest(final @Valid @RequestBody SignUpRequestDto signUpRequestDto){
+    authService.testSignUP(signUpRequestDto);
   }
 
   /**
