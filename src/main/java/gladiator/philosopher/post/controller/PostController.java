@@ -2,8 +2,6 @@ package gladiator.philosopher.post.controller;
 
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
-import gladiator.philosopher.common.exception.CustomException;
-import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
@@ -11,7 +9,6 @@ import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.service.PostService;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -43,36 +40,30 @@ public class PostController {
   private final CategoryService categoryService;
 
   /**
-   * 게시글 생성
+   * 게시글 작성 ( 완료 )
+   *
    * @param multipartFiles
    * @param postRequestDto
    * @param accountDetails
    */
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  @ResponseStatus(HttpStatus.OK)
-  public void createPost(
-      final @RequestPart("image") List<MultipartFile> multipartFiles,
+  @ResponseStatus(HttpStatus.CREATED)
+  public Long createPost(
+      final @RequestPart(required = false, value = "image") List<MultipartFile> multipartFiles,
       final @RequestPart("dto") PostRequestDto postRequestDto,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-    List<String> FailToPostUrls = null;
-    postRequestDto.checkByOpinionCount();
-    s3Uploader.checkFilesExtension(multipartFiles);
     List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-    FailToPostUrls = urls.stream().collect(Collectors.toList());
-    Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
-    try {
-      postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
-    } catch (Exception e) {
-      for (String url : FailToPostUrls) {
-        s3Uploader.newDeleteS3(url, dirName);
-      }
-      throw new CustomException(ExceptionStatus.FAIL_TO_POSTING);
-    }
+    System.out.println(urls);
+      Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
+      final Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
+      return postId;
   }
+
 
   /**
    * 게시글 검색
+   *
    * @param condition
    * @param pageable
    * @return
@@ -86,6 +77,7 @@ public class PostController {
 
   /**
    * 게시글 수정
+   *
    * @param postId
    * @param postRequestDto
    * @param accountDetails
@@ -105,6 +97,7 @@ public class PostController {
 
   /**
    * 게시글 삭제
+   *
    * @param postId
    * @param accountDetails
    */
@@ -133,15 +126,15 @@ public class PostController {
       s3Uploader.checkFilesExtension(multipartFiles);
       final List<String> strings = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
       try {
-        postService.modifyPostAndImage(postId, strings, postRequestDto, accountDetails.getAccount());
-        s3Uploader.DeleteS3Files(oldUrls,dirName);
+        postService.modifyPostAndImage(postId, strings, postRequestDto,
+            accountDetails.getAccount());
+        s3Uploader.DeleteS3Files(oldUrls, dirName);
       } catch (RuntimeException e) {
-        s3Uploader.DeleteS3Files(strings,dirName);
+        s3Uploader.DeleteS3Files(strings, dirName);
       }
     }
     return postId;
   }
-
 
 
 }

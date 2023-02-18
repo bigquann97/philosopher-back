@@ -21,8 +21,7 @@ public interface PostService {
    * @param accountDetails
    * @param category
    */
-  Long createPost(List<String> urls, PostRequestDto postRequestDto,
-      Account accountDetails, Category category);
+  Long createPost(List<String> urls, PostRequestDto postRequestDto, Account accountDetails, Category category);
 
   /**
    * 게시물 단건 조회
@@ -32,7 +31,6 @@ public interface PostService {
    */
   PostResponseDto getPost(Long postId);
 
-//  List<PostsResponseDto> searchPostByCondition(int pageChoice);
 
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
   Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
@@ -45,4 +43,6 @@ public interface PostService {
   Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
   Page<PostsResponseDto> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
   List<String> getOldUrls(Long id);
+
+
 }

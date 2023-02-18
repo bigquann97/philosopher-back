@@ -66,6 +66,10 @@ public class S3Uploader {
    * @throws IOException
    */
   public List<String> upLoadFileToMulti(List<MultipartFile> multipartFiles, String dirName) {
+
+    if(multipartFiles.get(0).getOriginalFilename().equals(""))
+      return null;
+
     try {
       List<String> resultUrlList = new ArrayList<>();
 
@@ -73,8 +77,7 @@ public class S3Uploader {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        String fileName =
-            dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getOriginalFilename(); // s3에 저장될 파일의 이름
         String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
             objectMetadata); // s3로 업로드
         log.info("upfile url is :" + uploadImageUrl);
@@ -84,6 +87,24 @@ public class S3Uploader {
     } catch (IOException e) {
       throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
+
+  }
+
+  public List<String> getFilesUrl(List<MultipartFile> multipartFiles, String dirName){
+    checkByFileCount(multipartFiles); // 파일 갯수 확인
+    checkFilesExtension(multipartFiles); // 파일 확장자 검사
+    List<String> resultUrls = new ArrayList<>();
+
+    for(MultipartFile file : multipartFiles){
+      ObjectMetadata objectMetadata = new ObjectMetadata();
+      objectMetadata.setContentLength(file.getSize());
+      objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
+      String fileName =
+          dirName + "/" + UUID.randomUUID() + file.getOriginalFilename(); // s3에 저장될 파일의 이름
+      resultUrls.add(fileName);
+      log.info(fileName);
+    }
+    return resultUrls;
   }
 
   /**
@@ -95,8 +116,7 @@ public class S3Uploader {
    * @return
    */
   private String putS3(InputStream file, String fileName, ObjectMetadata objectMetadata) {
-    amazonS3Client.putObject(
-        new PutObjectRequest(bucket, fileName, file, objectMetadata).withCannedAcl(
+    amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file, objectMetadata).withCannedAcl(
             CannedAccessControlList.PublicRead));
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
@@ -182,6 +202,10 @@ public class S3Uploader {
     }
   }
 
+  public void checkByFileCount(List<MultipartFile> multipartFiles){
+    if(multipartFiles.size()>4)
+      throw new FileException(ExceptionStatus.TO_MUCH_FILES);
+  }
 
 
 }

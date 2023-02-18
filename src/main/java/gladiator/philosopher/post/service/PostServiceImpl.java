@@ -15,7 +15,6 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -42,31 +41,30 @@ public class PostServiceImpl implements PostService {
       final Account account,
       final Category category
   ) {
+    postRequestDto.checkByOpinionCount();
     Post post = postRequestDto.toEntity(account, category);
+    if (url == null) {
+      saveOpinions(postRequestDto, post);
+      postRepository.save(post);
+    } else {
+      saveImages(url,post);
+      saveOpinions(postRequestDto, post);
+      postRepository.save(post);
+    }
+    return post.getId();
+  }
+
+  private void saveOpinions(PostRequestDto postRequestDto, Post post){
+    List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
+        .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
+    postOpinionRepository.saveAll(opinions);
+  }
+  private void saveImages(List<String> url, Post post){
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
     }
-
-    List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
-        .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
-    postOpinionRepository.saveAll(opinions);
-
-    postRepository.save(post);
-    return post.getId();
   }
-
-//  @Override
-//  @Transactional
-//  public List<PostsResponseDto> searchPostByCondition(final int page) {
-//    Page<Post> posts = postRepository.findAll(pageableSetting(page));
-//    if (posts.isEmpty()) {
-//      throw new CustomException(NOT_FOUND_POST);
-//    }
-//    List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
-//        Collectors.toList());
-//    return PostResponseDtoList;
-//  }
 
   private Pageable pageableSetting(final int pageChoice) {
     Sort.Direction direction = Sort.Direction.DESC;
@@ -78,10 +76,10 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public PostResponseDto getPost(final Long postId) {
     Post post = getPostEntity(postId);
-    Long postRecommendCount = (long) post.getRecommends().size();
+//    Long postRecommendCount = (long) post.getRecommends().size();
     List<String> options = postOpinionRepository.getOptions(post.getId());
     List<String> url = postImageRepository.getUrl(post.getId());
-    return new PostResponseDto(post, postRecommendCount, url, options);
+    return new PostResponseDto(post, 10L, url, options);
   }
 
 
