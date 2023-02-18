@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class PostsResponseDto {
+public class PostResponseDtoByQueryDsl {
 
   // post
   private Long id;
@@ -18,7 +18,7 @@ public class PostsResponseDto {
   private Long recommend; // 추천수
 
 
-  public PostsResponseDto(Long id, String title, String category, LocalDateTime createdDate,
+  public PostResponseDtoByQueryDsl(Long id, String title, String category, LocalDateTime createdDate,
       PostStatus status, String nickname, Long recommend) {
     this.id = id;
     this.title = title;

@@ -5,8 +5,9 @@ import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
+import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
-import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import gladiator.philosopher.post.service.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,16 @@ public class PostController {
       return postId;
   }
 
+  /**
+   * 게시물 단건 조회
+   * @param postId
+   * @return
+   */
+  @GetMapping("/{postId}")
+  @ResponseStatus(HttpStatus.OK)
+  private PostResponseDto getPost(@PathVariable("postId")Long postId){
+    return postService.getPost(postId);
+  }
 
   /**
    * 게시글 검색
@@ -69,7 +80,7 @@ public class PostController {
    * @return
    */
   @GetMapping("/")
-  public Page<PostsResponseDto> searchPost(
+  public Page<PostResponseDtoByQueryDsl> searchPost(
       final PostSearchCondition condition,
       final Pageable pageable) {
     return postService.searchPostByCondition(condition, pageable);

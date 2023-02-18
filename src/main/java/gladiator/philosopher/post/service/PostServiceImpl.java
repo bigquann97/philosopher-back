@@ -8,7 +8,7 @@ import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
-import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
@@ -54,11 +54,25 @@ public class PostServiceImpl implements PostService {
     return post.getId();
   }
 
+
+  @Override
+  @Transactional
+  public PostResponseDto getPost(final Long postId) {
+    Post post = getPostEntity(postId);
+//    Long postRecommendCount = (long) post.getRecommends().size();
+//    List<String> options = postOpinionRepository.getOptions(post.getId());
+//    List<String> url = postImageRepository.getUrl(post.getId());
+    return new PostResponseDto(post);
+
+  }
+
+
   private void saveOpinions(PostRequestDto postRequestDto, Post post){
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
     postOpinionRepository.saveAll(opinions);
   }
+
   private void saveImages(List<String> url, Post post){
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
@@ -72,15 +86,6 @@ public class PostServiceImpl implements PostService {
     return PageRequest.of(pageChoice - 1, 4, sort);
   }
 
-  @Override
-  @Transactional
-  public PostResponseDto getPost(final Long postId) {
-    Post post = getPostEntity(postId);
-//    Long postRecommendCount = (long) post.getRecommends().size();
-    List<String> options = postOpinionRepository.getOptions(post.getId());
-    List<String> url = postImageRepository.getUrl(post.getId());
-    return new PostResponseDto(post, 10L, url, options);
-  }
 
 
   @Override
@@ -129,7 +134,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public Page<PostsResponseDto> searchPostByCondition(
+  public Page<PostResponseDtoByQueryDsl> searchPostByCondition(
       final PostSearchCondition condition,
       final Pageable pageable
   ) {

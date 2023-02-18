@@ -3,10 +3,8 @@ package gladiator.philosopher.post.repository;
 import static gladiator.philosopher.account.entity.QAccount.account;
 import static gladiator.philosopher.post.entity.QPost.post;
 import static gladiator.philosopher.recommend.entity.QPostRecommend.postRecommend;
-import static gladiator.philosopher.recommend.entity.QRecommend.recommend;
 import static org.springframework.util.StringUtils.hasText;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -14,7 +12,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.post.dto.PostSearchCondition;
-import gladiator.philosopher.post.dto.PostsResponseDto;
+import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +30,10 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public Page<PostsResponseDto> searchPost(PostSearchCondition condition, Pageable pageable) {
+  public Page<PostResponseDtoByQueryDsl> searchPost(PostSearchCondition condition, Pageable pageable) {
 
-    final List<PostsResponseDto> fetch = jpaQueryFactory.select
-            (Projections.constructor(PostsResponseDto.class,
+    final List<PostResponseDtoByQueryDsl> fetch = jpaQueryFactory.select
+            (Projections.constructor(PostResponseDtoByQueryDsl.class,
                 post.id,
                 post.title,
                 post.category.name,
