@@ -7,8 +7,11 @@ import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.util.EmailMessage;
 import gladiator.philosopher.common.util.RedisUtil;
 import java.util.UUID;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +31,15 @@ public class EmailService {
       final String sub,
       final String text
   ) {
-    SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo(to);
-    message.setSubject(sub);
-    message.setText(text);
+    MimeMessage message = emailSender.createMimeMessage();
+
+    try {
+      message.addRecipient(RecipientType.TO, new InternetAddress(to));
+      message.setSubject("[MS :p] " + sub, "utf-8");
+      message.setText(text, "utf-8", "html");
+    } catch (MessagingException e) {
+      throw new IllegalArgumentException("이메일 전송 실패");
+    }
     emailSender.send(message);
   }
 
