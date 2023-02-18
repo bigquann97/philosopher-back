@@ -35,7 +35,7 @@ public class EmailService {
 
     try {
       message.addRecipient(RecipientType.TO, new InternetAddress(to));
-      message.setSubject("[MS :p] " + sub, "utf-8");
+      message.setSubject(sub, "utf-8");
       message.setText(text, "utf-8", "html");
     } catch (MessagingException e) {
       throw new IllegalArgumentException("이메일 전송 실패");
