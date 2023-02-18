@@ -1,6 +1,7 @@
 package gladiator.philosopher.notification.service;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.notification.entity.Notification;
 import gladiator.philosopher.notification.repository.NotificationRepository;
@@ -10,6 +11,9 @@ import gladiator.philosopher.recommend.entity.Recommend;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +43,15 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public List<NotificationResponseDto> getMyNotifications(final Account member) {
-    List<Notification> notifications = notificationRepository.findByAccount(member);
-    return notifications.stream().map(NotificationResponseDto::of)
-        .collect(Collectors.toList());
+  public MyPage<NotificationResponseDto> getMyNotifications(int page, final Account account) {
+    PageRequest pageRequest = PageRequest.of(page, 5);
+    Page<Notification> paged = notificationRepository.findByAccountOrderByIdDesc(account,
+        pageRequest);
+
+    List<NotificationResponseDto> dtos = paged.getContent().stream()
+        .map(NotificationResponseDto::of).collect(Collectors.toList());
+
+    return new MyPage<>(new PageImpl<>(dtos, paged.getPageable(), paged.getTotalElements()));
   }
 
 }
