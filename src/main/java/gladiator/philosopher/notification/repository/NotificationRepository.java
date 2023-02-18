@@ -2,12 +2,13 @@ package gladiator.philosopher.notification.repository;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.notification.entity.Notification;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-  List<Notification> findByAccount(@NonNull Account account);
+  Page<Notification> findByAccountOrderByIdDesc(@NonNull Account account, Pageable pageable);
 
 }
