@@ -143,6 +143,16 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  public List<PostImage> getPostImages(Post post) {
+    return postImageRepository.findByPost(post);
+  }
+
+  @Override
+  public List<PostOpinion> getPostOpinions(Post post) {
+    return postOpinionRepository.findByPost(post);
+  }
+
+  @Override
   @Transactional
   public Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
       Account account) {
