@@ -23,6 +23,7 @@ import gladiator.philosopher.recommend.repository.PostRecommendRepository;
 import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
 
-  private final static int COUNT_FOR_MAKE_THREAD = 2;
+  private final static int COUNT_FOR_MAKE_THREAD = 3;
   private final PostRecommendRepository postRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
   private final CommentRecommendRepository commentRecommendRepository;
@@ -117,7 +118,8 @@ public class RecommendServiceImpl implements RecommendService {
 
     if (getPostRecommendCount(post) >= COUNT_FOR_MAKE_THREAD) {
       post.makeThread();
-      threadService.startThread(post);
+      List<PostRecommend> recommends = postRecommendRepository.findByPost(post);
+      threadService.startThread(post, recommends);
     }
   }
 

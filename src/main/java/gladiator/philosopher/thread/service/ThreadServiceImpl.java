@@ -8,6 +8,7 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
@@ -46,7 +47,7 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Thread startThread(final Post post) {
+  public Thread startThread(final Post post, final List<PostRecommend> recommends) {
     Thread thread = Thread.builder()
         .account(post.getAccount())
         .title(post.getTitle())
@@ -67,9 +68,11 @@ public class ThreadServiceImpl implements ThreadService {
 
     threadOpinionRepository.saveAll(opinions);
 
-    notificationService.notifyToRecommendersThatThreadHasStarted(post, post.getRecommends());
+    Thread savedThread = threadRepository.saveAndFlush(thread);
 
-    return threadRepository.save(thread);
+    notificationService.notifyToRecommendersThatThreadHasStarted(savedThread, recommends);
+
+    return savedThread;
   }
 
   /**
