@@ -49,7 +49,7 @@ public class Thread extends BaseEntity {
   @Column(nullable = false)
   private ThreadStatus status;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "account_id")
   private Account account;
 

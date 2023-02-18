@@ -4,6 +4,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +50,7 @@ public class ThreadServiceImpl implements ThreadService {
         .account(post.getAccount())
         .title(post.getTitle())
         .content(post.getContent())
+        .category(post.getCategory())
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
@@ -117,11 +118,12 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
     return threadRepository.selectActiveThreadsWithCond(cond);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ThreadResponseDto selectArchivedThread(Long threadId) {
     return threadRepository.selectThread(threadId)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
@@ -134,8 +136,8 @@ public class ThreadServiceImpl implements ThreadService {
    * @return
    */
   @Override
-  @Transactional
-  public Page<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond cond) {
+  @Transactional(readOnly = true)
+  public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond cond) {
     return threadRepository.selectArchivedThreadWithCond(cond);
   }
 

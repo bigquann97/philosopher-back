@@ -1,13 +1,13 @@
 package gladiator.philosopher.thread.controller;
 
 
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Sort;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +35,7 @@ public class ThreadController {
   // 쓰레드 객체 페이징 조회
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public Page<ThreadSimpleResponseDto> selectActiveThreads(
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreads(
       final @RequestParam(required = false) Long category,
       final @RequestParam(required = false) Integer page,
       final @RequestParam(required = false) Sort sort,
@@ -56,7 +56,7 @@ public class ThreadController {
   // 아카이빙 된 쓰레드 조회
   @GetMapping("/archived")
   @ResponseStatus(HttpStatus.OK)
-  public Page<ThreadSimpleResponseDto> selectArchivedThreads(
+  public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(
       final @RequestParam(required = false) Long category,
       final @RequestParam(required = false) Integer page,
       final @RequestParam(required = false) Sort sort,

@@ -1,5 +1,7 @@
 package gladiator.philosopher.thread.dto;
 
+import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.common.util.TimeAdapter;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
@@ -15,15 +17,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class ThreadResponseDto {
 
-  private final Long id;
-  private final String title;
-  private final String content;
-  private final String nickname;
-  private final LocalDateTime createdDate;
-  private final LocalDateTime endDate;
-  private final Long recommend;
-  private final List<String> images;
-  private final List<String> opinions;
+  private Long id;
+  private String title;
+  private String content;
+  private String nickname;
+  private String createdDate;
+  private String endDate;
+  private String category;
+  private Long commentCount;
+  private Long recommendCount;
+  private List<String> images;
+  private List<String> opinions;
+
+  public ThreadResponseDto(Long id, String title, String content, String nickname,
+      LocalDateTime createdDate, LocalDateTime endDate, Category category,
+      Long commentCount, Long recommendCount) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.nickname = nickname;
+    this.createdDate = TimeAdapter.formatToString(createdDate);
+    this.endDate = TimeAdapter.formatToString(endDate);
+    this.category = category.getName();
+    this.commentCount = commentCount;
+    this.recommendCount = recommendCount;
+  }
 
   @Builder
   public ThreadResponseDto(final Thread thread) {
@@ -32,10 +50,12 @@ public class ThreadResponseDto {
     this.content = thread.getContent();
     this.images = thread.getThreadImages().stream().map(ThreadImage::getImageUrl)
         .collect(Collectors.toList());
-    this.recommend = (long) thread.getRecommends().size();
+    this.commentCount = (long) thread.getRecommends().size();
+    this.recommendCount = (long) thread.getRecommends().size();
     this.nickname = thread.getAccount().getNickname();
-    this.createdDate = thread.getCreatedDate();
-    this.endDate = thread.getEndDate();
+    this.category = thread.getCategory().getName();
+    this.createdDate = TimeAdapter.formatToString(thread.getCreatedDate());
+    this.endDate = TimeAdapter.formatToString(thread.getEndDate());
     this.opinions = thread.getOpinions().stream().map(ThreadOpinion::getOpinion)
         .collect(Collectors.toList());
   }
@@ -48,4 +68,11 @@ public class ThreadResponseDto {
     return threads.stream().map(ThreadResponseDto::of).collect(Collectors.toList());
   }
 
+  public void addImages(List<String> images) {
+    this.images = images;
+  }
+
+  public void addOpinions(List<String> opinions) {
+    this.opinions = opinions;
+  }
 }
