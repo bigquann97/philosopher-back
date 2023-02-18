@@ -641,7 +641,6 @@ public class EmailMessage {
       + "        \n"
       + "        \n"
       + "        <div class=\"email-footer__additional-info\" style=\"font-size: 12px;line-height: 19px;margin-bottom: 15px;\">\n"
-      + "          <unsubscribe style=\"text-decoration: underline;\">Unsubscribe</unsubscribe>\n"
       + "        </div>\n"
       + "        <!--[if mso]>&nbsp;<![endif]-->\n"
       + "      </div>\n"
