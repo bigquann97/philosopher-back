@@ -3,11 +3,11 @@ package gladiator.philosopher.comment.controller;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.service.CommentService;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +37,7 @@ public class CommentController {
    */
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/thread/{threadId}")
-  public Page<CommentResponseDto> selectCommentsWithPaging(
+  public MyPage<CommentResponseDto> selectCommentsWithPaging(
       final @PathVariable Long threadId,
       final @RequestParam(required = false, defaultValue = "1") int page
   ) {
