@@ -41,11 +41,11 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PostImage> images = new ArrayList<>();
-
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PostRecommend> recommends = new ArrayList<>();
+//  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<PostImage> images = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<PostRecommend> recommends = new ArrayList<>();
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostOpinion> opinions = new ArrayList<>();
@@ -62,30 +62,17 @@ public class Post extends BaseEntity {
   private boolean isThreaded;
 
   @Builder
-  public Post(Account account, String title, String content, List<PostImage> images,
+  public Post(Account account, String title, String content,
       List<PostOpinion> opinions, Category category) {
     this.account = account;
     this.title = title;
     this.content = content;
     this.status = PostStatus.ACTIVE;
-    this.images = images;
+//    this.images = images;
     this.opinions = opinions;
     this.category = category;
     this.isThreaded = false;
   }
-
-  // 테스트 생성자
-  public Post(Account account, String title, String content, List<PostOpinion> opinions,
-      Category category) {
-    this.account = account;
-    this.title = title;
-    this.content = content;
-    this.status = PostStatus.ACTIVE;
-    this.opinions = opinions;
-    this.category = category;
-    this.isThreaded = false;
-  }
-
   public void modifyPost(String title, String content) {
     this.title = title;
     this.content = content;

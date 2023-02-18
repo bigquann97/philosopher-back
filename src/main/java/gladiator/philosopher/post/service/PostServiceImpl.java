@@ -15,6 +15,7 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.recommend.repository.PostRecommendRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class PostServiceImpl implements PostService {
   private final PostRepository postRepository;
   private final PostImageRepository postImageRepository;
   private final PostOpinionRepository postOpinionRepository;
+  private final PostRecommendRepository postRecommendRepository;
 
   @Override
   @Transactional
@@ -56,29 +58,46 @@ public class PostServiceImpl implements PostService {
 
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public PostResponseDto getPost(final Long postId) {
     Post post = getPostEntity(postId);
-//    Long postRecommendCount = (long) post.getRecommends().size();
-//    List<String> options = postOpinionRepository.getOptions(post.getId());
-//    List<String> url = postImageRepository.getUrl(post.getId());
-    return new PostResponseDto(post);
-
+    final long recommendCount = postRecommendRepository.countByPost(post);
+    final List<String> url = postImageRepository.getUrl(post.getId());
+    return new PostResponseDto(post, recommendCount, url);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public Page<PostResponseDtoByQueryDsl> searchPostByCondition(
+      final PostSearchCondition condition,
+      final Pageable pageable
+  ) {
+    return postRepository.searchPost(condition, pageable);
+  }
 
+  /**
+   * 의견 저장 -> 사용처 : createPost
+   * @param postRequestDto
+   * @param post
+   */
   private void saveOpinions(PostRequestDto postRequestDto, Post post){
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
     postOpinionRepository.saveAll(opinions);
   }
 
+  /**
+   * 이미지 저장 -> 사용처 : createPost
+   * @param url
+   * @param post
+   */
   private void saveImages(List<String> url, Post post){
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
     }
   }
+
 
   private Pageable pageableSetting(final int pageChoice) {
     Sort.Direction direction = Sort.Direction.DESC;
@@ -133,13 +152,7 @@ public class PostServiceImpl implements PostService {
     return post.getId();
   }
 
-  @Override
-  public Page<PostResponseDtoByQueryDsl> searchPostByCondition(
-      final PostSearchCondition condition,
-      final Pageable pageable
-  ) {
-    return postRepository.searchPost(condition, pageable);
-  }
+
 
   @Override
   public List<String> getOldUrls(Long id) {

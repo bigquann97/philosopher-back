@@ -62,7 +62,7 @@ public class PostController {
   }
 
   /**
-   * 게시물 단건 조회
+   * 게시물 단건 조회 ( 완료 )
    * @param postId
    * @return
    */
@@ -73,7 +73,7 @@ public class PostController {
   }
 
   /**
-   * 게시글 검색
+   * 게시글 검색 ( 완료 )
    *
    * @param condition
    * @param pageable
@@ -84,6 +84,21 @@ public class PostController {
       final PostSearchCondition condition,
       final Pageable pageable) {
     return postService.searchPostByCondition(condition, pageable);
+  }
+
+  /**
+   * 게시글 삭제
+   *
+   * @param postId
+   * @param accountDetails
+   */
+  @DeleteMapping("/{postId}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deletePost(
+      final @PathVariable Long postId,
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
+    postService.deletePost(postId, accountDetails.getAccount());
   }
 
   /**
@@ -104,21 +119,6 @@ public class PostController {
     final Long PostId = postService.modifyOnlyPost(postId, postRequestDto,
         accountDetails.getAccount());
     return PostId;
-  }
-
-  /**
-   * 게시글 삭제
-   *
-   * @param postId
-   * @param accountDetails
-   */
-  @DeleteMapping("/{postId}")
-  @ResponseStatus(HttpStatus.OK)
-  public void deletePost(
-      final @PathVariable Long postId,
-      final @AuthenticationPrincipal AccountDetails accountDetails
-  ) {
-    postService.deletePost(postId, accountDetails.getAccount());
   }
 
 

@@ -56,11 +56,11 @@ public class ThreadServiceImpl implements ThreadService {
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
-    List<ThreadImage> images = post.getImages().stream()
-        .map(x -> new ThreadImage(x.getImageUrl(), thread)).
-        collect(Collectors.toList());
+//    List<ThreadImage> images = post.getImages().stream()
+//        .map(x -> new ThreadImage(x.getImageUrl(), thread)).
+//        collect(Collectors.toList());
 
-    threadImageRepository.saveAll(images);
+//    threadImageRepository.saveAll(images);
 
     List<ThreadOpinion> opinions = post.getOpinions().stream()
         .map(o -> new ThreadOpinion(thread, o.getOpinion()))
