@@ -55,7 +55,6 @@ public class PostController {
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
     List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-    System.out.println(urls);
       Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
       final Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(), Category);
       return postId;
@@ -87,7 +86,7 @@ public class PostController {
   }
 
   /**
-   * 게시글 삭제
+   * 게시글 삭제 ( 완료 )
    *
    * @param postId
    * @param accountDetails
@@ -98,7 +97,9 @@ public class PostController {
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
+    List<String> oldUrls = postService.getOldUrls(postId);
     postService.deletePost(postId, accountDetails.getAccount());
+    s3Uploader.DeleteS3Files(oldUrls,dirName);
   }
 
   /**

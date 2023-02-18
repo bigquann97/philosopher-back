@@ -75,6 +75,18 @@ public class PostServiceImpl implements PostService {
     return postRepository.searchPost(condition, pageable);
   }
 
+  @Override
+  @Transactional
+  public void deletePost(final Long postId, final Account account) {
+    Post post = getPostEntity(postId);
+    post.isWriter(account);
+    postOpinionRepository.deleteAllByPostOpinion(post);
+    postImageRepository.deleteAllByPostImage(post);
+    postRecommendRepository.deleteAllByPostRecommend(post);
+    postRepository.delete(post);
+  }
+
+
   /**
    * 의견 저장 -> 사용처 : createPost
    * @param postRequestDto
@@ -99,14 +111,6 @@ public class PostServiceImpl implements PostService {
   }
 
 
-  private Pageable pageableSetting(final int pageChoice) {
-    Sort.Direction direction = Sort.Direction.DESC;
-    Sort sort = Sort.by(direction, "id");
-    return PageRequest.of(pageChoice - 1, 4, sort);
-  }
-
-
-
   @Override
   @Transactional
   public Long modifyOnlyPost(
@@ -122,19 +126,13 @@ public class PostServiceImpl implements PostService {
   }
 
 
-  @Override
-  @Transactional
-  public void deletePost(final Long postId, final Account account) {
-    Post post = getPostEntity(postId);
-    post.isWriter(account);
-    postRepository.delete(post);
-  }
 
   @Override // 여기서 필요한 작업은 -> 해당 DB단말고 파일 데이터도 지워야 함
   public void deletePostByAdmin(final Long postId) {
     Post post = getPostEntity(postId);
     postRepository.delete(post);
   }
+
 
   @Override
   public Post getPostEntity(final Long postId) {

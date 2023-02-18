@@ -17,29 +17,18 @@ public interface PostService {
 
   // CRUD
   Long createPost(List<String> urls, PostRequestDto postRequestDto, Account accountDetails, Category category); // 게시물 작성 ( 완료 - C)
-
   PostResponseDto getPost(Long postId); // 게시물 단건 조회 ( 완료 - R )
   Page<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable); // 게시물 조건조회 ( 완료 - R) - 아직 관호님꺼 적용 x
-  void deletePost(Long postId, Account accountDetails); // 게시물 삭제 ()
+  void deletePost(Long postId, Account accountDetails); // 게시물 삭제 ( 완료 - D)
+  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto); // 어드민 - 게시글 - 수정 ( )
+
+  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
-
-  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
-      Account account);
-
-  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto); // 게시글 수정 ( )
 
   // GET DATA
   Post getPostEntity(Long postId);
-
   void deletePostByAdmin(Long id);
-
-  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
-
-  Page<PostsResponseDto> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
-
   List<String> getOldUrls(Long id);
-
   List<PostImage> getPostImages(Post post);
-
   List<PostOpinion> getPostOpinions(Post post);
 }
