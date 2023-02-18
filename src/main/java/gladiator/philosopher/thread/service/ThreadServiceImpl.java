@@ -13,6 +13,7 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
+import gladiator.philosopher.thread.entity.ThreadStatus;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
@@ -169,6 +170,23 @@ public class ThreadServiceImpl implements ThreadService {
     });
     // 데이터가 있어야먄 join을 해온다는 점?
     return resultData;
+  }
+
+  /**
+   * 스케줄링 Thread 상태 제어
+   */
+  @Override
+  @Transactional
+  public void controllActiveThreads() {
+
+    // 현재 날짜/시간
+    LocalDateTime now = LocalDateTime.now();
+
+    // 현재 시간 이후로 종료되지 않고 활성화 되어 있는 쓰레드 전체
+    List<Thread> targetThread = threadRepository.findAllByEndDateIsBeforeAndStatus(now,
+        ThreadStatus.ACTIVE);
+    targetThread.stream().forEach(thread -> thread.setStatus(ThreadStatus.BLINDED));
+    threadRepository.saveAll(targetThread);
   }
 
 }
