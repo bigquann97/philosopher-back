@@ -4,12 +4,12 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.thread.entity.Thread;
-import org.springframework.data.domain.Page;
 
 public interface CommentService {
 
-  Page<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page);
+  MyPage<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page);
 
   void createComment(
       final CommentRequestDto commentRequestDto,
