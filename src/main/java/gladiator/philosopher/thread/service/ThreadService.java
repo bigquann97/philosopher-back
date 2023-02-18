@@ -7,6 +7,7 @@ import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
 import java.util.List;
 
 public interface ThreadService {
@@ -29,4 +30,5 @@ public interface ThreadService {
 
   void controllActiveThreads();
 
+  List<ThreadOpinion> getOpinions(Thread thread);
 }

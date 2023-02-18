@@ -1,13 +1,8 @@
 package gladiator.philosopher.thread.dto;
 
-import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.util.TimeAdapter;
-import gladiator.philosopher.thread.entity.Thread;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,11 +19,11 @@ public class ThreadSimpleResponseDto {
   private String createdDate;
   private String endDate;
 
-  public ThreadSimpleResponseDto(Long id, String title, Category category, Long commentCount,
+  public ThreadSimpleResponseDto(Long id, String title, String name, Long commentCount,
       Long recommendCount, String nickname, LocalDateTime createdDate, LocalDateTime endDate) {
     this.id = id;
     this.title = title;
-    this.category = category.getName();
+    this.category = name;
     this.commentCount = commentCount;
     this.recommendCount = recommendCount;
     this.nickname = nickname;
@@ -36,6 +31,9 @@ public class ThreadSimpleResponseDto {
     this.endDate = TimeAdapter.formatToString(endDate);
   }
 
+}
+
+/*
   @Builder
   public ThreadSimpleResponseDto(Thread thread) {
     this.id = thread.getId();
@@ -56,4 +54,4 @@ public class ThreadSimpleResponseDto {
     return threadList.stream().map(ThreadSimpleResponseDto::of).collect(Collectors.toList());
   }
 
-}
+ */

@@ -3,12 +3,8 @@ package gladiator.philosopher.thread.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,12 +15,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.Hibernate;
 
 @Getter
@@ -46,27 +40,17 @@ public class Thread extends BaseEntity {
   @Column(nullable = false)
   private ThreadLocation location;
 
-  @Setter
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private ThreadStatus status;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id")
   private Account account;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
-
-  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private Set<ThreadImage> threadImages = new LinkedHashSet<>();
-
-  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private Set<ThreadRecommend> recommends = new LinkedHashSet<>();
-
-  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-  private Set<ThreadOpinion> opinions = new LinkedHashSet<>();
 
   @Builder
   public Thread(String title, String content, Account account, LocalDateTime endDate,
@@ -111,7 +95,7 @@ public class Thread extends BaseEntity {
   }
 
   public boolean isArchived() {
-    return this.location.equals(ThreadLocation.ARCHIVED);
+    return this.location == ThreadLocation.ARCHIVED;
   }
 
   public boolean isBlinded() {

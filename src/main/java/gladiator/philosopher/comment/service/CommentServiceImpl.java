@@ -15,7 +15,9 @@ import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.service.ThreadService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -115,7 +117,8 @@ public class CommentServiceImpl implements CommentService {
       final Thread thread,
       final CommentRequestDto commentRequestDto
   ) {
-    boolean threadHasOpinion = thread.getOpinions().stream()
+    List<ThreadOpinion> opinions = threadService.getOpinions(thread);
+    boolean threadHasOpinion = opinions.stream()
         .anyMatch(x -> x.getOpinion().equals(commentRequestDto.getOpinion()));
 
     if (!threadHasOpinion) {

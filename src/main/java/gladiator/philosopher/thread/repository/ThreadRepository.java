@@ -16,6 +16,7 @@ public interface ThreadRepository extends JpaRepository<Thread, Long>, ThreadCus
 
   List<Thread> findAllByEndDateIsBeforeAndStatus(LocalDateTime endDate, ThreadStatus status);
 
+  List<Thread> findAllByEndDateIsBeforeAndLocation(LocalDateTime endDate, ThreadLocation location);
 //  @Query("select new gladiator.philosopher.thread.dto.ThreadSimpleResponseDto(t.id, t.title, count(r), t.account.nickname,t.createdDate, t.endTime) from Thread t join Recommend r on r.thread.id=t.id")
 //  List<ThreadSimpleResponseDto> findAllThreads();
 
