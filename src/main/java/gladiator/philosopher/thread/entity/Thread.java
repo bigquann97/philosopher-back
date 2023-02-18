@@ -24,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 @Getter
@@ -45,6 +46,7 @@ public class Thread extends BaseEntity {
   @Column(nullable = false)
   private ThreadLocation location;
 
+  @Setter
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private ThreadStatus status;
