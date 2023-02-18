@@ -6,9 +6,9 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
-import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
@@ -32,7 +32,7 @@ public interface PostService {
    */
   PostResponseDto getPost(Long postId);
 
-  List<PostsResponseDto> SearchByQuerydsl(int pageChoice);
+//  List<PostsResponseDto> searchPostByCondition(int pageChoice);
 
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
   Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
@@ -43,10 +43,6 @@ public interface PostService {
 
   void deletePostByAdmin(Long id);
   Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
-
-  //  List<PostResponseDto> searchPost(PostSearchCondition condition, Pageable pageable);
-
-  List<TestPostResponseDto> SearchByQuerydsl(PostSearchCondition condition, Pageable pageable);
-
+  Page<PostsResponseDto> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
   List<String> getOldUrls(Long id);
 }

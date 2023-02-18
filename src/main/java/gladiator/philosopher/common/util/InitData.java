@@ -107,22 +107,22 @@ public class InitData implements ApplicationRunner {
     // 게시글 부
     List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
 
-    Post post1 = new Post(account1, "김지환의 테스트 데이터입니다.", "김지환의 테스트 데이터입니다", null, category1);
+    Post post1 = new Post(account1, "게시글 1번 제목", "김지환, 박정수", null, category1);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, "박정수의 테스트 데이터입니다.", "박정수의  데이터입니다", null, category1);
+    Post post2 = new Post(account2, " 게시글 2번 제목 ", "박정수, 박건하", null, category1);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, "박정수의 테스트 데이터입니다.", "박정수의테스트 데이터입니다", null, category2);
+    Post post3 = new Post(account3, " 게시글 3번 제목 ", "박건하, 이정국", null, category2);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, "하규호의 테스트 데이터입니다.", "하규호의테스트 데이터입니다", null, category2);
+    Post post4 = new Post(account4, " 게시글 4번 제목 ", "이정국 ,이진호", null, category2);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, "테스트 데이터입니다.", "테스트 데이터입니다", null, category4);
+    Post post5 = new Post(account4, " 게시글 5번 제목 ", "이진호, 이명박", null, category4);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, "테스트 데이터입니다.", "테스트 데이터입니다", null, category5);
+    Post post6 = new Post(account5, " 게시글 6번 제목 ", "이명박, 박명수", null, category5);
     postRepository.save(post6);
 
     // 포스트 이미지

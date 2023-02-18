@@ -6,17 +6,20 @@ import static gladiator.philosopher.recommend.entity.QPostRecommend.postRecommen
 import static gladiator.philosopher.recommend.entity.QRecommend.recommend;
 import static org.springframework.util.StringUtils.hasText;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.post.dto.PostSearchCondition;
-import gladiator.philosopher.post.dto.PostStatus;
-import gladiator.philosopher.post.dto.TestPostResponseDto;
+import gladiator.philosopher.post.dto.PostsResponseDto;
 import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @Slf4j
@@ -29,59 +32,50 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public List<TestPostResponseDto> searchPost(PostSearchCondition condition, Pageable pageable) {
+  public Page<PostsResponseDto> searchPost(PostSearchCondition condition, Pageable pageable) {
 
-    List<TestPostResponseDto> data = jpaQueryFactory.select
-            (Projections.constructor(TestPostResponseDto.class,
-                post.id.as("id"),
-                post.title.as("title"),
-                post.content.as("content"),
-                post.category.name.as("category"),
-                post.createdDate.as("createDate"),
-                post.status.as("status"),
-                account.nickname.as("nickname"),
+    final List<PostsResponseDto> fetch = jpaQueryFactory.select
+            (Projections.constructor(PostsResponseDto.class,
+                post.id,
+                post.title,
+                post.category.name,
+                post.createdDate,
+                post.status,
+                account.nickname,
                 JPAExpressions
-                    .select(Wildcard.count).from(recommend)
-                    .where(post.id.eq(postRecommend.post.id)))
-            )
+                    .select(Wildcard.count).from(postRecommend)
+                    .where(post.id.eq(postRecommend.post.id))
+            ))
         .from(post)
         .leftJoin(post.account, account)
         .where(
-            postContentEqual(condition.getContent()),
-            postStatusEqual(condition.getStatus()),
-            postCategoryEqual(condition.getCategory()),
-            postTitleEqual(condition.getTitle())
+            postContentAndTitleEqual(condition.getWord()),
+            postCategoryEqual(condition.getCategoryId())
         )
-        .groupBy(post.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
+        .orderBy(post.id.desc())
         .fetch();
-//
-//    List<PostImage> postImages= jpaQueryFactory.selectFrom(postImage)
-//        .where(postImage.post.id.eq(post.id)).fetch();
-//
-//    for (TestPostResponseDto testPostResponseDto : data) {
 
-//    }
+    final JPAQuery<Long> count = jpaQueryFactory.select(post.count())
+        .from(post)
+        .where(
+            postContentAndTitleEqual(condition.getWord()),
+            postCategoryEqual(condition.getCategoryId())
+        );
 
+    return new PageImpl<>(fetch, pageable, count.fetchOne());
 
-    return data;
   }
 
-  private BooleanExpression postStatusEqual(String status) {
-    return hasText(status) ? post.status.eq(PostStatus.valueOf(status)) : null;
+  private BooleanExpression postCategoryEqual(Long categoryId) {
+    return categoryId != null ? post.category.id.eq(categoryId) : null;
   }
 
-  private BooleanExpression postCategoryEqual(String category) {
-    return hasText(category) ? post.category.name.eq(category) : null;
+  private BooleanExpression postContentAndTitleEqual(String word) {
+    return hasText(word) ? post.content.containsIgnoreCase(word).or(post.title.containsIgnoreCase(word)) : null;
   }
 
-  private BooleanExpression postContentEqual(String content) {
-    return hasText(content) ? post.content.contains(content) : null;
-  }
 
-  private BooleanExpression postTitleEqual(String title) {
-    return hasText(title) ? post.title.contains(title) : null;
-  }
 
 }
