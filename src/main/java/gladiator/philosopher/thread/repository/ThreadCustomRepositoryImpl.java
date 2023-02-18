@@ -13,6 +13,7 @@ import gladiator.philosopher.category.entity.QCategory;
 import gladiator.philosopher.comment.entity.QComment;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.recommend.entity.QThreadRecommend;
+import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
@@ -41,8 +42,10 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   private final QCategory category;
   private final QThreadImage threadImage;
   private final QThreadOpinion threadOpinion;
+  private final ThreadRecommendRepository threadRecommendRepository;
 
-  public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+  public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory,
+      ThreadRecommendRepository threadRecommendRepository) {
     super(Thread.class);
     this.jpaQueryFactory = jpaQueryFactory;
     this.thread = QThread.thread;
@@ -52,6 +55,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.category = QCategory.category;
     this.threadImage = QThreadImage.threadImage;
     this.threadOpinion = QThreadOpinion.threadOpinion;
+    this.threadRecommendRepository = threadRecommendRepository;
   }
 
   @Override
@@ -128,17 +132,16 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
             ))
         .from(thread)
         .leftJoin(account).on(thread.account.id.eq(account.id))
-        .leftJoin(category).on(thread.category.id.eq(thread.id))
-//        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id)).groupBy(thread.id)
+        .leftJoin(category).on(thread.category.id.eq(category.id))
+        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id))
+        .groupBy(thread.id)
         .where(
             threadStatusEq(ThreadLocation.CONTINUE),
             titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond)
-        )
+            categoryEq(cond))
         .orderBy(
             orderByCondSort(cond.getSort()),
-            orderByCondSort(Sort.NEW)
-        )
+            orderByCondSort(Sort.NEW))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -166,7 +169,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 ThreadSimpleResponseDto.class,
                 thread.id,
                 thread.title,
-                thread.category,
+                category.name,
                 JPAExpressions
                     .select(Wildcard.count)
                     .from(comment)
@@ -180,33 +183,29 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 thread.endDate
             ))
         .from(thread)
-        .leftJoin(thread.account, account)
-        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id)).groupBy(thread.id)
+        .leftJoin(account).on(account.id.eq(thread.account.id))
+        .leftJoin(category).on(category.id.eq(thread.category.id))
+        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id))
+        .groupBy(thread.id)
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),
             titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond)
-        )
+            categoryEq(cond))
         .orderBy(
             orderByCondSort(cond.getSort()),
-            orderByCondSort(Sort.NEW)
-        ).fetch();
+            orderByCondSort(Sort.NEW))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
 
     Long total = jpaQueryFactory
         .select(Wildcard.count)
         .from(thread)
-        .leftJoin(thread.account, account)
-        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id)).groupBy(thread.id)
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),
             titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond)
-        )
-        .orderBy(
-            orderByCondSort(cond.getSort()),
-            orderByCondSort(Sort.NEW)
-        ).fetch().get(0);
-
+            categoryEq(cond))
+        .fetch().get(0);
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
 
@@ -227,7 +226,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   }
 
   private BooleanExpression titleOrContentContainsWord(String word) {
-    return hasText(word) ? thread.content.containsIgnoreCase(word)
+    return hasText(word) ? thread.title.containsIgnoreCase(word)
         .or(thread.content.containsIgnoreCase(word)) : null;
   }
 
