@@ -7,6 +7,8 @@ import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.entity.PostOpinion;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,15 +22,24 @@ public interface PostService {
   Page<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable); // 게시물 조건조회 ( 완료 - R) - 아직 관호님꺼 적용 x
   void deletePost(Long postId, Account accountDetails); // 게시물 삭제 ()
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
-  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
+
+  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
+      Account account);
 
   Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto); // 게시글 수정 ( )
 
   // GET DATA
   Post getPostEntity(Long postId);
+
   void deletePostByAdmin(Long id);
+
+  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
+
+  Page<PostsResponseDto> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
 
   List<String> getOldUrls(Long id);
 
+  List<PostImage> getPostImages(Post post);
 
+  List<PostOpinion> getPostOpinions(Post post);
 }

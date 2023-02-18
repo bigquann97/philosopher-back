@@ -8,6 +8,7 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
@@ -38,6 +39,7 @@ public class ThreadServiceImpl implements ThreadService {
   private final ThreadRepository threadRepository;
   private final ThreadImageRepository threadImageRepository;
   private final NotificationService notificationService;
+  private final PostService postService;
 
   /**
    * 쓰레드 시작
@@ -56,15 +58,14 @@ public class ThreadServiceImpl implements ThreadService {
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
-//    List<ThreadImage> images = post.getImages().stream()
-//        .map(x -> new ThreadImage(x.getImageUrl(), thread)).
-//        collect(Collectors.toList());
+    List<ThreadImage> images = postService.getPostImages(post).stream()
+        .map(x -> new ThreadImage(x.getImageUrl(), thread)).
+        collect(Collectors.toList());
 
 //    threadImageRepository.saveAll(images);
 
-    List<ThreadOpinion> opinions = post.getOpinions().stream()
-        .map(o -> new ThreadOpinion(thread, o.getOpinion()))
-        .collect(Collectors.toList());
+    List<ThreadOpinion> opinions = postService.getPostOpinions(post).stream()
+        .map(o -> new ThreadOpinion(thread, o.getOpinion())).collect(Collectors.toList());
 
     threadOpinionRepository.saveAll(opinions);
 
