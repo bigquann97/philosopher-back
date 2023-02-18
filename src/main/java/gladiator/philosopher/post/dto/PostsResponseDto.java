@@ -1,20 +1,31 @@
 package gladiator.philosopher.post.dto;
 
-import gladiator.philosopher.post.entity.Post;
 import java.time.LocalDateTime;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class PostsResponseDto {
 
-  private final Long id;
-  private final String title;
-  private final LocalDateTime createDate;
+  // post
+  private Long id;
+  private String title;
+  private String category;
+  private LocalDateTime createdDate;
+  private PostStatus status;
+  // account
+  private String nickname;
+  //recommend
+  private Long recommend; // 추천수
 
-  public PostsResponseDto(Post post) {
-    this.id = post.getId();
-    this.title = post.getTitle();
-    this.createDate = post.getCreatedDate();
+
+  public PostsResponseDto(Long id, String title, String category, LocalDateTime createdDate,
+      PostStatus status, String nickname, Long recommend) {
+    this.id = id;
+    this.title = title;
+    this.category = category;
+    this.createdDate = createdDate;
+    this.status = status;
+    this.nickname = nickname;
+    this.recommend = recommend;
   }
-
 }

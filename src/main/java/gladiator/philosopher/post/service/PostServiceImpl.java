@@ -9,7 +9,6 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
-import gladiator.philosopher.post.dto.TestPostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
@@ -57,17 +56,17 @@ public class PostServiceImpl implements PostService {
     return post.getId();
   }
 
-  @Override
-  @Transactional
-  public List<PostsResponseDto> SearchByQuerydsl(final int page) {
-    Page<Post> posts = postRepository.findAll(pageableSetting(page));
-    if (posts.isEmpty()) {
-      throw new CustomException(NOT_FOUND_POST);
-    }
-    List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
-        Collectors.toList());
-    return PostResponseDtoList;
-  }
+//  @Override
+//  @Transactional
+//  public List<PostsResponseDto> searchPostByCondition(final int page) {
+//    Page<Post> posts = postRepository.findAll(pageableSetting(page));
+//    if (posts.isEmpty()) {
+//      throw new CustomException(NOT_FOUND_POST);
+//    }
+//    List<PostsResponseDto> PostResponseDtoList = posts.stream().map(PostsResponseDto::new).collect(
+//        Collectors.toList());
+//    return PostResponseDtoList;
+//  }
 
   private Pageable pageableSetting(final int pageChoice) {
     Sort.Direction direction = Sort.Direction.DESC;
@@ -132,17 +131,11 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<TestPostResponseDto> SearchByQuerydsl(
+  public Page<PostsResponseDto> searchPostByCondition(
       final PostSearchCondition condition,
       final Pageable pageable
   ) {
-    List<TestPostResponseDto> testPostResponseDtos = postRepository.searchPost(condition, pageable);
-    List<TestPostResponseDto> result = new ArrayList<>();
-    for (int i = 0; i < testPostResponseDtos.size(); i++) {
-      List<String> url = postImageRepository.getUrl(testPostResponseDtos.get(i).getId());
-      result.add(new TestPostResponseDto(testPostResponseDtos.get(i), url));
-    }
-    return result;
+    return postRepository.searchPost(condition, pageable);
   }
 
   @Override
