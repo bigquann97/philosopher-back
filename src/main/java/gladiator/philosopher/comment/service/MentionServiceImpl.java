@@ -1,12 +1,12 @@
-package gladiator.philosopher.mention.service;
+package gladiator.philosopher.comment.service;
 
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
 
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.comment.repository.CommentRepository;
+import gladiator.philosopher.comment.repository.MentionRepository;
 import gladiator.philosopher.common.exception.NotFoundException;
-import gladiator.philosopher.mention.entity.Mention;
-import gladiator.philosopher.mention.repository.MentionRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

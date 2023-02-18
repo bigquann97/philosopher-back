@@ -14,7 +14,6 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
-import gladiator.philosopher.mention.service.MentionService;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;

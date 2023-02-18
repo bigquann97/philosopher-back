@@ -1,4 +1,4 @@
-package gladiator.philosopher.mention.service;
+package gladiator.philosopher.comment.service;
 
 import gladiator.philosopher.comment.entity.Comment;
 
