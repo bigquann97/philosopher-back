@@ -2,8 +2,8 @@ package gladiator.philosopher.comment.dto;
 
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.entity.CommentStatus;
+import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.common.util.TimeAdapter;
-import gladiator.philosopher.mention.entity.Mention;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;

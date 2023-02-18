@@ -1,6 +1,5 @@
-package gladiator.philosopher.mention.entity;
+package gladiator.philosopher.comment.entity;
 
-import gladiator.philosopher.comment.entity.Comment;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
