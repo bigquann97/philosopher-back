@@ -27,4 +27,6 @@ public interface ThreadService {
 
   List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2();
 
+  void controllActiveThreads();
+
 }
