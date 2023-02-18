@@ -4,16 +4,18 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
+import gladiator.philosopher.thread.entity.ThreadLocation;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
-import gladiator.philosopher.thread.entity.ThreadStatus;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
@@ -23,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +47,12 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Thread startThread(final Post post) {
+  public Thread startThread(final Post post, final List<PostRecommend> recommends) {
     Thread thread = Thread.builder()
         .account(post.getAccount())
         .title(post.getTitle())
         .content(post.getContent())
+        .category(post.getCategory())
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
@@ -66,9 +68,11 @@ public class ThreadServiceImpl implements ThreadService {
 
     threadOpinionRepository.saveAll(opinions);
 
-    notificationService.notifyToRecommendersThatThreadHasStarted(post, post.getRecommends());
+    Thread savedThread = threadRepository.saveAndFlush(thread);
 
-    return threadRepository.save(thread);
+    notificationService.notifyToRecommendersThatThreadHasStarted(savedThread, recommends);
+
+    return savedThread;
   }
 
   /**
@@ -118,11 +122,12 @@ public class ThreadServiceImpl implements ThreadService {
    */
   @Override
   @Transactional
-  public Page<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
     return threadRepository.selectActiveThreadsWithCond(cond);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ThreadResponseDto selectArchivedThread(Long threadId) {
     return threadRepository.selectThread(threadId)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
@@ -135,8 +140,8 @@ public class ThreadServiceImpl implements ThreadService {
    * @return
    */
   @Override
-  @Transactional
-  public Page<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond cond) {
+  @Transactional(readOnly = true)
+  public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond cond) {
     return threadRepository.selectArchivedThreadWithCond(cond);
   }
 
@@ -178,15 +183,20 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional
   public void controllActiveThreads() {
-
     // 현재 날짜/시간
     LocalDateTime now = LocalDateTime.now();
 
     // 현재 시간 이후로 종료되지 않고 활성화 되어 있는 쓰레드 전체
-    List<Thread> targetThread = threadRepository.findAllByEndDateIsBeforeAndStatus(now,
-        ThreadStatus.ACTIVE);
-    targetThread.stream().forEach(thread -> thread.setStatus(ThreadStatus.BLINDED));
+    List<Thread> targetThread = threadRepository.findAllByEndDateIsBeforeAndLocation(now,
+        ThreadLocation.CONTINUE);
+    targetThread.forEach(Thread::finishThread);
     threadRepository.saveAll(targetThread);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<ThreadOpinion> getOpinions(Thread thread) {
+    return threadOpinionRepository.findByThread(thread);
   }
 
 }

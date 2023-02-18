@@ -1,25 +1,27 @@
 package gladiator.philosopher.thread.service;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
 import java.util.List;
-import org.springframework.data.domain.Page;
 
 public interface ThreadService {
 
-  Thread startThread(final Post post);
+  Thread startThread(final Post post, final List<PostRecommend> recommends);
 
   ThreadResponseDto selectThread(final Long threadId);
 
-  Page<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond);
+  MyPage<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond);
 
   ThreadResponseDto selectArchivedThread(Long threadId);
 
-  Page<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond of);
+  MyPage<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond of);
 
   Thread finishThread(final Thread thread);
 
@@ -29,4 +31,5 @@ public interface ThreadService {
 
   void controllActiveThreads();
 
+  List<ThreadOpinion> getOpinions(Thread thread);
 }

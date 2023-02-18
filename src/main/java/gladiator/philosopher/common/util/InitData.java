@@ -7,12 +7,12 @@ import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.repository.CategoryRepository;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.comment.repository.CommentRepository;
+import gladiator.philosopher.comment.repository.MentionRepository;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.enums.UserStatus;
-import gladiator.philosopher.mention.entity.Mention;
-import gladiator.philosopher.mention.repository.MentionRepository;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
@@ -234,6 +234,12 @@ public class InitData implements ApplicationRunner {
 //    recommendRepository.save(recommend2);
     ThreadRecommend threadRecommend = new ThreadRecommend(account1, thread1);
     threadRecommendRepository.save(threadRecommend);
+
+    for (int i = 0; i < 1000; i++) {
+      Thread thread = new Thread("title" + i, "content" + i, account1,
+          LocalDateTime.now().plusDays(1L), category1);
+      threadRepository.save(thread);
+    }
 
   }
 

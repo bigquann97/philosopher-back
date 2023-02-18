@@ -1,12 +1,9 @@
 package gladiator.philosopher.admin.dto;
 
-import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadLocation;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +26,11 @@ public class ThreadsSimpleResponseDtoByAdmin {
     this.id = thread.getId();
     this.title = thread.getTitle();
     this.content = thread.getContent();
-    this.imageUrl = thread.getThreadImages().stream().map(ThreadImage::getImageUrl)
-        .collect(Collectors.toList());
-    this.recommendCount = thread.getRecommends().stream().map(ThreadRecommend::getThread).count();
+    this.imageUrl = null; // threadImage 연관관계 끊어내서 null 처리
+//        thread.getThreadImages().stream().map(ThreadImage::getImageUrl)
+//        .collect(Collectors.toList());
+    this.recommendCount = null; //threadRecommends 연관과계 끊어내서 null 처리
+//        thread.getRecommends().stream().map(ThreadRecommend::getThread).count();
     this.nickname = thread.getAccount().getNickname();
     this.location = thread.getLocation();
     this.createdDate = thread.getCreatedDate();

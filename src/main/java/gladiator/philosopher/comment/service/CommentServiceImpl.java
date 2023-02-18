@@ -10,14 +10,15 @@ import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
-import gladiator.philosopher.mention.service.MentionService;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.service.ThreadService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page) {
+  public MyPage<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page) {
     PageRequest pageable = PageRequest.of(page, 10);
     return commentRepository.selectCommentsWithPaging(pageable, threadId);
   }
@@ -116,7 +117,8 @@ public class CommentServiceImpl implements CommentService {
       final Thread thread,
       final CommentRequestDto commentRequestDto
   ) {
-    boolean threadHasOpinion = thread.getOpinions().stream()
+    List<ThreadOpinion> opinions = threadService.getOpinions(thread);
+    boolean threadHasOpinion = opinions.stream()
         .anyMatch(x -> x.getOpinion().equals(commentRequestDto.getOpinion()));
 
     if (!threadHasOpinion) {

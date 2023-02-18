@@ -31,10 +31,13 @@ public class Notification extends BaseEntity {
 
   private String content;
 
+  private String redirectUrl;
+
   @Builder
-  public Notification(Account account, String content) {
+  public Notification(Account account, String content, String redirectUrl) {
     this.account = account;
     this.content = content;
+    this.redirectUrl = redirectUrl;
   }
 
   @Override
@@ -53,5 +56,5 @@ public class Notification extends BaseEntity {
   public int hashCode() {
     return getClass().hashCode();
   }
-  
+
 }

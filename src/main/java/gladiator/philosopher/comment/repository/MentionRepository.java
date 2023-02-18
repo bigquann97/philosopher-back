@@ -1,7 +1,7 @@
-package gladiator.philosopher.mention.repository;
+package gladiator.philosopher.comment.repository;
 
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.mention.entity.Mention;
+import gladiator.philosopher.comment.entity.Mention;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
