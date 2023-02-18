@@ -235,6 +235,12 @@ public class InitData implements ApplicationRunner {
     ThreadRecommend threadRecommend = new ThreadRecommend(account1, thread1);
     threadRecommendRepository.save(threadRecommend);
 
+    for (int i = 0; i < 1000; i++) {
+      Thread thread = new Thread("title" + i, "content" + i, account1,
+          LocalDateTime.now().plusDays(1L), category1);
+      threadRepository.save(thread);
+    }
+
   }
 
 }
