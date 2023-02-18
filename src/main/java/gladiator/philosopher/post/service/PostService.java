@@ -7,6 +7,8 @@ import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostsResponseDto;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.entity.PostImage;
+import gladiator.philosopher.post.entity.PostOpinion;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +37,23 @@ public interface PostService {
 //  List<PostsResponseDto> searchPostByCondition(int pageChoice);
 
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
-  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
+
+  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
+      Account account);
 
   void deletePost(Long postId, Account accountDetails);
 
   Post getPostEntity(Long postId);
 
   void deletePostByAdmin(Long id);
+
   Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
+
   Page<PostsResponseDto> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
+
   List<String> getOldUrls(Long id);
+
+  List<PostImage> getPostImages(Post post);
+
+  List<PostOpinion> getPostOpinions(Post post);
 }
