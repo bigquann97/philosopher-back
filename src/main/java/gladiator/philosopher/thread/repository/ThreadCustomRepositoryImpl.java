@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
+import gladiator.philosopher.category.entity.QCategory;
 import gladiator.philosopher.comment.entity.QComment;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.recommend.entity.QThreadRecommend;
@@ -37,6 +38,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   private final QThreadRecommend threadRecommend;
   private final QComment comment;
   private final QAccount account;
+  private final QCategory category;
   private final QThreadImage threadImage;
   private final QThreadOpinion threadOpinion;
 
@@ -47,6 +49,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.threadRecommend = QThreadRecommend.threadRecommend;
     this.comment = QComment.comment;
     this.account = QAccount.account;
+    this.category = QCategory.category;
     this.threadImage = QThreadImage.threadImage;
     this.threadOpinion = QThreadOpinion.threadOpinion;
   }
@@ -63,7 +66,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 account.nickname,
                 thread.createdDate,
                 thread.endDate,
-                thread.category,
+                category.name,
                 JPAExpressions
                     .select(Wildcard.count)
                     .from(comment)
@@ -74,8 +77,10 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                     .where(threadRecommend.thread.id.eq(thread.id))
             ))
         .from(thread)
+        .leftJoin(account).on(thread.account.id.eq(account.id))
+        .leftJoin(category).on(thread.category.id.eq(category.id))
         .where(thread.id.eq(id))
-        .fetchOne();
+        .fetchFirst();
 
     List<String> images = jpaQueryFactory
         .select(threadImage.imageUrl)
@@ -96,7 +101,6 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     } else {
       return Optional.empty();
     }
-
   }
 
   @Override
@@ -109,7 +113,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 ThreadSimpleResponseDto.class,
                 thread.id,
                 thread.title,
-                thread.category,
+                category.name,
                 JPAExpressions
                     .select(Wildcard.count)
                     .from(comment)
@@ -123,8 +127,9 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 thread.endDate
             ))
         .from(thread)
-        .leftJoin(thread.account, account)
-        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id)).groupBy(thread.id)
+        .leftJoin(account).on(thread.account.id.eq(account.id))
+        .leftJoin(category).on(thread.category.id.eq(thread.id))
+//        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id)).groupBy(thread.id)
         .where(
             threadStatusEq(ThreadLocation.CONTINUE),
             titleOrContentContainsWord(cond.getWord()),

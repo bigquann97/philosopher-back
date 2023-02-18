@@ -1,15 +1,9 @@
 package gladiator.philosopher.thread.dto;
 
-import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.util.TimeAdapter;
-import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadImage;
-import gladiator.philosopher.thread.entity.ThreadOpinion;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,7 +24,7 @@ public class ThreadResponseDto {
   private List<String> opinions;
 
   public ThreadResponseDto(Long id, String title, String content, String nickname,
-      LocalDateTime createdDate, LocalDateTime endDate, Category category,
+      LocalDateTime createdDate, LocalDateTime endDate, String name,
       Long commentCount, Long recommendCount) {
     this.id = id;
     this.title = title;
@@ -38,11 +32,21 @@ public class ThreadResponseDto {
     this.nickname = nickname;
     this.createdDate = TimeAdapter.formatToString(createdDate);
     this.endDate = TimeAdapter.formatToString(endDate);
-    this.category = category.getName();
+    this.category = name;
     this.commentCount = commentCount;
     this.recommendCount = recommendCount;
   }
 
+  public void addImages(List<String> images) {
+    this.images = images;
+  }
+
+  public void addOpinions(List<String> opinions) {
+    this.opinions = opinions;
+  }
+}
+
+/*
   @Builder
   public ThreadResponseDto(final Thread thread) {
     this.id = thread.getId();
@@ -68,11 +72,4 @@ public class ThreadResponseDto {
     return threads.stream().map(ThreadResponseDto::of).collect(Collectors.toList());
   }
 
-  public void addImages(List<String> images) {
-    this.images = images;
-  }
-
-  public void addOpinions(List<String> opinions) {
-    this.opinions = opinions;
-  }
-}
+ */
