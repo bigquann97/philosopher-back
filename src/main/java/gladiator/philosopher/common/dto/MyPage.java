@@ -9,23 +9,23 @@ public class MyPage<T> {
 
   private List<T> content;
 
-  private Long totalElements;
-
-  private int totalPage;
-
-  private int currPage;
-
-  private boolean isLast;
-
-  private boolean empty;
+  private int numberOfElements;
+  private long totalElements;
+  private int totalPages;
+  private int number;
+  private int size;
+  private boolean first;
+  private boolean last;
 
   public MyPage(PageImpl<T> page) {
     this.content = page.getContent();
-    this.totalPage = page.getTotalPages();
-    this.isLast = page.isLast();
+    this.numberOfElements = page.getNumberOfElements();
     this.totalElements = page.getTotalElements();
-    this.currPage = page.getNumber() + 1;
-    this.empty = page.isEmpty();
+    this.totalPages = page.getTotalPages();
+    this.number = page.getNumber();
+    this.size = page.getSize();
+    this.first = page.isFirst();
+    this.last = page.isLast();
   }
 
 }
