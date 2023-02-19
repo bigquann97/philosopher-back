@@ -11,6 +11,7 @@ import static gladiator.philosopher.common.jwt.JwtTokenProvider.AUTHORIZATION_HE
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.BEARER_PREFIX;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME;
 
+import gladiator.philosopher.account.dto.ReissueResponseDto;
 import gladiator.philosopher.account.dto.login.SignInRequestDto;
 import gladiator.philosopher.account.dto.login.SignInResponseDto;
 import gladiator.philosopher.account.dto.login.SignUpRequestDto;
@@ -96,13 +97,14 @@ public class AuthServiceImpl implements AuthService {
         REFRESH_TOKEN_EXPIRE_TIME);
     response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
 
-    return SignInResponseDto.of(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+    return SignInResponseDto.of(account.getNickname(), tokenDto.getAccessToken(),
+        tokenDto.getRefreshToken());
   }
 
 
   @Override
   @Transactional
-  public SignInResponseDto reissue(
+  public ReissueResponseDto reissue(
       final TokenRequestDto tokenRequestDto,
       final HttpServletResponse response
   ) {
@@ -121,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
           REFRESH_TOKEN_EXPIRE_TIME);
       response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
 
-      return SignInResponseDto.of(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+      return ReissueResponseDto.of(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
     } catch (NullPointerException e) {
       throw new AuthException(INVALID_REFRESH_TOKEN);
     }
