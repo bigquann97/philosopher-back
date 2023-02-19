@@ -2,11 +2,13 @@ package gladiator.philosopher.thread.repository;
 
 import static org.springframework.util.StringUtils.hasText;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
 import gladiator.philosopher.category.entity.QCategory;
@@ -25,6 +27,7 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadLocation;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -111,53 +114,51 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
 
-    List<ThreadSimpleResponseDto> dtos = jpaQueryFactory
+    JPQLQuery<Tuple> query = jpaQueryFactory
         .select(
-            Projections.constructor(
-                ThreadSimpleResponseDto.class,
-                thread.id,
-                thread.title,
-                category.name,
-                JPAExpressions
-                    .select(Wildcard.count)
-                    .from(comment)
-                    .where(comment.thread.id.eq(thread.id)),
-                JPAExpressions
-                    .select(Wildcard.count)
-                    .from(threadRecommend)
-                    .where(threadRecommend.thread.id.eq(thread.id)),
-                account.nickname,
-                thread.createdDate,
-                thread.endDate
-            ))
+            thread.id,
+            thread.title,
+            category.name,
+            comment.count(),
+            threadRecommend.count(),
+            account.nickname,
+            thread.createdDate,
+            thread.endDate
+        )
         .from(thread)
-        .leftJoin(account).on(thread.account.id.eq(account.id))
-        .leftJoin(category).on(thread.category.id.eq(category.id))
-        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id))
+        .leftJoin(thread.comments, comment)
+        .leftJoin(thread.recommends, threadRecommend)
+        .leftJoin(thread.account, account)
+        .leftJoin(thread.category, category)
+        .where(
+            threadStatusEq(ThreadLocation.CONTINUE),
+            titleOrContentContainsWord(cond.getWord()),
+            categoryEq(cond)
+        )
         .groupBy(thread.id)
-        .where(
-            threadStatusEq(ThreadLocation.CONTINUE),
-            titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond))
-        .orderBy(
-            orderByCondSort(cond.getSort()),
-            orderByCondSort(Sort.NEW))
+        .orderBy(orderByCondSort(cond.getSort()), orderByCondSort(Sort.NEW))
         .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
-        .fetch();
+        .limit(pageable.getPageSize());
 
-    Long total = jpaQueryFactory
-        .select(Wildcard.count)
-        .from(thread)
-        .where(
-            threadStatusEq(ThreadLocation.CONTINUE),
-            titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond))
-        .fetch().get(0);
+    List<Tuple> tuples = query.fetch();
+
+    List<ThreadSimpleResponseDto> dtos = tuples.stream()
+        .map(tuple -> new ThreadSimpleResponseDto(
+            tuple.get(thread.id),
+            tuple.get(thread.title),
+            tuple.get(category.name),
+            tuple.get(comment.count()),
+            tuple.get(threadRecommend.count()),
+            tuple.get(account.nickname),
+            tuple.get(thread.createdDate),
+            tuple.get(thread.endDate)
+        ))
+        .collect(Collectors.toList());
+
+    long total = query.fetchCount();
 
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
-
 
   @Override
   public MyPage<ThreadSimpleResponseDto> selectArchivedThreadWithCond(ThreadSearchCond cond) {
@@ -239,24 +240,9 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
 // ===============================================
 
-/*
-
-  @Override
-  public Optional<ThreadResponseDto> selectThread(Long id) {
-    Thread resultThread = jpaQueryFactory
-        .select(thread)
-        .from(thread)
-        .leftJoin(thread.threadImages).fetchJoin()
-        .leftJoin(thread.recommends).fetchJoin()
-        .leftJoin(thread.opinions).fetchJoin()
-        .where(thread.id.eq(id))
-        .fetchOne();
-    ThreadResponseDto dto = ThreadResponseDto.of(resultThread);
-    return Optional.ofNullable(dto);
-  }
-
-  @Override
-  public Page<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
+/* N+1
+ @Override
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
 
     JPAQuery<Thread> query = query(thread, cond, ThreadLocation.CONTINUE)
@@ -266,31 +252,79 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     List<Thread> threads = query.fetch();
     Long totalSize = countQuery(cond, ThreadLocation.CONTINUE).fetch().get(0);
 
-    return new PageImpl<>(ThreadSimpleResponseDto.of(threads), pageable, totalSize);
+    PageImpl<ThreadSimpleResponseDto> impl = new PageImpl<>(
+        ThreadSimpleResponseDto.of(threads), pageable, totalSize);
+
+    return new MyPage<>(impl);
   }
 
-    @Override
-  public Page<ThreadSimpleResponseDto> selectArchivedThreadWithCond(ThreadSearchCond cond) {
-    Pageable pageable = cond.getPageable();
-
-    JPAQuery<Thread> query = query(thread, cond, ThreadLocation.ARCHIVED)
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize());
-
-    List<Thread> threads = query.fetch();
-    Long totalSize = countQuery(cond, ThreadLocation.ARCHIVED).fetch().get(0);
-
-    return new PageImpl<>(ThreadSimpleResponseDto.of(threads), pageable, totalSize);
-    return null;
-  }
-
-    private <T> JPAQuery<T> query(Expression<T> expr, ThreadSearchCond cond,
+  private <T> JPAQuery<T> query(Expression<T> expr, ThreadSearchCond cond,
       ThreadLocation location) {
     return jpaQueryFactory
         .select(expr)
         .from(thread)
-        .leftJoin(thread.recommends, threadRecommend).fetchJoin()
-        .leftJoin(thread.account).fetchJoin()
+        .leftJoin(thread.recommends, threadRecommend)
+        .leftJoin(thread.account, account)
+        .leftJoin(thread.category, category)
+        .where(
+            threadStatusEq(location),
+            titleOrContentContainsWord(cond.getWord()),
+            categoryEq(cond)
+        )
+        .orderBy(
+            orderByCondSort(cond.getSort()),
+            orderByCondSort(Sort.NEW)
+        )
+        .groupBy(thread.id)
+        ;
+  }
+
+  private JPAQuery<Long> countQuery(ThreadSearchCond cond, ThreadLocation location) {
+    return jpaQueryFactory
+        .select(Wildcard.count)
+        .from(thread)
+        .leftJoin(thread.recommends, threadRecommend)
+        .where(
+            threadStatusEq(location),
+            titleOrContentContainsWord(cond.getWord()),
+            categoryEq(cond)
+        )
+        .orderBy(
+            orderByCondSort(cond.getSort()),
+            orderByCondSort(Sort.NEW)
+        )
+        .groupBy(thread.id)
+        ;
+  }
+ */
+
+/* Fetch
+
+  @Override
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
+    Pageable pageable = cond.getPageable();
+
+    JPAQuery<Thread> query = query(thread, cond, ThreadLocation.CONTINUE)
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize());
+
+    List<Thread> threads = query.fetch();
+    Long totalSize = countQuery(cond, ThreadLocation.CONTINUE).fetch().get(0);
+
+    PageImpl<ThreadSimpleResponseDto> impl = new PageImpl<>(
+        ThreadSimpleResponseDto.of(threads), pageable, totalSize);
+
+    return new MyPage<>(impl);
+  }
+
+  private <T> JPAQuery<T> query(Expression<T> expr, ThreadSearchCond cond,
+      ThreadLocation location) {
+    return jpaQueryFactory
+        .select(expr)
+        .from(thread)
+        .leftJoin(thread.recommends, threadRecommend).fetchJoin().groupBy(threadRecommend.id)
+        .leftJoin(thread.account, account).fetchJoin()
+        .leftJoin(thread.category, category).fetchJoin()
         .where(
             threadStatusEq(location),
             titleOrContentContainsWord(cond.getWord()),
@@ -322,7 +356,152 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         ;
   }
 
+ */
 
+/*my
+  @Override
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
+    Pageable pageable = cond.getPageable();
 
+    List<ThreadSimpleResponseDto> dtos = jpaQueryFactory
+        .select(
+            Projections.constructor(
+                ThreadSimpleResponseDto.class,
+                thread.id,
+                thread.title,
+                category.name,
+                JPAExpressions
+                    .select(Wildcard.count)
+                    .from(comment)
+                    .where(comment.thread.id.eq(thread.id)),
+                JPAExpressions
+                    .select(Wildcard.count)
+                    .from(threadRecommend)
+                    .where(threadRecommend.thread.id.eq(thread.id)),
+                account.nickname,
+                thread.createdDate,
+                thread.endDate
+            ))
+        .from(thread)
+        .leftJoin(account).on(thread.account.id.eq(account.id))
+        .leftJoin(category).on(thread.category.id.eq(category.id))
+        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id))
+        .groupBy(thread.id)
+        .where(
+            threadStatusEq(ThreadLocation.CONTINUE),
+            titleOrContentContainsWord(cond.getWord()),
+            categoryEq(cond))
+        .orderBy(
+            orderByCondSort(cond.getSort()),
+            orderByCondSort(Sort.NEW))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+
+    Long total = jpaQueryFactory
+        .select(Wildcard.count)
+        .from(thread)
+        .where(
+            threadStatusEq(ThreadLocation.CONTINUE),
+            titleOrContentContainsWord(cond.getWord()),
+            categoryEq(cond))
+        .fetch().get(0);
+
+    return new MyPage<>(new PageImpl<>(dtos, pageable, total));
+  }
+ */
+
+/* 1
+  @Override
+  public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
+    Pageable pageable = cond.getPageable();
+
+    JPQLQuery<Tuple> query = jpaQueryFactory
+        .select(thread.id, thread.title, category.name, comment.count(), threadRecommend.count(),
+            account.nickname, thread.createdDate, thread.endDate)
+        .from(thread)
+        .leftJoin(thread.comments, comment).on(comment.thread.eq(thread))
+        .leftJoin(thread.recommends, threadRecommend).on(threadRecommend.thread.eq(thread))
+        .leftJoin(thread.account, account)
+        .leftJoin(thread.category, category)
+        .where(threadStatusEq(ThreadLocation.CONTINUE),
+            titleOrContentContainsWord(cond.getWord()),
+            categoryEq(cond))
+        .groupBy(thread.id)
+        .orderBy(orderByCondSort(cond.getSort()), orderByCondSort(Sort.NEW))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize());
+
+    List<Tuple> tuples = query.fetch();
+
+    List<ThreadSimpleResponseDto> dtos = tuples.stream()
+        .map(tuple -> new ThreadSimpleResponseDto(
+            tuple.get(thread.id),
+            tuple.get(thread.title),
+            tuple.get(category.name),
+            tuple.get(comment.count()),
+            tuple.get(threadRecommend.count()),
+            tuple.get(account.nickname),
+            tuple.get(thread.createdDate),
+            tuple.get(thread.endDate)))
+        .collect(Collectors.toList());
+
+    long total = query.fetchCount();
+
+    return new MyPage<>(new PageImpl<>(dtos, pageable, total));
+  }
+
+ */
+
+/* 2
+@Override
+public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchCond cond) {
+  Pageable pageable = cond.getPageable();
+
+  JPQLQuery<Tuple> query = jpaQueryFactory
+      .select(
+          thread.id,
+          thread.title,
+          category.name,
+          comment.count(),
+          threadRecommend.count(),
+          account.nickname,
+          thread.createdDate,
+          thread.endDate
+      )
+      .from(thread)
+      .leftJoin(thread.comments, comment)
+      .leftJoin(thread.recommends, threadRecommend)
+      .leftJoin(thread.account, account)
+      .leftJoin(thread.category, category)
+      .where(
+          threadStatusEq(ThreadLocation.CONTINUE),
+          titleOrContentContainsWord(cond.getWord()),
+          categoryEq(cond)
+      )
+      .groupBy(thread.id)
+      .orderBy(orderByCondSort(cond.getSort()), orderByCondSort(Sort.NEW))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize());
+
+  List<Tuple> tuples = query.fetch();
+
+  List<ThreadSimpleResponseDto> dtos = tuples.stream()
+      .map(tuple -> new ThreadSimpleResponseDto(
+          tuple.get(thread.id),
+          tuple.get(thread.title),
+          tuple.get(category.name),
+          tuple.get(comment.count()),
+          tuple.get(threadRecommend.count()),
+          tuple.get(account.nickname),
+          tuple.get(thread.createdDate),
+          tuple.get(thread.endDate)
+      ))
+      .collect(Collectors.toList());
+
+  long total = query.fetchCount();
+
+  return new MyPage<>(new PageImpl<>(dtos, pageable, total));
+}
 
  */
