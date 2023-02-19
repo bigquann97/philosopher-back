@@ -22,7 +22,7 @@ public interface PostImageRepository extends JpaRepository<PostImage, Long>, Pos
 
   @Modifying
   @Transactional
-  @Query("delete from PostImage p where p.post=:post")
+  @Query("delete from PostImage p where p.post= ?1")
   void deleteAllByPostImage(Post post);
 
 }

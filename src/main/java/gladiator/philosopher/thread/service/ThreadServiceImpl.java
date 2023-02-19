@@ -62,7 +62,7 @@ public class ThreadServiceImpl implements ThreadService {
         .map(x -> new ThreadImage(x.getImageUrl(), thread)).
         collect(Collectors.toList());
 
-    threadImageRepository.saveAll(images);
+//    threadImageRepository.saveAll(images);
 
     List<ThreadOpinion> opinions = postService.getPostOpinions(post).stream()
         .map(o -> new ThreadOpinion(thread, o.getOpinion())).collect(Collectors.toList());
