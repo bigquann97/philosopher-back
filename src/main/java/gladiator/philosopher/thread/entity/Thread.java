@@ -2,9 +2,13 @@ package gladiator.philosopher.thread.entity;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.common.entity.BaseEntity;
+import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +56,12 @@ public class Thread extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
+
+  @OneToMany(mappedBy = "thread")
+  private Set<Comment> comments = new LinkedHashSet<>();
+
+  @OneToMany(mappedBy = "thread")
+  private Set<ThreadRecommend> recommends = new LinkedHashSet<>();
 
   @Builder
   public Thread(String title, String content, Account account, LocalDateTime endDate,
