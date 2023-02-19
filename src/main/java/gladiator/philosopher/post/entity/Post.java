@@ -73,7 +73,13 @@ public class Post extends BaseEntity {
     this.category = category;
     this.isThreaded = false;
   }
-  public void modifyPost(String title, String content) {
+  public void modifyPost(String title, String content, Category category) {
+    this.title = title;
+    this.content = content;
+    this.category = category;
+  }
+
+  public void modifyPost(String title, String content){
     this.title = title;
     this.content = content;
   }

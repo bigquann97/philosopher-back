@@ -91,8 +91,6 @@ public class S3Uploader {
   }
 
   public List<String> getFilesUrl(List<MultipartFile> multipartFiles, String dirName){
-    checkByFileCount(multipartFiles); // 파일 갯수 확인
-    checkFilesExtension(multipartFiles); // 파일 확장자 검사
     List<String> resultUrls = new ArrayList<>();
 
     for(MultipartFile file : multipartFiles){
@@ -205,6 +203,12 @@ public class S3Uploader {
   public void checkByFileCount(List<MultipartFile> multipartFiles){
     if(multipartFiles.size()>4)
       throw new FileException(ExceptionStatus.TO_MUCH_FILES);
+  }
+
+  public void checkFileUpload(List<MultipartFile> multipartFiles){
+    checkByFileCount(multipartFiles); // 파일 갯수 확인
+    checkFilesExtension(multipartFiles); // 파일 확장자 검사
+    checkByFileCount(multipartFiles);
   }
 
 

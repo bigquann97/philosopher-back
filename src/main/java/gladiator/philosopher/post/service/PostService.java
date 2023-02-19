@@ -2,6 +2,7 @@ package gladiator.philosopher.post.service;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.post.dto.PostModifyRequestDto;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostSearchCondition;
@@ -22,7 +23,8 @@ public interface PostService {
   void deletePost(Long postId, Account accountDetails); // 게시물 삭제 ( 완료 - D)
   Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto); // 어드민 - 게시글 - 수정 ( )
 
-  Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto, Account account);
+  Long modifyPost(Long postId,List<String>urls, PostModifyRequestDto postModifyRequestDto, Account account, Category category);
+
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
 
   // GET DATA

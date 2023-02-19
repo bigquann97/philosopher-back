@@ -5,10 +5,11 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.post.dto.PostModifyRequestDto;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
-import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
+import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
@@ -19,15 +20,15 @@ import gladiator.philosopher.recommend.repository.PostRecommendRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
@@ -49,7 +50,7 @@ public class PostServiceImpl implements PostService {
       saveOpinions(postRequestDto, post);
       postRepository.save(post);
     } else {
-      saveImages(url,post);
+      saveImages(url, post);
       saveOpinions(postRequestDto, post);
       postRepository.save(post);
     }
@@ -86,30 +87,48 @@ public class PostServiceImpl implements PostService {
     postRepository.delete(post);
   }
 
+  @Override
+  @Transactional
+  public Long modifyPost(Long postId, List<String> urls, PostModifyRequestDto postModifyRequestDto,
+      Account account, Category category) {
+    Post post = getPostEntity(postId);
+    log.info(post.getTitle());
+    post.isWriter(account);
+    post.modifyPost(postModifyRequestDto.getTitle(), postModifyRequestDto.getContent(), category);
+    postRepository.saveAndFlush(post);
+    if (urls == null) {
+      return post.getId();
+    } else {
+      saveImages(urls, post);
+      postImageRepository.deleteAllByPostImage(post);
+      return post.getId();
+    }
+  }
 
   /**
    * 의견 저장 -> 사용처 : createPost
+   *
    * @param postRequestDto
    * @param post
    */
-  private void saveOpinions(PostRequestDto postRequestDto, Post post){
+  private void saveOpinions(PostRequestDto postRequestDto, Post post) {
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
     postOpinionRepository.saveAll(opinions);
   }
 
   /**
-   * 이미지 저장 -> 사용처 : createPost
+   * 이미지 저장 -> 사용처 : createPost, modifyPost
+   *
    * @param url
    * @param post
    */
-  private void saveImages(List<String> url, Post post){
+  private void saveImages(List<String> url, Post post) {
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
-      postImageRepository.save(postImage);
+      postImageRepository.saveAndFlush(postImage);
     }
   }
-
 
   @Override
   @Transactional
@@ -125,15 +144,19 @@ public class PostServiceImpl implements PostService {
     return post.getId();
   }
 
-
-
-  @Override // 여기서 필요한 작업은 -> 해당 DB단말고 파일 데이터도 지워야 함
+  @Override
   public void deletePostByAdmin(final Long postId) {
     Post post = getPostEntity(postId);
     postRepository.delete(post);
   }
 
 
+  /**
+   * ID를 이용한 Post 객체 찾기
+   *
+   * @param postId
+   * @return
+   */
   @Override
   public Post getPostEntity(final Long postId) {
     return postRepository.findById(postId).orElseThrow(
@@ -151,7 +174,6 @@ public class PostServiceImpl implements PostService {
   }
 
 
-
   @Override
   public List<String> getOldUrls(Long id) {
     return postImageRepository.getUrl(getPostEntity(id).getId());
@@ -167,20 +189,5 @@ public class PostServiceImpl implements PostService {
     return postOpinionRepository.findByPost(post);
   }
 
-  @Override
-  @Transactional
-  public Long modifyPostAndImage(Long postId, List<String> urls, PostRequestDto postRequestDto,
-      Account account) {
-    Post post = getPostEntity(postId);
-    post.isWriter(account);
-    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
-    postRepository.save(post);
-    postImageRepository.deleteAllByPostImage(post);
-    for (String url : urls) {
-      PostImage postImage = new PostImage(url, post);
-      postImageRepository.save(postImage);
-    }
-    return postId;
-  }
 
 }
