@@ -241,6 +241,20 @@ public class InitData implements ApplicationRunner {
       threadRepository.save(thread);
     }
 
+    Thread thread = new Thread("테스트용 데이터", "콘텐츠", account1, LocalDateTime.now().plusDays(1L),
+        category1);
+    threadRepository.save(thread);
+    ThreadOpinion to1 = new ThreadOpinion(thread, "한다.");
+    ThreadOpinion to2 = new ThreadOpinion(thread, "안한다.");
+    ThreadOpinion to3 = new ThreadOpinion(thread, "무관.");
+
+    threadOpinionRepository.saveAll(List.of(to1, to2, to3));
+
+    for (int i = 0; i < 123; i++) {
+      Comment comment1 = new Comment(account2, thread, "content", "한다.");
+      commentRepository.save(comment1);
+    }
+
   }
 
 }
