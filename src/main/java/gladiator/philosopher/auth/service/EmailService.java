@@ -60,7 +60,7 @@ public class EmailService {
       throw new AuthException(INVALID_CODE);
     }
     redisUtil.setDataExpire(WHITELIST_KEY_PREFIX + email, "true",
-        30L); // 1일 이메일 화이트리스트 유지
+        60L * 60 * 24); // 1일 이메일 화이트리스트 유지
     redisUtil.deleteData(VERIFY_KEY_PREFIX + email);
   }
 
