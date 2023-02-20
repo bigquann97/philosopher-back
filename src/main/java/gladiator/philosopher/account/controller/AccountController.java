@@ -2,6 +2,7 @@ package gladiator.philosopher.account.controller;
 
 import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
 import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
+import gladiator.philosopher.account.dto.UserInfoResponseDto;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
@@ -34,8 +35,8 @@ public class AccountController {
    */ // 기능 수정 할 것
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
-  public void getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
-    accountService.getMyInfo(accountDetails.getAccount());
+  public UserInfoResponseDto getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
+    return accountService.getMyInfo(accountDetails.getAccount());
   }
 
   /**

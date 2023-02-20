@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import java.util.List;
@@ -30,7 +31,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public Page<PostResponseDtoByQueryDsl> searchPost(PostSearchCondition condition, Pageable pageable) {
+  public MyPage<PostResponseDtoByQueryDsl> searchPost(PostSearchCondition condition, Pageable pageable) {
 
     final List<PostResponseDtoByQueryDsl> fetch = jpaQueryFactory.select
             (Projections.constructor(PostResponseDtoByQueryDsl.class,
@@ -62,7 +63,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             postCategoryEqual(condition.getCategoryId())
         );
 
-    return new PageImpl<>(fetch, pageable, count.fetchOne());
+    return new MyPage<>(new PageImpl<>(fetch, pageable, count.fetchOne()));
 
   }
 
