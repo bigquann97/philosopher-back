@@ -6,11 +6,20 @@ import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
+import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.category.service.CategoryService;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.ReportResponseDto;
+import gladiator.philosopher.report.dto.post.PostReportResponseDto;
 import gladiator.philosopher.report.service.ReportService;
+import gladiator.philosopher.thread.dto.ThreadSearchCond;
+import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
+import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,10 +30,11 @@ public class AdminServiceImpl implements AdminService {
   private final AccountService accountService;
   private final ThreadService threadService;
   private final AccountRepository accountRepository;
+  private final CategoryService categoryService;
 
   @Override
-  public List<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition) {
-    return accountRepository.searchAccount(condition);
+  public MyPage<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition, Pageable pageable) {
+    return accountRepository.searchAccount(condition, pageable);
   }
 
   @Override
@@ -37,10 +47,27 @@ public class AdminServiceImpl implements AdminService {
     accountService.UpdateAccountRole(account);
   }
 
+
   @Override
-  public List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2() {
-    return threadService.getThreadsV2();
+  public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(ThreadSearchCond of) {
+    return threadService.selectArchivedThreads(of);
   }
 
+  @Override
+  public List<PostReportResponseDto> getPostsReports() {
+    return reportService.getPostReports();
+  }
+
+  @Override
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchByThreadsAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+    return threadService.searchThreadByAdmin(cond, pageable);
+  }
+
+  @Override
+  public Long modifyThread(Long id, ModifyThreadRequestDto threadRequestDto) {
+    Category category = categoryService.getCategoryEntity(
+        threadRequestDto.getCategoryId());
+    return threadService.modifyThreadByAdmin(id,threadRequestDto, category);
+  }
 
 }

@@ -25,8 +25,15 @@ import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
 import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
+import gladiator.philosopher.report.entity.PostReport;
+import gladiator.philosopher.report.entity.ReportCategory;
+import gladiator.philosopher.report.repository.PostReportRepository;
+import gladiator.philosopher.report.repository.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
+import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
@@ -59,6 +66,9 @@ public class InitData implements ApplicationRunner {
   private final PostRecommendRepository postRecommendRepository;
   private final CommentRecommendRepository commentRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
+  private final PostReportRepository postReportRepository;
+  private final ThreadReportRepository threadReportRepository;
+  private final ThreadImageRepository threadImageRepository;
 
 
   @Override
@@ -66,7 +76,7 @@ public class InitData implements ApplicationRunner {
   public void run(ApplicationArguments args) throws Exception {
 
     // 회원부 ( 10명 )
-    Account account1 = new Account(1L, "kiang18@naver.com", passwordEncoder.encode("rlawlghks1"),
+    Account account1 = new Account(1L, "wlsdn7717@naver.com", passwordEncoder.encode("rlawlghks1"),
         20, "김지환", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
     accountRepository.save(account1);
     AccountInfo accountImage1 = new AccountInfo(account1, "jipang1.jpg");
@@ -164,11 +174,11 @@ public class InitData implements ApplicationRunner {
 
 
     // 포스트 이미지
-    PostImage postImage = new PostImage("jipang2.png", post1);
+    PostImage postImage = new PostImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/84e41f39-7dee-404f-b27e-2c1de1ce3f25image", post1);
     postImageRepository.save(postImage);
-    PostImage postImage2 = new PostImage("test2.png", post2);
+    PostImage postImage2 = new PostImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/ec6c575a-7c1b-4f93-9f5c-724137154e66image", post2);
     postImageRepository.save(postImage2);
-    PostImage postImage3 = new PostImage("test3.png", post2);
+    PostImage postImage3 = new PostImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/170e675d-e0de-49d4-9356-cd985cc4efa4image", post2);
     postImageRepository.save(postImage3);
     PostImage postImage4 = new PostImage("test4.png", post3);
     postImageRepository.save(postImage4);
@@ -221,6 +231,37 @@ public class InitData implements ApplicationRunner {
     List<String> opinion3 = Arrays.asList("틀렸다", "맞다");
     List<String> opinion4 = Arrays.asList("니 말이 다 맞음", "내 말이 다 맞음");
     List<String> opinion5 = Arrays.asList("아니랑께", "맞당께");
+
+    PostReport postReport = new PostReport("이사람 이상합니다,",account3, account6, ReportCategory.ABUSE, post8.getId());
+    postReportRepository.save(postReport);
+    PostReport postReport2 = new PostReport("커피땅콩",account5, account8, ReportCategory.ABUSE, post10.getId());
+    postReportRepository.save(postReport2);
+    PostReport postReport3 = new PostReport("알고리즘 책",account6, account9, ReportCategory.ABUSE, post6.getId());
+    postReportRepository.save(postReport3);
+    PostReport postReport4 = new PostReport("김영한",account7, account4, ReportCategory.ABUSE, post4.getId());
+    postReportRepository.save(postReport4);
+    PostReport postReport5 = new PostReport("인프런",account8, account1, ReportCategory.ADVERTISEMENT, post2.getId());
+    postReportRepository.save(postReport5);
+    PostReport postReport6 = new PostReport("프로그래밍",account9, account6, ReportCategory.ABUSE, post1.getId());
+    postReportRepository.save(postReport6);
+    PostReport postReport7 = new PostReport("신고합니다",account10, account3, ReportCategory.SEXUAL_HARASSMENT, post3.getId());
+    postReportRepository.save(postReport7);
+    PostReport postReport8 = new PostReport("내배캠 118",account8, account5, ReportCategory.ADVERTISEMENT, post5.getId());
+    postReportRepository.save(postReport8);
+    PostReport postReport9 = new PostReport("이펙티브 자바",account6, account3, ReportCategory.SEXUAL_HARASSMENT, post7.getId());
+    postReportRepository.save(postReport9);
+    PostReport postReport10 = new PostReport("우분투 리눅스",account4, account1, ReportCategory.ABUSE, post9.getId());
+    postReportRepository.save(postReport10);
+    PostReport postReport11 = new PostReport("갤럭시 이온",account2, account6, ReportCategory.ADVERTISEMENT, post8.getId());
+    postReportRepository.save(postReport11);
+    PostReport postReport12 = new PostReport("백북",account1, account4, ReportCategory.SEXUAL_HARASSMENT, post7.getId());
+    postReportRepository.save(postReport12);
+    PostReport postReport13 = new PostReport("빅맥",account3, account6, ReportCategory.ABUSE, post6.getId());
+    postReportRepository.save(postReport13);
+    PostReport postReport14 = new PostReport("감자탕",account5, account6, ReportCategory.SEXUAL_HARASSMENT, post5.getId());
+    postReportRepository.save(postReport14);
+    PostReport postReport15 = new PostReport("치즈",account10, account9, ReportCategory.ADVERTISEMENT, post4.getId());
+    postReportRepository.save(postReport15);
 
 
 
@@ -285,6 +326,8 @@ public class InitData implements ApplicationRunner {
     Thread thread2 = new Thread(post5.getTitle(), post5.getContent(), account5, LocalDateTime.now(),
         null);
     threadRepository.save(thread2);
+    ThreadImage threadImage = new ThreadImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/ec6c575a-7c1b-4f93-9f5c-724137154e66image", thread1);
+    threadImageRepository.save(threadImage);
 
     ThreadOpinion threadOpinion1 = new ThreadOpinion(thread1, "한다");
     ThreadOpinion threadOpinion2 = new ThreadOpinion(thread1, "안한다");
@@ -335,6 +378,24 @@ public class InitData implements ApplicationRunner {
       Comment comment1 = new Comment(account2, thread, "content", "한다.");
       commentRepository.save(comment1);
     }
+
+    // 김지환 테스트
+//    Thread thread11 = new Thread("백종원의 스타벅스","내용입니다", account2, LocalDateTime.now().plusDays(1L), category3, ThreadStatus.BLINDED);
+//    threadRepository.save(thread11);
+//    Thread thread12 = new Thread("김지환의 테스트 타이틀","답변입니다", account3, LocalDateTime.now().plusDays(1L), category4, ThreadStatus.DELETED);
+//    threadRepository.save(thread12);
+//    Thread threadc = new Thread("김정국의 테스트 ","김담", account5, LocalDateTime.now().plusDays(1L), category5, ThreadStatus.DELETED);
+//    threadRepository.save(threadc);
+//    Thread threadd = new Thread("김종국의 파파존스","지담", account4, LocalDateTime.now().plusDays(1L), category1, ThreadStatus.DELETED);
+//    threadRepository.save(threadd);
+//    Thread threade = new Thread("요로시쿠나레","건담", account6, LocalDateTime.now().plusDays(1L), category3, ThreadStatus.BLINDED);
+//    threadRepository.save(threade);
+//    Thread threadf = new Thread("쉰들러 리스트","담담", account8, LocalDateTime.now().plusDays(1L), category2, ThreadStatus.DELETED);
+//    threadRepository.save(threadf);
+//    Thread threadg = new Thread("메이플스토리","웅담", account7, LocalDateTime.now().plusDays(1L), category4, ThreadStatus.BLINDED);
+//    threadRepository.save(threadg);
+
+
 
   }
 

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +23,9 @@ public interface PostRecommendRepository extends JpaRepository<PostRecommend, Lo
   List<PostRecommend> findByPost(@NonNull Post post);
 
   @Transactional
-  @Modifying
-  @Query("delete from PostRecommend p where p.post = ?1")
-  void deleteAllByPostRecommend(Post post);
+  @Modifying(clearAutomatically = true)
+  @Query("delete from PostRecommend p where p.post.id =:id")
+  void deleteAllByPostRecommend(@Param("id")Long id);
+
 
 }

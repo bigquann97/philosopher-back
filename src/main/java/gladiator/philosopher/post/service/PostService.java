@@ -30,7 +30,9 @@ public interface PostService {
 
   // GET DATA
   Post getPostEntity(Long postId);
+
   void deletePostByAdmin(Long id);
+
   List<String> getOldUrls(Long id);
   List<PostImage> getPostImages(Post post);
   List<PostOpinion> getPostOpinions(Post post);

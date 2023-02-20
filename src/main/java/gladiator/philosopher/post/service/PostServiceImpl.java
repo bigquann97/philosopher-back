@@ -18,6 +18,7 @@ import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
+import gladiator.philosopher.report.repository.PostReportRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
+
+  private final PostReportRepository postReportRepository;
 
   private final PostRepository postRepository;
   private final PostImageRepository postImageRepository;
@@ -82,10 +85,11 @@ public class PostServiceImpl implements PostService {
   public void deletePost(final Long postId, final Account account) {
     Post post = getPostEntity(postId);
     post.isWriter(account);
-    postOpinionRepository.deleteAllByPostOpinion(post);
-    postImageRepository.deleteAllByPostImage(post);
-    postRecommendRepository.deleteAllByPostRecommend(post);
-    postRepository.delete(post);
+//    postOpinionRepository.deleteAllByPostOpinion(post.getId());
+//    postImageRepository.deleteAllByPostImage(post.getId());
+//    postRecommendRepository.deleteAllByPostRecommend(post.getId());
+    post.StatusChangeByAdmin();
+    postRepository.saveAndFlush(post);
   }
 
   @Override
@@ -101,7 +105,7 @@ public class PostServiceImpl implements PostService {
       return post.getId();
     } else {
       saveImages(urls, post);
-      postImageRepository.deleteAllByPostImage(post);
+      postImageRepository.deleteAllByPostImage(post.getId());
       return post.getId();
     }
   }
@@ -127,7 +131,7 @@ public class PostServiceImpl implements PostService {
   private void saveImages(List<String> url, Post post) {
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
-      postImageRepository.saveAndFlush(postImage);
+      postImageRepository.save(postImage);
     }
   }
 
@@ -145,11 +149,20 @@ public class PostServiceImpl implements PostService {
     return post.getId();
   }
 
+  /**
+   * 게시글 삭제 ( 상태 변경 )- 사용처 : 어드민
+   * @param postId
+   */
   @Override
+  @Transactional
   public void deletePostByAdmin(final Long postId) {
-    Post post = getPostEntity(postId);
-    postRepository.delete(post);
+    final Post post = postRepository.findById(postId).orElseThrow(
+        () -> new CustomException(NOT_FOUND_POST));
+    post.StatusChangeByAdmin();
+
+    postRepository.saveAndFlush(post);
   }
+
 
 
   /**
@@ -165,6 +178,12 @@ public class PostServiceImpl implements PostService {
     );
   }
 
+  /**
+   * 게시글 수정 - 사용처 : 어드민
+   * @param postId
+   * @param postRequestDto
+   * @return
+   */
   @Override
   @Transactional
   public Long modifyPostByAdmin(final Long postId, final PostRequestDto postRequestDto) {

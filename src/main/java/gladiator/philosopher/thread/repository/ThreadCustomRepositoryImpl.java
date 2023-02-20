@@ -9,8 +9,11 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
+import gladiator.philosopher.admin.dto.QThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.QCategory;
 import gladiator.philosopher.comment.entity.QComment;
 import gladiator.philosopher.common.dto.MyPage;
@@ -18,6 +21,7 @@ import gladiator.philosopher.recommend.entity.QThreadRecommend;
 import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
+import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.QThreadImage;
@@ -25,6 +29,7 @@ import gladiator.philosopher.thread.entity.QThreadOpinion;
 import gladiator.philosopher.thread.entity.Sort;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadLocation;
+import gladiator.philosopher.thread.entity.ThreadStatus;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -243,7 +248,44 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   }
 
 
+  @Override
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> selectThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+
+    final List<ThreadsSimpleResponseDtoByAdmin> fetch = jpaQueryFactory.select(
+            new QThreadsSimpleResponseDtoByAdmin(thread.id,
+                thread.title,
+                thread.content,
+                category.name,
+                JPAExpressions
+                    .select(Wildcard.count)
+                    .from(threadRecommend)
+                    .where(threadRecommend.thread.id.eq(thread.id)),
+                account.nickname,
+                thread.location))
+        .from(thread)
+        .leftJoin(thread.account, account)
+        .leftJoin(thread.category, category)
+        .where(
+            threadStatusCheck(cond.getThreadStatus())
+        )
+        .orderBy(thread.id.desc())
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+
+    final JPAQuery<Long> countThread = jpaQueryFactory.select(thread.count()).from(thread)
+        .where(
+            threadStatusCheck(cond.getThreadStatus())
+        );
+    return new MyPage<>(new PageImpl<>(fetch, pageable, countThread.fetchOne()));
+  }
+
+  private BooleanExpression threadStatusCheck(String threadStatus){
+    return hasText(threadStatus) ? thread.status.eq(ThreadStatus.valueOf(threadStatus)) : null;
+  }
+
 }
+
 
 // ===============================================
 

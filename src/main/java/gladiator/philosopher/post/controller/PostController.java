@@ -102,9 +102,9 @@ public class PostController {
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-    List<String> oldUrls = postService.getOldUrls(postId);
+//    List<String> oldUrls = postService.getOldUrls(postId);
     postService.deletePost(postId, accountDetails.getAccount());
-    s3Uploader.DeleteS3Files(oldUrls, dirName);
+//    s3Uploader.DeleteS3Files(oldUrls, dirName);
   }
 
 

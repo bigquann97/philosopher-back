@@ -5,6 +5,7 @@ import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
+import gladiator.philosopher.report.dto.post.PostReportResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface ReportService {
   
   List<ReportResponseDto> getReports();
 
+  List<PostReportResponseDto> getPostReports();
 }

@@ -4,9 +4,9 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.enums.Gender;
 import gladiator.philosopher.common.enums.UserRole;
 import gladiator.philosopher.common.enums.UserStatus;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+
+
 public class AccountFactory {
 
   public static Account createUserAccount1() {

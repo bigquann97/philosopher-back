@@ -105,7 +105,8 @@ public class CommentServiceImpl implements CommentService {
   @Transactional
   public void deleteCommentByAdmin(final Long id) {
     Comment comment = getCommentEntity(id);
-    commentRepository.delete(comment);
+    comment.changeByCommentStatus();
+    commentRepository.saveAndFlush(comment);
   }
 
   private void checkIfAccountIsWriter(final Comment comment, final Account account) {
