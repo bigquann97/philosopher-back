@@ -2,6 +2,7 @@ package gladiator.philosopher.thread.dto;
 
 import gladiator.philosopher.common.util.TimeAdapter;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,17 +18,20 @@ public class ThreadSimpleResponseDto {
   private Long id;
   private String title;
   private String category;
+  private String status;
   private Long commentCount;
   private Long recommendCount;
   private String nickname;
   private String createdDate;
   private String endDate;
 
-  public ThreadSimpleResponseDto(Long id, String title, String name, Long commentCount,
-      Long recommendCount, String nickname, LocalDateTime createdDate, LocalDateTime endDate) {
+  public ThreadSimpleResponseDto(Long id, String title, String name, ThreadStatus status,
+      Long commentCount, Long recommendCount, String nickname, LocalDateTime createdDate,
+      LocalDateTime endDate) {
     this.id = id;
     this.title = title;
     this.category = name;
+    this.status = status.name();
     this.commentCount = commentCount;
     this.recommendCount = recommendCount;
     this.nickname = nickname;
@@ -40,6 +44,7 @@ public class ThreadSimpleResponseDto {
     this.id = thread.getId();
     this.title = thread.getTitle();
     this.category = thread.getCategory().getName();
+    this.status = thread.getStatus().name();
     this.commentCount = (long) thread.getRecommends().size();
     this.recommendCount = (long) thread.getRecommends().size();
     this.nickname = thread.getAccount().getNickname();
