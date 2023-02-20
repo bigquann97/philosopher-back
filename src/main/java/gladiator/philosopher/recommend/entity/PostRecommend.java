@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class PostRecommend extends Recommend {
   @JoinColumn(name = "post_id")
   private Post post;
 
+  @Builder
   public PostRecommend(Account account, Post post) {
     this.account = account;
     this.post = post;

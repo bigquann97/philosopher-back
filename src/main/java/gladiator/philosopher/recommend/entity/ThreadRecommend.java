@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class ThreadRecommend extends Recommend {
   @JoinColumn(name = "thread_id")
   private Thread thread;
 
+  @Builder
   public ThreadRecommend(Account account, Thread thread) {
     this.account = account;
     this.thread = thread;
