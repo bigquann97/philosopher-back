@@ -4,6 +4,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.post.dto.PostModifyRequestDto;
 import gladiator.philosopher.post.dto.PostRequestDto;
@@ -69,7 +70,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<PostResponseDtoByQueryDsl> searchPostByCondition(
+  public MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(
       final PostSearchCondition condition,
       final Pageable pageable
   ) {
