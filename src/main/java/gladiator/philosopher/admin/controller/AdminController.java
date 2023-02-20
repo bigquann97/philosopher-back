@@ -85,11 +85,6 @@ public class AdminController {
 
 
   /**
-   * 댓글 삭제
-   */
-
-
-  /**
    * 신고 목록 조회 ( 페이징 처리 해야함)
    *
    * @return
@@ -98,6 +93,12 @@ public class AdminController {
   public List<ReportResponseDto> getReports() {
     return adminService.getReports();
   }
+
+  // 신고목록 관련해서 각자 신고 목록 조회를 체크할 수 있도록 해야한다 -> ( 3개 )
+
+//  @GetMapping("/reports/posts")
+//
+
 
   /**
    * 댓글 수정

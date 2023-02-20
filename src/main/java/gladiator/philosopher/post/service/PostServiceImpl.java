@@ -127,7 +127,7 @@ public class PostServiceImpl implements PostService {
   private void saveImages(List<String> url, Post post) {
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
-      postImageRepository.saveAndFlush(postImage);
+      postImageRepository.save(postImage);
     }
   }
 

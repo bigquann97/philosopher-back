@@ -164,11 +164,11 @@ public class InitData implements ApplicationRunner {
 
 
     // 포스트 이미지
-    PostImage postImage = new PostImage("jipang2.png", post1);
+    PostImage postImage = new PostImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/84e41f39-7dee-404f-b27e-2c1de1ce3f25image", post1);
     postImageRepository.save(postImage);
-    PostImage postImage2 = new PostImage("test2.png", post2);
+    PostImage postImage2 = new PostImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/ec6c575a-7c1b-4f93-9f5c-724137154e66image", post2);
     postImageRepository.save(postImage2);
-    PostImage postImage3 = new PostImage("test3.png", post2);
+    PostImage postImage3 = new PostImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/170e675d-e0de-49d4-9356-cd985cc4efa4image", post2);
     postImageRepository.save(postImage3);
     PostImage postImage4 = new PostImage("test4.png", post3);
     postImageRepository.save(postImage4);
