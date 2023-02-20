@@ -76,5 +76,4 @@ public class CommentResponseDto {
   public static CommentResponseDto of(Comment comment, Long recommendCount) {
     return CommentResponseDto.builder().comment(comment).recommendCount(recommendCount).build();
   }
-
 }
