@@ -43,8 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   @Transactional
   public void modifyCategory(final Long id, final CategoryRequestDto dto) {
-    Category category = categoryRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException(NOT_FOUND_CATEGORY));
+    Category category = getCategoryEntity(id);
     Category modifiedCategory = category.modifyName(dto.getName());
     categoryRepository.save(modifiedCategory);
   }
