@@ -2,6 +2,7 @@ package gladiator.philosopher.post.controller;
 
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostModifyRequestDto;
@@ -83,7 +84,7 @@ public class PostController {
    * @return
    */
   @GetMapping("/")
-  public Page<PostResponseDtoByQueryDsl> searchPost(
+  public MyPage<PostResponseDtoByQueryDsl> searchPost(
       final PostSearchCondition condition,
       final Pageable pageable) {
     return postService.searchPostByCondition(condition, pageable);
