@@ -5,6 +5,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUT
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_OPINION;
 
+import gladiator.philosopher.account.dto.AccountCommentDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
@@ -14,12 +15,17 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
   private final CommentRepository commentRepository;
   private final MentionService mentionService;
   private final ThreadService threadService;
+  private final PostRepository postRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -124,6 +131,18 @@ public class CommentServiceImpl implements CommentService {
     if (!threadHasOpinion) {
       throw new InvalidAccessException(NOT_FOUND_OPINION);
     }
+  }
+
+  @Override
+  @Transactional
+  public List<AccountCommentDto> findMyComments(Account account, int pageNum) {
+    Pageable pageable = PageRequest.of(pageNum - 1, 10,
+        Sort.by("createdDate").descending());
+    Page<Comment> commentPage = commentRepository.findCommentByAccount_Id(account.getId(),
+        pageable);
+    List<AccountCommentDto> productResponseList = commentPage.getContent().stream()
+        .map(AccountCommentDto::new).collect(Collectors.toList());
+    return productResponseList;
   }
 
 }

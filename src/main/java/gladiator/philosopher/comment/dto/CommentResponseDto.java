@@ -63,6 +63,21 @@ public class CommentResponseDto {
     this.recommendCount = recommendCount;
   }
 
+  @Builder
+  public CommentResponseDto(Comment comment) {
+    this.commentId = comment.getId();
+    this.opinion = comment.getOpinion();
+    this.content = comment.getContent();
+    this.mentioningCommentIds = comment.getMentionings().stream()
+        .map(x -> x.getMentionedComment().getId()).collect(
+            Collectors.toList());
+    this.mentionedCommentIds = comment.getMentioneds().stream()
+        .map(x -> x.getMentioningComment().getId()).collect(
+            Collectors.toList());
+    this.createDate = TimeAdapter.formatToString(comment.getCreatedDate());
+    this.status = comment.getStatus().name();
+  }
+
   public static CommentResponseDto of(Comment comment, Long recommendCount) {
     return CommentResponseDto.builder().comment(comment).recommendCount(recommendCount).build();
   }
