@@ -33,6 +33,7 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
@@ -67,6 +68,7 @@ public class InitData implements ApplicationRunner {
   private final ThreadRecommendRepository threadRecommendRepository;
   private final PostReportRepository postReportRepository;
   private final ThreadReportRepository threadReportRepository;
+  private final ThreadImageRepository threadImageRepository;
 
 
   @Override
@@ -325,6 +327,7 @@ public class InitData implements ApplicationRunner {
         null);
     threadRepository.save(thread2);
     ThreadImage threadImage = new ThreadImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/ec6c575a-7c1b-4f93-9f5c-724137154e66image", thread1);
+    threadImageRepository.save(threadImage);
 
     ThreadOpinion threadOpinion1 = new ThreadOpinion(thread1, "한다");
     ThreadOpinion threadOpinion2 = new ThreadOpinion(thread1, "안한다");
