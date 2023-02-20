@@ -52,7 +52,7 @@ public class CommentResponseDto {
     this.nickname = comment.getAccount().getNickname();
     this.opinion = comment.getOpinion();
     this.content = comment.getContent();
-    this.mentioningComments = comment.getMentionings().stream()
+    this.mentioningCommentIds = comment.getMentionings().stream()
         .map(x -> {
           Comment c = x.getMentionedComment();
           Long id = c.getId();
@@ -60,7 +60,7 @@ public class CommentResponseDto {
           return MentionResponseDto.of(id, content);
         })
         .collect(Collectors.toList());
-    this.mentionedComments = comment.getMentioneds().stream()
+    this.mentionedCommentIds = comment.getMentioneds().stream()
         .map(x -> {
           Comment c = x.getMentioningComment();
           Long id = c.getId();

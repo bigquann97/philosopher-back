@@ -10,6 +10,9 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.dto.post.PostReportResponseDto;
 import gladiator.philosopher.report.service.ReportService;
+import gladiator.philosopher.thread.dto.ThreadSearchCond;
+import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
+import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,13 +43,19 @@ public class AdminServiceImpl implements AdminService {
     accountService.UpdateAccountRole(account);
   }
 
+
   @Override
-  public List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2() {
-    return threadService.getThreadsV2();
+  public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(ThreadSearchCond of) {
+    return threadService.selectArchivedThreads(of);
   }
 
   @Override
   public List<PostReportResponseDto> getPostsReports() {
     return reportService.getPostReports();
+  }
+
+  @Override
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchByThreadsAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+    return threadService.searchThreadByAdmin(cond, pageable);
   }
 }

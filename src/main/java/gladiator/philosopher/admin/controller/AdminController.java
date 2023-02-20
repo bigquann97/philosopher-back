@@ -12,6 +12,11 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.dto.post.PostReportResponseDto;
+import gladiator.philosopher.thread.dto.ThreadSearchCond;
+import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
+import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
+import gladiator.philosopher.thread.entity.Sort;
+import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +42,7 @@ public class AdminController {
   private final PostService postService;
   private final AccountService accountService;
   private final CommentService commentService;
+  private final ThreadRepository threadRepository;
 
   /**
    * 회원 정보 가지고 오기
@@ -61,7 +68,7 @@ public class AdminController {
   }
 
   /**
-   * 게시글 삭제
+   * 게시글 삭제 -> 상태만 DELETE로 바꿈
    *
    * @param id
    */
@@ -117,7 +124,7 @@ public class AdminController {
   }
 
   /**
-   * 댓글 삭제
+   * 댓글 삭제 -> 댓글 상태만 DELETE로 바꿈
    */
   @DeleteMapping("comment/{id}")
   public void deleteCommentByAdmin(final @PathVariable("id") Long id) {
@@ -132,14 +139,32 @@ public class AdminController {
   /**
    * 쓰레드 목록 조회
    */
-  @GetMapping("/threads")
-  public ResponseEntity<List<ThreadsSimpleResponseDtoByAdmin>> getThreadsV2() {
-    return ResponseEntity.status(200).body(adminService.getThreadsV2());
-  }
 
   /**
-   * 아카이브 목록 조회
+   * 아카이브 된 쓰레드 조회 by 관호님
+   * @param
+   * @return
    */
+  @GetMapping("/thread/archived")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(
+      final @RequestParam(required = false) Long category,
+      final @RequestParam(required = false) Integer page,
+      final @RequestParam(required = false) Sort sort,
+      final @RequestParam(required = false) String word
+  ){
+    return adminService.selectArchivedThreads(ThreadSearchCond.of(page, sort, word, category));
+  }
+
+
+  @GetMapping("thread/test")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreads(
+      final ThreadSearchCondByAdmin cond,
+      final Pageable pageable){
+    return adminService.searchByThreadsAdmin(cond,pageable);
+  }
+
 
 
 }

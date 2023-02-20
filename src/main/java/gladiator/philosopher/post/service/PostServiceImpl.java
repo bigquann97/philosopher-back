@@ -85,10 +85,11 @@ public class PostServiceImpl implements PostService {
   public void deletePost(final Long postId, final Account account) {
     Post post = getPostEntity(postId);
     post.isWriter(account);
-    postOpinionRepository.deleteAllByPostOpinion(post.getId());
-    postImageRepository.deleteAllByPostImage(post.getId());
-    postRecommendRepository.deleteAllByPostRecommend(post.getId());
-    postRepository.delete(post);
+//    postOpinionRepository.deleteAllByPostOpinion(post.getId());
+//    postImageRepository.deleteAllByPostImage(post.getId());
+//    postRecommendRepository.deleteAllByPostRecommend(post.getId());
+    post.StatusChangeByAdmin();
+    postRepository.saveAndFlush(post);
   }
 
   @Override
@@ -149,7 +150,7 @@ public class PostServiceImpl implements PostService {
   }
 
   /**
-   * 게시글 삭제 - 사용처 : 어드민
+   * 게시글 삭제 ( 상태 변경 )- 사용처 : 어드민
    * @param postId
    */
   @Override
@@ -157,16 +158,9 @@ public class PostServiceImpl implements PostService {
   public void deletePostByAdmin(final Long postId) {
     final Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(NOT_FOUND_POST));
-    log.info(" 데이터 지우기 시작 - 추천부터 지웁니다.");
-    postRecommendRepository.deleteAllByPostRecommend(post.getId());
-    log.info("  이미지 지웁니다 -> DB 아직 안지웠습니다 .");
-    postImageRepository.deleteAllByPostImage(post.getId());
-    log.info("  의견 다 지웁니다");
-    postOpinionRepository.deleteAllByPostOpinion(post.getId());
-    log.info("  신고 목록 다 지웁니다 ( 해당 게시물 )");
-    postReportRepository.deleteByPostId(post.getId());
+    post.StatusChangeByAdmin();
 
-    postRepository.delete(post);
+    postRepository.saveAndFlush(post);
   }
 
 

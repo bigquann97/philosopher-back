@@ -99,6 +99,9 @@ public class Post extends BaseEntity {
   public boolean isBlinded() {
     return this.status == PostStatus.BLINDED;
   }
+  public void StatusChangeByAdmin(){
+    this.status = PostStatus.DELETED;
+  }
 
 
 }
