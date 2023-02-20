@@ -66,7 +66,7 @@ public class InitData implements ApplicationRunner {
   public void run(ApplicationArguments args) throws Exception {
 
     // 회원부 ( 10명 )
-    Account account1 = new Account(1L, "kiang18@naver.com", passwordEncoder.encode("rlawlghks1"),
+    Account account1 = new Account(1L, "wlsdn7717@naver.com", passwordEncoder.encode("rlawlghks1"),
         20, "김지환", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
     accountRepository.save(account1);
     AccountInfo accountImage1 = new AccountInfo(account1, "jipang1.jpg");

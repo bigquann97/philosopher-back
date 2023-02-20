@@ -6,11 +6,13 @@ import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.service.ReportService;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +25,8 @@ public class AdminServiceImpl implements AdminService {
   private final AccountRepository accountRepository;
 
   @Override
-  public List<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition) {
-    return accountRepository.searchAccount(condition);
+  public MyPage<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition, Pageable pageable) {
+    return accountRepository.searchAccount(condition, pageable);
   }
 
   @Override

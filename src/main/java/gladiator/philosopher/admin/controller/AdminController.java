@@ -7,11 +7,14 @@ import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.service.CommentService;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,8 +37,8 @@ public class AdminController {
   private final CommentService commentService;
 
   @GetMapping("/accountsV2")
-  public List<UserInfoByAdminResponseDto> searchAccounts(final AccountSearchCondition condition) {
-    return adminService.getAccounts(condition);
+  public MyPage<UserInfoByAdminResponseDto> searchAccounts(final AccountSearchCondition condition, Pageable pageable) {
+    return adminService.getAccounts(condition, pageable);
   }
 
   /**
@@ -44,6 +48,7 @@ public class AdminController {
    */
   @PatchMapping("/modify/account/role/{id}")
   @PreAuthorize("hasRole('ROLE_MASTER')")
+  @ResponseStatus(HttpStatus.CREATED)
   public void modifyUserRole(final @PathVariable("id") Long id) {
     adminService.modifyUserRole(accountService.getAccount(id));
   }
@@ -104,7 +109,7 @@ public class AdminController {
   /**
    * 쓰레드 목록 조회
    */
-  @GetMapping("/threadsV2")
+  @GetMapping("/threads")
   public ResponseEntity<List<ThreadsSimpleResponseDtoByAdmin>> getThreadsV2() {
     return ResponseEntity.status(200).body(adminService.getThreadsV2());
   }

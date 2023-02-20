@@ -4,8 +4,10 @@ import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.ReportResponseDto;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface AdminService {
 
@@ -14,7 +16,7 @@ public interface AdminService {
 
   List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2();
 
-  List<UserInfoByAdminResponseDto> getAccounts(AccountSearchCondition condition);
+  MyPage<UserInfoByAdminResponseDto> getAccounts(AccountSearchCondition condition, Pageable pageable);
 
 
   // 모든 게시글 조회
