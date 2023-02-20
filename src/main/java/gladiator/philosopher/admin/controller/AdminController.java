@@ -11,6 +11,7 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
+import gladiator.philosopher.report.dto.post.PostReportResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -96,8 +97,11 @@ public class AdminController {
 
   // 신고목록 관련해서 각자 신고 목록 조회를 체크할 수 있도록 해야한다 -> ( 3개 )
 
-//  @GetMapping("/reports/posts")
-//
+  @GetMapping("/reports/posts")
+  public List<PostReportResponseDto> getPostsReports(){
+    return adminService.getPostsReports();
+  }
+
 
 
   /**

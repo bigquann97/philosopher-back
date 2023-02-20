@@ -25,6 +25,9 @@ import gladiator.philosopher.recommend.entity.ThreadRecommend;
 import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
 import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
+import gladiator.philosopher.report.entity.PostReport;
+import gladiator.philosopher.report.entity.ReportCategory;
+import gladiator.philosopher.report.repository.PostReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
@@ -59,6 +62,7 @@ public class InitData implements ApplicationRunner {
   private final PostRecommendRepository postRecommendRepository;
   private final CommentRecommendRepository commentRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
+  private final PostReportRepository postReportRepository;
 
 
   @Override
@@ -221,6 +225,37 @@ public class InitData implements ApplicationRunner {
     List<String> opinion3 = Arrays.asList("틀렸다", "맞다");
     List<String> opinion4 = Arrays.asList("니 말이 다 맞음", "내 말이 다 맞음");
     List<String> opinion5 = Arrays.asList("아니랑께", "맞당께");
+
+    PostReport postReport = new PostReport("이사람 이상합니다,",account3, account6, ReportCategory.ABUSE, post8.getId());
+    postReportRepository.save(postReport);
+    PostReport postReport2 = new PostReport("커피땅콩",account5, account8, ReportCategory.ABUSE, post10.getId());
+    postReportRepository.save(postReport2);
+    PostReport postReport3 = new PostReport("알고리즘 책",account6, account9, ReportCategory.ABUSE, post6.getId());
+    postReportRepository.save(postReport3);
+    PostReport postReport4 = new PostReport("김영한",account7, account4, ReportCategory.ABUSE, post4.getId());
+    postReportRepository.save(postReport4);
+    PostReport postReport5 = new PostReport("인프런",account8, account1, ReportCategory.ADVERTISEMENT, post2.getId());
+    postReportRepository.save(postReport5);
+    PostReport postReport6 = new PostReport("프로그래밍",account9, account6, ReportCategory.ABUSE, post1.getId());
+    postReportRepository.save(postReport6);
+    PostReport postReport7 = new PostReport("신고합니다",account10, account3, ReportCategory.SEXUAL_HARASSMENT, post3.getId());
+    postReportRepository.save(postReport7);
+    PostReport postReport8 = new PostReport("내배캠 118",account8, account5, ReportCategory.ADVERTISEMENT, post5.getId());
+    postReportRepository.save(postReport8);
+    PostReport postReport9 = new PostReport("이펙티브 자바",account6, account3, ReportCategory.SEXUAL_HARASSMENT, post7.getId());
+    postReportRepository.save(postReport9);
+    PostReport postReport10 = new PostReport("우분투 리눅스",account4, account1, ReportCategory.ABUSE, post9.getId());
+    postReportRepository.save(postReport10);
+    PostReport postReport11 = new PostReport("갤럭시 이온",account2, account6, ReportCategory.ADVERTISEMENT, post8.getId());
+    postReportRepository.save(postReport11);
+    PostReport postReport12 = new PostReport("백북",account1, account4, ReportCategory.SEXUAL_HARASSMENT, post7.getId());
+    postReportRepository.save(postReport12);
+    PostReport postReport13 = new PostReport("빅맥",account3, account6, ReportCategory.ABUSE, post6.getId());
+    postReportRepository.save(postReport13);
+    PostReport postReport14 = new PostReport("감자탕",account5, account6, ReportCategory.SEXUAL_HARASSMENT, post5.getId());
+    postReportRepository.save(postReport14);
+    PostReport postReport15 = new PostReport("치즈",account10, account9, ReportCategory.ADVERTISEMENT, post4.getId());
+    postReportRepository.save(postReport15);
 
 
 

@@ -6,6 +6,7 @@ import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.ReportResponseDto;
+import gladiator.philosopher.report.dto.post.PostReportResponseDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
@@ -18,6 +19,7 @@ public interface AdminService {
 
   MyPage<UserInfoByAdminResponseDto> getAccounts(AccountSearchCondition condition, Pageable pageable);
 
+  List<PostReportResponseDto> getPostsReports();
 
   // 모든 게시글 조회
 
