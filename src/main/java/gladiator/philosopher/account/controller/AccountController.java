@@ -86,6 +86,5 @@ public class AccountController {
       s3Uploader.newDeleteS3(oldUrl,dirName);
   }
 
-
 }
 

@@ -36,6 +36,12 @@ public class AdminController {
   private final AccountService accountService;
   private final CommentService commentService;
 
+  /**
+   * 회원 정보 가지고 오기
+   * @param condition
+   * @param pageable
+   * @return
+   */
   @GetMapping("/accountsV2")
   public MyPage<UserInfoByAdminResponseDto> searchAccounts(final AccountSearchCondition condition, Pageable pageable) {
     return adminService.getAccounts(condition, pageable);
@@ -77,8 +83,14 @@ public class AdminController {
     postService.modifyPostByAdmin(id, postRequestDto);
   }
 
+
   /**
-   * 신고 목록 조회
+   * 댓글 삭제
+   */
+
+
+  /**
+   * 신고 목록 조회 ( 페이징 처리 해야함)
    *
    * @return
    */
@@ -105,6 +117,10 @@ public class AdminController {
   public void deleteCommentByAdmin(final @PathVariable("id") Long id) {
     commentService.deleteCommentByAdmin(id);
   }
+
+  /**
+   * 쓰레드 수정, 삭제
+   */
 
   /**
    * 쓰레드 목록 조회
