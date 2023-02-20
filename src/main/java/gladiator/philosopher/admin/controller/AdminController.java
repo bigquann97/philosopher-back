@@ -32,18 +32,8 @@ public class AdminController {
   private final AccountService accountService;
   private final CommentService commentService;
 
-  /**
-   * 유저 목록 조회
-   *
-   * @return
-   */
-  @GetMapping("/accounts")
-  public List<UserInfoByAdminResponseDto> getAccounts() {
-    return adminService.getUsersInfoList();
-  }
-
   @GetMapping("/accountsV2")
-  public List<UserInfoByAdminResponseDto> getAccountsV2(final AccountSearchCondition condition) {
+  public List<UserInfoByAdminResponseDto> searchAccounts(final AccountSearchCondition condition) {
     return adminService.getAccounts(condition);
   }
 
