@@ -95,14 +95,15 @@ public class AdminController {
     return adminService.getReports();
   }
 
-  // 신고목록 관련해서 각자 신고 목록 조회를 체크할 수 있도록 해야한다 -> ( 3개 )
-
+  /**
+   * 신고 목록 조회 (Post)
+   * @return
+   */
+  // 신고목록 관련해서 각자 신고 목록 조회를 체크할 수 있도록 해야한다 -> ( 3개 ) -> 이 부분에 관해서 querydsl을 적용하는것이 맞을까?
   @GetMapping("/reports/posts")
   public List<PostReportResponseDto> getPostsReports(){
     return adminService.getPostsReports();
   }
-
-
 
   /**
    * 댓글 수정
@@ -126,6 +127,7 @@ public class AdminController {
   /**
    * 쓰레드 수정, 삭제
    */
+
 
   /**
    * 쓰레드 목록 조회

@@ -30,9 +30,9 @@ public class CommentResponseDto {
 
   private Long recommendCount;
 
-  private List<MentionResponseDto> mentioningComments;
+  private List<MentionResponseDto> mentioningCommentIds;
 
-  private List<MentionResponseDto> mentionedComments;
+  private List<MentionResponseDto> mentionedCommentIds;
 
   public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
       LocalDateTime createDate, CommentStatus status, Long recommendCount,
