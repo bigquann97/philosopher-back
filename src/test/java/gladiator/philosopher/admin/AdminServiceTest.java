@@ -1,4 +1,4 @@
-package gladiator.philosopher.admin.service;
+package gladiator.philosopher.admin;
 
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.post.repository.PostRepository;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class AdminServiceImplTest {
+class AdminServiceTest {
 
   @Autowired
   AccountRepository accountRepository;
