@@ -2,6 +2,7 @@ package gladiator.philosopher.post.service;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.dto.PostModifyRequestDto;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
@@ -19,7 +20,7 @@ public interface PostService {
   // CRUD
   Long createPost(List<String> urls, PostRequestDto postRequestDto, Account accountDetails, Category category); // 게시물 작성 ( 완료 - C)
   PostResponseDto getPost(Long postId); // 게시물 단건 조회 ( 완료 - R )
-  Page<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable); // 게시물 조건조회 ( 완료 - R) - 아직 관호님꺼 적용 x
+  MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable); // 게시물 조건조회 ( 완료 - R) - 아직 관호님꺼 적용 x
   void deletePost(Long postId, Account accountDetails); // 게시물 삭제 ( 완료 - D)
   Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto); // 어드민 - 게시글 - 수정 ( )
 

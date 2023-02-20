@@ -68,7 +68,6 @@ public class AuthServiceImpl implements AuthService {
     AccountInfo accountInfo = new AccountInfo(account, imageUrl);
     accountInfoRepository.save(accountInfo);
 
-    redisUtil.deleteData(EmailService.WHITELIST_KEY_PREFIX + signUpRequestDto.getEmail());
   }
 
   /**
@@ -221,7 +220,7 @@ public class AuthServiceImpl implements AuthService {
 
   private void checkIfEmailVerified(String email) {
     try {
-      if (!redisUtil.getData(EmailService.WHITELIST_KEY_PREFIX + email).equals("true")) {
+      if (!redisUtil.hasKey(EmailService.WHITELIST_KEY_PREFIX + email)) {
         throw new AuthException(NOT_VERIFIED_EMAIL);
       }
     } catch (NullPointerException e) {

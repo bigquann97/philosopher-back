@@ -1,9 +1,9 @@
-package gladiator.philosopher.mention.service;
+package gladiator.philosopher.mention;
 
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
-class MentionServiceImplTest {
+class MentionServiceTest {
 
   @Test
   void test() {

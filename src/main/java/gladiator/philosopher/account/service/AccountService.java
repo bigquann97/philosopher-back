@@ -28,4 +28,5 @@ public interface AccountService {
   String getOldUrl(Account account);
 
   void AdminCheck(); // 어드민 체크 -> 해당 로직 통과하게된다면 어드민
+
 }
