@@ -30,9 +30,9 @@ public class CommentResponseDto {
 
   private Long recommendCount;
 
-  private List<Long> mentioningCommentIds;
+  private List<MentionResponseDto> mentioningComments;
 
-  private List<Long> mentionedCommentIds;
+  private List<MentionResponseDto> mentionedComments;
 
   public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
       LocalDateTime createDate, CommentStatus status, Long recommendCount,
@@ -52,6 +52,32 @@ public class CommentResponseDto {
     this.nickname = comment.getAccount().getNickname();
     this.opinion = comment.getOpinion();
     this.content = comment.getContent();
+    this.mentioningComments = comment.getMentionings().stream()
+        .map(x -> {
+          Comment c = x.getMentionedComment();
+          Long id = c.getId();
+          String content = c.getContent();
+          return MentionResponseDto.of(id, content);
+        })
+        .collect(Collectors.toList());
+    this.mentionedComments = comment.getMentioneds().stream()
+        .map(x -> {
+          Comment c = x.getMentioningComment();
+          Long id = c.getId();
+          String content = c.getContent();
+          return MentionResponseDto.of(id, content);
+        })
+        .collect(Collectors.toList());
+    this.createDate = TimeAdapter.formatToString(comment.getCreatedDate());
+    this.status = comment.getStatus().name();
+    this.recommendCount = recommendCount;
+  }
+
+  @Builder
+  public CommentResponseDto(Comment comment) {
+    this.commentId = comment.getId();
+    this.opinion = comment.getOpinion();
+    this.content = comment.getContent();
     this.mentioningCommentIds = comment.getMentionings().stream()
         .map(x -> x.getMentionedComment().getId()).collect(
             Collectors.toList());
@@ -60,7 +86,6 @@ public class CommentResponseDto {
             Collectors.toList());
     this.createDate = TimeAdapter.formatToString(comment.getCreatedDate());
     this.status = comment.getStatus().name();
-    this.recommendCount = recommendCount;
   }
 
   public static CommentResponseDto of(Comment comment, Long recommendCount) {

@@ -119,14 +119,20 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
             thread.id,
             thread.title,
             category.name,
-            comment.count(),
-            threadRecommend.count(),
+            thread.status,
+            JPAExpressions
+                .select(Wildcard.count)
+                .from(comment)
+                .where(comment.thread.id.eq(thread.id)),
+            JPAExpressions
+                .select(Wildcard.count)
+                .from(threadRecommend)
+                .where(threadRecommend.thread.id.eq(thread.id)),
             account.nickname,
             thread.createdDate,
             thread.endDate
         )
         .from(thread)
-        .leftJoin(thread.comments, comment)
         .leftJoin(thread.recommends, threadRecommend)
         .leftJoin(thread.account, account)
         .leftJoin(thread.category, category)
@@ -147,8 +153,9 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
             tuple.get(thread.id),
             tuple.get(thread.title),
             tuple.get(category.name),
-            tuple.get(comment.count()),
-            tuple.get(threadRecommend.count()),
+            tuple.get(thread.status),
+            tuple.get(4, Long.class),
+            tuple.get(5, Long.class),
             tuple.get(account.nickname),
             tuple.get(thread.createdDate),
             tuple.get(thread.endDate)
