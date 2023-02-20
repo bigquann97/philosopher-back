@@ -11,8 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AccountService {
   List<UserInfoByAdminResponseDto> selectAccountsInfo(); // 모든 유저 정보 가지고 오기
 
-
-
   Account getAccount(Long id); // 사용자 가지고 오기 ( 단건조회 )
 
   void UpdateAccountRole(Account account); // 권한 업데이트 ( 어드민 )
@@ -27,4 +25,5 @@ public interface AccountService {
   String getOldUrl(Account account);
 
   void AdminCheck(); // 어드민 체크 -> 해당 로직 통과하게된다면 어드민
+
 }

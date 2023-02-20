@@ -65,9 +65,9 @@ public class InitData implements ApplicationRunner {
   @Transactional
   public void run(ApplicationArguments args) throws Exception {
 
-    // 회원부 ( 5명 )
+    // 회원부 ( 10명 )
     Account account1 = new Account(1L, "kiang18@naver.com", passwordEncoder.encode("rlawlghks1"),
-        20, "김지환", Gender.FEMALE, UserRole.ROLE_MASTER, UserStatus.ACTIVATED);
+        20, "김지환", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
     accountRepository.save(account1);
     AccountInfo accountImage1 = new AccountInfo(account1, "jipang1.jpg");
     accountInfoRepository.save(accountImage1);
@@ -89,8 +89,25 @@ public class InitData implements ApplicationRunner {
     accountRepository.save(account4);
 
     Account account5 = new Account(5L, "test4@naver.com", passwordEncoder.encode("rlawlghks1"), 100,
-        "김관호", Gender.FEMALE, UserRole.ROLE_USER, UserStatus.SUSPENDED);
+        "김관호", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.SUSPENDED);
     accountRepository.save(account5);
+
+    Account account6 = new Account(6L, "test5@naver.com", passwordEncoder.encode("rlawlghks1"), 10,
+        "이승윤", Gender.MALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
+    accountRepository.save(account6);
+    Account account7 = new Account(7L, "test6@naver.com", passwordEncoder.encode("rlawlghks1"), 30,
+        "김미란", Gender.MALE, UserRole.ROLE_USER, UserStatus.SUSPENDED);
+    accountRepository.save(account7);
+    Account account8 = new Account(8L, "test7@naver.com", passwordEncoder.encode("rlawlghks1"), 31,
+        "김도화", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
+    accountRepository.save(account8);
+    Account account9 = new Account(9L, "test8@naver.com", passwordEncoder.encode("rlawlghks1"), 35,
+        "박연주", Gender.FEMALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
+    accountRepository.save(account9);
+    Account account10 = new Account(10L, "test9@naver.com", passwordEncoder.encode("rlawlghks1"), 37,
+        "김두이", Gender.MALE, UserRole.ROLE_USER, UserStatus.SUSPENDED);
+    accountRepository.save(account10);
+
 
     // 카테고리
     Category category1 = new Category("철학");
@@ -105,25 +122,46 @@ public class InitData implements ApplicationRunner {
     categoryRepository.save(category5);
 
     // 게시글 부
-    List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
-
-    Post post1 = new Post(account1, "게시글 1번 제목", "김지환, 박정수", null, category1);
+    Post post1 = new Post(account1, " 깻잎 논쟁 보고만 있나요? ", "김지환, 박정수", null, category1);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, " 게시글 2번 제목 ", "박정수, 박건하", null, category1);
+    Post post2 = new Post(account2, " 닭이 먼저인가요 치킨이 먼저인가요 ", "박정수, 박건하", null, category1);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, " 게시글 3번 제목 ", "박건하, 이정국", null, category2);
+    Post post3 = new Post(account3, " 아 배고프다 ", "박건하, 이정국", null, category2);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, " 게시글 4번 제목 ", "이정국 ,이진호", null, category2);
+    Post post4 = new Post(account4, " 5억년 버튼 누르실 건가여? ", "이정국 ,이진호", null, category2);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, " 게시글 5번 제목 ", "이진호, 이명박", null, category4);
+    Post post5 = new Post(account4, " 원더걸스 vs 뉴진스 ", "이진호, 이명박", null, category4);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, " 게시글 6번 제목 ", "이명박, 박명수", null, category5);
+    Post post6 = new Post(account5, " 여자친구 앞에서 이성 반찬 밀어주기 ", "이명박, 박명수", null, category5);
     postRepository.save(post6);
+    Post post7 = new Post(account6, " 팥붕 vs 슈붕 ", "이명박, 존박", null, category3);
+    postRepository.save(post7);
+    Post post8 = new Post(account7, " 군대 여자도 가야한다? ", "이명박, 박명수", null, category3);
+    postRepository.save(post8);
+    Post post9 = new Post(account8, " 1년뒤 1억 10년뒤 5억 ", " 9번 게시물의 내용입니다 ", null, category2);
+    postRepository.save(post9);
+    Post post10 = new Post(account9, " 수저 세팅 ", "10번 게시물의 내용입니다", null, category5);
+    postRepository.save(post10);
+    Post post11 = new Post(account10, " 아 몰라 ", "11번 게시물의 내용입니다", null, category5);
+    postRepository.save(post11);
+    Post post12 = new Post(account9, " 못참아 ", "12번 게시물의 내용입니다", null, category4);
+    postRepository.save(post12);
+    Post post13 = new Post(account8, " 사후세계? ", "이명박, 박명수", null, category1);
+    postRepository.save(post13);
+    Post post14 = new Post(account7, " 메이웨더 vs 파퀴아오 ", "이명박, 박명수", null, category1);
+    postRepository.save(post14);
+    Post post15 = new Post(account6, " 안락사 ", "김지환", null, category2);
+    postRepository.save(post15);
+    Post post16 = new Post(account5, " 죽음이란? ", "배고프다", null, category2);
+    postRepository.save(post16);
+    Post post17 = new Post(account4, " 지옥 있나요?  ", "네 없습니다", null, category2);
+    postRepository.save(post17);
+
 
     // 포스트 이미지
     PostImage postImage = new PostImage("jipang2.png", post1);
@@ -177,17 +215,48 @@ public class InitData implements ApplicationRunner {
     PostRecommend recommend15 = new PostRecommend(account5, post4);
     postRecommendRepository.save(recommend15);
 
+    List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
+    List<String> opinion1 = Arrays.asList("한다", "안한다", "입닥쳐라");
+    List<String> opinion2 = Arrays.asList("누른다", "안누른다", "모르겠다");
+    List<String> opinion3 = Arrays.asList("틀렸다", "맞다");
+    List<String> opinion4 = Arrays.asList("니 말이 다 맞음", "내 말이 다 맞음");
+    List<String> opinion5 = Arrays.asList("아니랑께", "맞당께");
+
+
+
     List<PostOpinion> list = opinions.stream().map(x -> new PostOpinion(post1, x))
         .collect(Collectors.toList());
-    List<PostOpinion> list2 = opinions.stream().map(x -> new PostOpinion(post2, x))
+    List<PostOpinion> list2 = opinion1.stream().map(x -> new PostOpinion(post2, x))
         .collect(Collectors.toList());
-    List<PostOpinion> list3 = opinions.stream().map(x -> new PostOpinion(post3, x))
+    List<PostOpinion> list3 = opinion2.stream().map(x -> new PostOpinion(post3, x))
         .collect(Collectors.toList());
-    List<PostOpinion> list4 = opinions.stream().map(x -> new PostOpinion(post4, x))
+    List<PostOpinion> list4 = opinion3.stream().map(x -> new PostOpinion(post4, x))
         .collect(Collectors.toList());
-    List<PostOpinion> list5 = opinions.stream().map(x -> new PostOpinion(post5, x))
+    List<PostOpinion> list5 = opinion2.stream().map(x -> new PostOpinion(post5, x))
         .collect(Collectors.toList());
-    List<PostOpinion> list6 = opinions.stream().map(x -> new PostOpinion(post6, x))
+    List<PostOpinion> list6 = opinion1.stream().map(x -> new PostOpinion(post6, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list7 = opinion3.stream().map(x -> new PostOpinion(post7, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list8 = opinion5.stream().map(x -> new PostOpinion(post8, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list9 = opinion5.stream().map(x -> new PostOpinion(post9, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list10 = opinion3.stream().map(x -> new PostOpinion(post10, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list11 = opinion2.stream().map(x -> new PostOpinion(post11, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list12 = opinion4.stream().map(x -> new PostOpinion(post12, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list13 = opinion1.stream().map(x -> new PostOpinion(post13, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list14 = opinion3.stream().map(x -> new PostOpinion(post14, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list15 = opinion5.stream().map(x -> new PostOpinion(post15, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list16 = opinion2.stream().map(x -> new PostOpinion(post16, x))
+        .collect(Collectors.toList());
+    List<PostOpinion> list17 = opinion4.stream().map(x -> new PostOpinion(post17, x))
         .collect(Collectors.toList());
 
     postOpinionRepository.saveAll(list);
@@ -196,6 +265,18 @@ public class InitData implements ApplicationRunner {
     postOpinionRepository.saveAll(list4);
     postOpinionRepository.saveAll(list5);
     postOpinionRepository.saveAll(list6);
+    postOpinionRepository.saveAll(list7);
+    postOpinionRepository.saveAll(list8);
+    postOpinionRepository.saveAll(list9);
+    postOpinionRepository.saveAll(list10);
+    postOpinionRepository.saveAll(list11);
+    postOpinionRepository.saveAll(list12);
+    postOpinionRepository.saveAll(list13);
+    postOpinionRepository.saveAll(list14);
+    postOpinionRepository.saveAll(list15);
+    postOpinionRepository.saveAll(list16);
+    postOpinionRepository.saveAll(list17);
+
 
     // 쓰레드 부
     Thread thread1 = new Thread(post4.getTitle(), post4.getContent(), account4, LocalDateTime.now(),

@@ -23,11 +23,6 @@ public class AdminServiceImpl implements AdminService {
   private final AccountRepository accountRepository;
 
   @Override
-  public List<UserInfoByAdminResponseDto> getUsersInfoList() {
-    return accountService.selectAccountsInfo();
-  }
-
-  @Override
   public List<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition) {
     return accountRepository.searchAccount(condition);
   }
@@ -46,4 +41,6 @@ public class AdminServiceImpl implements AdminService {
   public List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2() {
     return threadService.getThreadsV2();
   }
+
+
 }
