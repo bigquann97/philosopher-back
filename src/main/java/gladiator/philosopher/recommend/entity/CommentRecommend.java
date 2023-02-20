@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class CommentRecommend extends Recommend {
   @JoinColumn(name = "comment_id")
   private Comment comment;
 
+  @Builder
   public CommentRecommend(Account account, Comment comment) {
     this.account = account;
     this.comment = comment;
