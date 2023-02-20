@@ -4,6 +4,8 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
@@ -170,7 +172,21 @@ public class ThreadServiceImpl implements ThreadService {
   }
 
   @Override
-  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+  @Transactional(readOnly = true)
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(
+      final ThreadSearchCondByAdmin cond,
+      final Pageable pageable
+  ) {
     return threadRepository.selectThreadByAdmin(cond,pageable);
+  }
+
+  @Override
+  @Transactional
+  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto, Category category) {
+    final Thread thread = threadRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
+    thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(),category);
+    threadRepository.saveAndFlush(thread);
+    return thread.getId();
   }
 }

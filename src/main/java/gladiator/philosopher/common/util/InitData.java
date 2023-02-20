@@ -28,8 +28,11 @@ import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.report.entity.PostReport;
 import gladiator.philosopher.report.entity.ReportCategory;
 import gladiator.philosopher.report.repository.PostReportRepository;
+import gladiator.philosopher.report.repository.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
+import gladiator.philosopher.thread.entity.ThreadStatus;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
@@ -63,6 +66,7 @@ public class InitData implements ApplicationRunner {
   private final CommentRecommendRepository commentRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
   private final PostReportRepository postReportRepository;
+  private final ThreadReportRepository threadReportRepository;
 
 
   @Override
@@ -320,6 +324,7 @@ public class InitData implements ApplicationRunner {
     Thread thread2 = new Thread(post5.getTitle(), post5.getContent(), account5, LocalDateTime.now(),
         null);
     threadRepository.save(thread2);
+    ThreadImage threadImage = new ThreadImage("https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/ec6c575a-7c1b-4f93-9f5c-724137154e66image", thread1);
 
     ThreadOpinion threadOpinion1 = new ThreadOpinion(thread1, "한다");
     ThreadOpinion threadOpinion2 = new ThreadOpinion(thread1, "안한다");
@@ -370,6 +375,24 @@ public class InitData implements ApplicationRunner {
       Comment comment1 = new Comment(account2, thread, "content", "한다.");
       commentRepository.save(comment1);
     }
+
+    // 김지환 테스트
+//    Thread thread11 = new Thread("백종원의 스타벅스","내용입니다", account2, LocalDateTime.now().plusDays(1L), category3, ThreadStatus.BLINDED);
+//    threadRepository.save(thread11);
+//    Thread thread12 = new Thread("김지환의 테스트 타이틀","답변입니다", account3, LocalDateTime.now().plusDays(1L), category4, ThreadStatus.DELETED);
+//    threadRepository.save(thread12);
+//    Thread threadc = new Thread("김정국의 테스트 ","김담", account5, LocalDateTime.now().plusDays(1L), category5, ThreadStatus.DELETED);
+//    threadRepository.save(threadc);
+//    Thread threadd = new Thread("김종국의 파파존스","지담", account4, LocalDateTime.now().plusDays(1L), category1, ThreadStatus.DELETED);
+//    threadRepository.save(threadd);
+//    Thread threade = new Thread("요로시쿠나레","건담", account6, LocalDateTime.now().plusDays(1L), category3, ThreadStatus.BLINDED);
+//    threadRepository.save(threade);
+//    Thread threadf = new Thread("쉰들러 리스트","담담", account8, LocalDateTime.now().plusDays(1L), category2, ThreadStatus.DELETED);
+//    threadRepository.save(threadf);
+//    Thread threadg = new Thread("메이플스토리","웅담", account7, LocalDateTime.now().plusDays(1L), category4, ThreadStatus.BLINDED);
+//    threadRepository.save(threadg);
+
+
 
   }
 

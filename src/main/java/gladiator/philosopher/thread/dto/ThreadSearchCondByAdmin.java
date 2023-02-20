@@ -1,14 +1,13 @@
 package gladiator.philosopher.thread.dto;
 
-import gladiator.philosopher.thread.entity.ThreadStatus;
 import lombok.Getter;
 
 @Getter
 public class ThreadSearchCondByAdmin {
 
-  private ThreadStatus threadStatus;
+  private String threadStatus;
 
-  public ThreadSearchCondByAdmin(ThreadStatus threadStatus) {
+  public ThreadSearchCondByAdmin(String threadStatus) {
     this.threadStatus = threadStatus;
   }
 }

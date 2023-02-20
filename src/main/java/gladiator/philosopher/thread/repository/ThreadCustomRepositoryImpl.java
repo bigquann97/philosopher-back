@@ -250,6 +250,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
   @Override
   public MyPage<ThreadsSimpleResponseDtoByAdmin> selectThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+
     final List<ThreadsSimpleResponseDtoByAdmin> fetch = jpaQueryFactory.select(
             new QThreadsSimpleResponseDtoByAdmin(thread.id,
                 thread.title,
@@ -262,10 +263,10 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 account.nickname,
                 thread.location))
         .from(thread)
-        .leftJoin(account).on(account.id.eq(thread.account.id))
+        .leftJoin(thread.account, account)
         .leftJoin(thread.category, category)
         .where(
-            threadStatusCheck(cond.getThreadStatus().toString())
+            threadStatusCheck(cond.getThreadStatus())
         )
         .orderBy(thread.id.desc())
         .offset(pageable.getOffset())
@@ -274,7 +275,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
     final JPAQuery<Long> countThread = jpaQueryFactory.select(thread.count()).from(thread)
         .where(
-            threadStatusCheck(cond.getThreadStatus().toString())
+            threadStatusCheck(cond.getThreadStatus())
         );
     return new MyPage<>(new PageImpl<>(fetch, pageable, countThread.fetchOne()));
   }
@@ -282,6 +283,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   private BooleanExpression threadStatusCheck(String threadStatus){
     return hasText(threadStatus) ? thread.status.eq(ThreadStatus.valueOf(threadStatus)) : null;
   }
+
 }
 
 

@@ -1,6 +1,8 @@
 package gladiator.philosopher.thread.service;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.recommend.entity.PostRecommend;
@@ -34,4 +36,6 @@ public interface ThreadService {
   List<ThreadOpinion> getOpinions(Thread thread);
 
   MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable);
+
+  Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto, Category category);
 }
