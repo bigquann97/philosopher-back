@@ -1,9 +1,10 @@
 package gladiator.philosopher.account.controller;
 
 import gladiator.philosopher.account.dto.AccountCommentResponseDto;
-import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
-import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
-import gladiator.philosopher.account.dto.UserInfoResponseDto;
+import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
+import gladiator.philosopher.account.dto.info.ModifyNicknameRequestDto;
+import gladiator.philosopher.account.dto.info.ModifyPasswordRequestDto;
+import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.s3.S3Uploader;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,35 +58,17 @@ public class AccountController {
     return commentService.findMyComments(accountDetails.getAccount(), pageNum);
   }
 
-  /**
-   * 내 정보 수정(닉네임)
-   *
-   * @param accountDetails
-   * @param modifynicknameRequestDto
-   */
-  @PatchMapping("/nickname")
+
+
+  @PutMapping("/info")
   @ResponseStatus(HttpStatus.CREATED)
-  public void modifyMyNickname(
+  public Long modifyAccountInfo(
       final @AuthenticationPrincipal AccountDetails accountDetails,
-      final @RequestBody ModifyNicknameRequestDto modifynicknameRequestDto
-  ) {
-    accountService.modifyMyNickname(accountDetails.getAccount(), modifynicknameRequestDto);
+      final @RequestBody ModifyAccountInfoRequestDto infoRequestDto
+  ){
+    return accountService.modifyAccountInfo(accountDetails.getAccount(), infoRequestDto);
   }
 
-  /**
-   * 내 정보 수정(비밀번호)
-   *
-   * @param accountDetails
-   * @param modifyPasswordRequestDto
-   */
-  @PatchMapping("/password")
-  @ResponseStatus(HttpStatus.CREATED)
-  public void modifyMyPassword(
-      final @AuthenticationPrincipal AccountDetails accountDetails,
-      final @RequestBody ModifyPasswordRequestDto modifyPasswordRequestDto
-  ) {
-    accountService.modifyMyPassword(accountDetails.getAccount(), modifyPasswordRequestDto);
-  }
 
   /**
    * 내 정보 수정(프로필 이미지)

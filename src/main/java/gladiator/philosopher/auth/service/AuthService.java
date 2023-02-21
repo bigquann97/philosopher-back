@@ -20,4 +20,6 @@ public interface AuthService {
 
   void verifyEmail(String email, String code);
 
+  void checkIfUserNickNameDuplicated(String nickName);
+
 }

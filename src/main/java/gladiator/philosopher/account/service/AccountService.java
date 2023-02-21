@@ -1,10 +1,12 @@
 package gladiator.philosopher.account.service;
 
-import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
-import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
-import gladiator.philosopher.account.dto.UserInfoResponseDto;
+import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
+import gladiator.philosopher.account.dto.info.ModifyNicknameRequestDto;
+import gladiator.philosopher.account.dto.info.ModifyPasswordRequestDto;
+import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
+import gladiator.philosopher.common.security.AccountDetails;
 import java.util.List;
 
 public interface AccountService {
@@ -17,16 +19,14 @@ public interface AccountService {
 
   UserInfoResponseDto getMyInfo(Account account); // 내 정보 가지고 오기
 
-  void modifyMyNickname(Account account,
-      ModifyNicknameRequestDto modifynicknameRequestDto); // 닉네임 변경
+
 
   void modifyAccountImage(Account account, String newUrl); // 프로필 이미지 수정
 
-  void modifyMyPassword(Account account,
-      ModifyPasswordRequestDto modifyPasswordRequestDto); // 비밀번호 변경
 
   String getOldUrl(Account account);
 
-  void AdminCheck(); // 어드민 체크 -> 해당 로직 통과하게된다면 어드민
+  void adminCheck(); // 어드민 체크 -> 해당 로직 통과하게된다면 어드민
 
+  Long modifyAccountInfo(Account account, ModifyAccountInfoRequestDto infoRequestDto);
 }

@@ -218,7 +218,8 @@ public class AuthServiceImpl implements AuthService {
    *
    * @param nickName
    */
-  private void checkIfUserNickNameDuplicated(final String nickName) {
+  @Override
+  public void checkIfUserNickNameDuplicated(final String nickName) {
     if (accountRepository.existsByNickname(nickName)) {
       throw new DuplicatedException(DUPLICATED_NICKNAME);
     }

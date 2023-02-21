@@ -1,4 +1,4 @@
-package gladiator.philosopher.account.dto;
+package gladiator.philosopher.account.dto.info;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class ModifyPasswordRequestDto {
+public class ModifyNicknameRequestDto {
 
-  private final String password;
+  private final String nickname;
 
 }
