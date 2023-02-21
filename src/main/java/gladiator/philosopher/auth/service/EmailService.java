@@ -5,7 +5,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID
 
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
-import gladiator.philosopher.common.util.EmailMessage;
+import gladiator.philosopher.common.util.VerifyEmailMessage;
 import gladiator.philosopher.common.util.RedisUtil;
 import java.util.UUID;
 import javax.mail.MessagingException;
@@ -14,7 +14,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +51,7 @@ public class EmailService {
     }
     String code = UUID.randomUUID().toString().substring(0, 7).toUpperCase();
     redisUtil.setDataExpire(VERIFY_KEY_PREFIX + email, code, 60 * 3L); // 3분 인증 시간
-    sendMail(email, EmailMessage.MESSAGE_TITLE, EmailMessage.createMessage(code));
+    sendMail(email, VerifyEmailMessage.MESSAGE_TITLE, VerifyEmailMessage.createMessage(code));
   }
 
   @Transactional

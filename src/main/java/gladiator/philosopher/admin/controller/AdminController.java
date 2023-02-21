@@ -4,7 +4,7 @@ import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.service.CommentService;
@@ -13,12 +13,11 @@ import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.report.dto.post.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
-import gladiator.philosopher.thread.entity.Sort;
-import gladiator.philosopher.thread.repository.ThreadRepository;
+import gladiator.philosopher.thread.enums.Sort;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -156,6 +155,7 @@ public class AdminController {
 
   /**
    * 쓰레드 간편 조회 ( 상태를 기준으로 조회 )
+   *
    * @param cond
    * @param pageable
    * @return
@@ -172,6 +172,7 @@ public class AdminController {
 
   /**
    * 쓰레드 수정
+   *
    * @param accountDetails
    * @param id
    * @param threadRequestDto
@@ -182,7 +183,7 @@ public class AdminController {
       final @AuthenticationPrincipal AccountDetails accountDetails,
       final @PathVariable("id") Long id,
       final @RequestBody ModifyThreadRequestDto threadRequestDto
-  ){
+  ) {
     Long threadId = adminService.modifyThread(id, threadRequestDto);
     return threadId;
   }

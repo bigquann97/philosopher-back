@@ -2,6 +2,7 @@ package gladiator.philosopher.common.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gladiator.philosopher.common.exception.dto.ErrorDto;
+import gladiator.philosopher.common.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -21,12 +22,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
+  private final RedisUtil redisUtil;
+  public static final String BLACK_LIST_KEY_PREFIX = "JWT::BLACK_LIST::";
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
     String token = jwtTokenProvider.resolveToken(request);
+
+    if (redisUtil.hasKey(BLACK_LIST_KEY_PREFIX + token)) {
+      jwtExceptionHandler(response, "BlackList Token", HttpStatus.UNAUTHORIZED.value());
+      return;
+    }
 
     if (token != null) {
       if (!jwtTokenProvider.validateToken(token)) {

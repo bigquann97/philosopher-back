@@ -1,7 +1,7 @@
 package gladiator.philosopher.common.security;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.enums.UserRole;
+import gladiator.philosopher.account.enums.UserRole;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;

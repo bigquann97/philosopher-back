@@ -8,7 +8,7 @@ import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.common.enums.UserRole;
+import gladiator.philosopher.account.enums.UserRole;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import java.util.List;

@@ -6,12 +6,12 @@ import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.ReportResponseDto;
-import gladiator.philosopher.report.dto.post.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.report.service.ReportService;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
@@ -33,7 +33,8 @@ public class AdminServiceImpl implements AdminService {
   private final CategoryService categoryService;
 
   @Override
-  public MyPage<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition, Pageable pageable) {
+  public MyPage<UserInfoByAdminResponseDto> getAccounts(final AccountSearchCondition condition,
+      Pageable pageable) {
     return accountRepository.searchAccount(condition, pageable);
   }
 
@@ -59,7 +60,8 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchByThreadsAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchByThreadsAdmin(ThreadSearchCondByAdmin cond,
+      Pageable pageable) {
     return threadService.searchThreadByAdmin(cond, pageable);
   }
 
@@ -67,7 +69,7 @@ public class AdminServiceImpl implements AdminService {
   public Long modifyThread(Long id, ModifyThreadRequestDto threadRequestDto) {
     Category category = categoryService.getCategoryEntity(
         threadRequestDto.getCategoryId());
-    return threadService.modifyThreadByAdmin(id,threadRequestDto, category);
+    return threadService.modifyThreadByAdmin(id, threadRequestDto, category);
   }
 
 }

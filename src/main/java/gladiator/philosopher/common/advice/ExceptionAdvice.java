@@ -1,7 +1,6 @@
 package gladiator.philosopher.common.advice;
 
 import gladiator.philosopher.common.exception.AuthException;
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.FileException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
@@ -25,15 +24,6 @@ public class ExceptionAdvice {
   protected ErrorDto authException(AuthException ex) {
     log.error(ex.getMessage());
     return new ErrorDto(ex.getCode(), ex.getMessage());
-  }
-
-  // TODO: 2023/02/17 제거 요망
-  @ExceptionHandler({CustomException.class})
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  protected ErrorDto handleCustomException(CustomException ex) {
-    log.error(ex.getMessage());
-    return new ErrorDto(ex.getExceptionStatus().getStatusCode(),
-        ex.getExceptionStatus().getMessage());
   }
 
   @ExceptionHandler({DuplicatedException.class})
@@ -72,11 +62,10 @@ public class ExceptionAdvice {
 
   @ExceptionHandler({IOException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  protected ErrorDto IoStreamException(CustomException ex) {
+  protected ErrorDto IoStreamException(IOException ex) {
     ex.printStackTrace();
     log.error(ex.getMessage());
-    return new ErrorDto(ex.getExceptionStatus().getStatusCode(),
-        ex.getExceptionStatus().getMessage());
+    return new ErrorDto(500, "IOException");
   }
 
 }

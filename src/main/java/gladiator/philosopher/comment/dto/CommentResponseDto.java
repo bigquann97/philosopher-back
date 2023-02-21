@@ -1,16 +1,11 @@
 package gladiator.philosopher.comment.dto;
 
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.comment.entity.CommentStatus;
-import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.common.util.TimeAdapter;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class CommentResponseDto {

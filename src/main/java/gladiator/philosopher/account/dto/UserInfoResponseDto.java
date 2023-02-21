@@ -1,8 +1,8 @@
 package gladiator.philosopher.account.dto;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.enums.Gender;
-import gladiator.philosopher.common.enums.UserStatus;
+import gladiator.philosopher.account.enums.Gender;
+import gladiator.philosopher.account.enums.UserStatus;
 import lombok.Getter;
 
 @Getter

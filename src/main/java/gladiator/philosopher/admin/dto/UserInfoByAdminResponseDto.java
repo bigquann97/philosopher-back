@@ -1,9 +1,9 @@
 package gladiator.philosopher.admin.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import gladiator.philosopher.common.enums.Gender;
-import gladiator.philosopher.common.enums.UserStatus;
-import gladiator.philosopher.common.enums.UserRole;
+import gladiator.philosopher.account.enums.Gender;
+import gladiator.philosopher.account.enums.UserStatus;
+import gladiator.philosopher.account.enums.UserRole;
 import lombok.Getter;
 
 @Getter

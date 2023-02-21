@@ -3,6 +3,8 @@ package gladiator.philosopher.thread.entity;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
+import gladiator.philosopher.thread.enums.ThreadLocation;
+import gladiator.philosopher.thread.enums.ThreadStatus;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -103,7 +105,7 @@ public class Thread extends BaseEntity {
   }
 
 
-  public void modifyThread(String title, String content, Category category){
+  public void modifyThread(String title, String content, Category category) {
     this.title = title;
     this.content = content;
     this.category = category;

@@ -23,6 +23,7 @@ import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
+import gladiator.philosopher.common.jwt.JwtAuthenticationFilter;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.jwt.TokenDto;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
@@ -31,9 +32,7 @@ import io.jsonwebtoken.Claims;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -147,8 +146,8 @@ public class AuthServiceImpl implements AuthService {
     String email = claim.getSubject();
     redisUtil.deleteData(email);
 
-    redisUtil.setDataExpire("JWT:BLACK_LIST:" + dto.getAccessToken(), "TRUE",
-        ACCESS_TOKEN_EXPIRE_TIME / 1000L);
+    redisUtil.setDataExpire(JwtAuthenticationFilter.BLACK_LIST_KEY_PREFIX + dto.getAccessToken(),
+        "TRUE", ACCESS_TOKEN_EXPIRE_TIME / 1000L);
   }
 
   @Override

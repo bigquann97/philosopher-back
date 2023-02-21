@@ -1,9 +1,8 @@
 package gladiator.philosopher.post.dto;
 
+import gladiator.philosopher.post.enums.PostStatus;
 import java.time.LocalDateTime;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class PostResponseDtoByQueryDsl {
@@ -20,7 +19,8 @@ public class PostResponseDtoByQueryDsl {
   private Long recommend; // 추천수
 
 
-  public PostResponseDtoByQueryDsl(Long id, String title, String category, LocalDateTime createdDate,
+  public PostResponseDtoByQueryDsl(Long id, String title, String category,
+      LocalDateTime createdDate,
       PostStatus status, String nickname, Long recommend) {
     this.id = id;
     this.title = title;

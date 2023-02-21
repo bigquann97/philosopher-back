@@ -1,4 +1,4 @@
-package gladiator.philosopher.comment.entity;
+package gladiator.philosopher.comment.enums;
 
 import lombok.Getter;
 

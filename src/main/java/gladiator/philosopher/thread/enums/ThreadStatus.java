@@ -1,4 +1,4 @@
-package gladiator.philosopher.thread.entity;
+package gladiator.philosopher.thread.enums;
 
 public enum ThreadStatus {
   ACTIVE, DELETED, BLINDED

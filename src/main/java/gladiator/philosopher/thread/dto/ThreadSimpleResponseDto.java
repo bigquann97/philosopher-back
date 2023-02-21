@@ -1,7 +1,7 @@
 package gladiator.philosopher.thread.dto;
 
 import gladiator.philosopher.common.util.TimeAdapter;
-import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.enums.ThreadStatus;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;

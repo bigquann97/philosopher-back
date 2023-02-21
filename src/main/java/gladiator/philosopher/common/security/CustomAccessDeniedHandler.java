@@ -22,7 +22,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     JSONObject responseJson = new JSONObject();
     responseJson.put("message", "권한 없는 사용자의 접근입니다.");
-    responseJson.put("code", 401);
+    responseJson.put("code", 403);
 
     response.getWriter().print(responseJson);
   }

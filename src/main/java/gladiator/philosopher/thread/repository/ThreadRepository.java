@@ -1,8 +1,8 @@
 package gladiator.philosopher.thread.repository;
 
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadLocation;
-import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.enums.ThreadLocation;
+import gladiator.philosopher.thread.enums.ThreadStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;

@@ -1,9 +1,9 @@
 package gladiator.philosopher.account.dto.login;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.enums.Gender;
-import gladiator.philosopher.common.enums.UserStatus;
-import gladiator.philosopher.common.enums.UserRole;
+import gladiator.philosopher.account.enums.Gender;
+import gladiator.philosopher.account.enums.UserStatus;
+import gladiator.philosopher.account.enums.UserRole;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

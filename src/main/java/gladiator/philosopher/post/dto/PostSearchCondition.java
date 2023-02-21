@@ -1,18 +1,12 @@
 package gladiator.philosopher.post.dto;
 
-import gladiator.philosopher.thread.entity.Sort;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Data
 public class PostSearchCondition {
 
   private String word;
   private Long categoryId;
-
-
 
 //
 //  @Builder

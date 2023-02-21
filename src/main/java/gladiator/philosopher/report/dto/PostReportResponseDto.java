@@ -1,9 +1,7 @@
-package gladiator.philosopher.report.dto.post;
+package gladiator.philosopher.report.dto;
 
-import gladiator.philosopher.report.entity.ReportCategory;
-import lombok.AccessLevel;
+import gladiator.philosopher.report.enums.ReportCategory;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class PostReportResponseDto {

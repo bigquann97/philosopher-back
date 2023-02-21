@@ -2,7 +2,7 @@ package gladiator.philosopher.post.dto;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
-import gladiator.philosopher.common.exception.CustomException;
+import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.post.entity.Post;
 import java.util.List;
@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(force = true,access = AccessLevel.PRIVATE)
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class PostRequestDto {
 
   private final String title;
@@ -37,7 +37,7 @@ public class PostRequestDto {
 
   public void checkByOpinionCount() {
     if (this.getOpinions().size() > 5) {
-      throw new CustomException(ExceptionStatus.EXCEEDED_INPUT_DATAS);
+      throw new InvalidAccessException(ExceptionStatus.EXCEEDED_INPUT_DATAS);
     }
   }
 

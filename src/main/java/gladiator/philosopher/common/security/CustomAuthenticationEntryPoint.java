@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     JSONObject responseJson = new JSONObject();
     responseJson.put("message", "가입되지 않은 사용자의 접근입니다.");
-    responseJson.put("code", 401);
+    responseJson.put("code", 409);
 
     response.getWriter().print(responseJson);
   }
