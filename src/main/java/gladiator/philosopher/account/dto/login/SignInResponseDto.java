@@ -26,4 +26,5 @@ public class SignInResponseDto {
       UserRole userRole) {
     return new SignInResponseDto(nickname, accessToken, refreshToken, userRole);
   }
+  
 }

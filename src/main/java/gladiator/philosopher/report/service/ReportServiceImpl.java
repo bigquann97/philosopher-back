@@ -6,38 +6,46 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICA
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.report.dto.ReportRequestDto;
-import gladiator.philosopher.report.dto.ReportResponseDto;
+import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
+import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.repository.CommentReportRepository;
 import gladiator.philosopher.report.repository.PostReportRepository;
 import gladiator.philosopher.report.repository.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-  private final static int COUNT_FOR_AUTO_BLIND = 3;
+  private final static int COUNT_FOR_AUTO_BLIND = 1;
   private final PostReportRepository postReportRepository;
   private final ThreadReportRepository threadReportRepository;
   private final CommentReportRepository commentReportRepository;
 
+  private final ThreadService threadService;
+  private final PostService postService;
+  private final CommentService commentService;
 
   @Override
+  @Transactional
   public void reportPost(
-      final Post post,
+      final Long id,
       final ReportRequestDto dto,
       final Account reporter
   ) {
+    Post post = postService.getPostEntity(id);
     checkIfReporterAlreadyReportedObject(post, reporter);
     postReportRepository.save(dto.toEntity(post, reporter));
-    if (postReportRepository.countByPostId(post.getId()) >= COUNT_FOR_AUTO_BLIND) {
+    if (postReportRepository.countByPostId(id) >= COUNT_FOR_AUTO_BLIND) {
       if (post.isBlinded()) {
         return;
       }
@@ -46,14 +54,16 @@ public class ReportServiceImpl implements ReportService {
   }
 
   @Override
+  @Transactional
   public void reportComment(
-      final Comment comment,
+      final Long id,
       final ReportRequestDto dto,
       final Account reporter
   ) {
+    Comment comment = commentService.getCommentEntity(id);
     checkIfReporterAlreadyReportedObject(comment, reporter);
     commentReportRepository.save(dto.toEntity(comment, reporter));
-    if (commentReportRepository.countByCommentId(comment.getId()) >= COUNT_FOR_AUTO_BLIND) {
+    if (commentReportRepository.countByCommentId(id) >= COUNT_FOR_AUTO_BLIND) {
       if (comment.isBlinded()) {
         return;
       }
@@ -62,25 +72,20 @@ public class ReportServiceImpl implements ReportService {
   }
 
   @Override
+  @Transactional
   public void reportThread(
-      final Thread thread,
+      final Long id,
       final ReportRequestDto dto,
       final Account reporter
   ) {
+    Thread thread = threadService.getThreadEntity(id);
     checkIfReporterAlreadyReportedObject(thread, reporter);
     threadReportRepository.save(dto.toEntity(thread, reporter));
     if (threadReportRepository.countByThreadId(thread.getId()) >= COUNT_FOR_AUTO_BLIND) {
-      if (thread.isBlinded()) {
-        return;
+      if (!thread.isBlinded()) {
+        thread.blind();
       }
-      thread.blind();
     }
-  }
-
-  @Override
-  public List<ReportResponseDto> getReports() {
-    // TODO: 2023/02/17 reportRepository삭제 
-    return null;
   }
 
   private void checkIfReporterAlreadyReportedObject(Object obj, Account reporter) {
@@ -106,6 +111,7 @@ public class ReportServiceImpl implements ReportService {
    * 게시글 신고 목록 조회 (사용처 : 어드민)
    */
   @Override
+  @Transactional(readOnly = true)
   public List<PostReportResponseDto> getPostReports() {
     return postReportRepository.getAllPostReportDtosByAdmin();
   }

@@ -2,6 +2,9 @@ package gladiator.philosopher.common.util;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
+import gladiator.philosopher.account.enums.Gender;
+import gladiator.philosopher.account.enums.UserRole;
+import gladiator.philosopher.account.enums.UserStatus;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.category.entity.Category;
@@ -10,9 +13,6 @@ import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.comment.repository.MentionRepository;
-import gladiator.philosopher.account.enums.Gender;
-import gladiator.philosopher.account.enums.UserRole;
-import gladiator.philosopher.account.enums.UserStatus;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
@@ -150,7 +150,7 @@ public class InitData implements ApplicationRunner {
     postRepository.save(post6);
     Post post7 = new Post(account6, " 팥붕 vs 슈붕 ", "이명박, 존박", null, category3);
     postRepository.save(post7);
-    Post post8 = new Post(account7, " 군대 여자도 가야한다? ", "이명박, 박명수", null, category3);
+    Post post8 = new Post(account7, " 길가는 사람에게 한대맞으면 5000원? ", "이명박, 박명수", null, category3);
     postRepository.save(post8);
     Post post9 = new Post(account8, " 1년뒤 1억 10년뒤 5억 ", " 9번 게시물의 내용입니다 ", null, category2);
     postRepository.save(post9);

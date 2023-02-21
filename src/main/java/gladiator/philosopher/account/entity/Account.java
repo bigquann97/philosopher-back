@@ -1,9 +1,9 @@
 package gladiator.philosopher.account.entity;
 
-import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.account.enums.Gender;
 import gladiator.philosopher.account.enums.UserRole;
 import gladiator.philosopher.account.enums.UserStatus;
+import gladiator.philosopher.common.entity.BaseEntity;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,6 +79,11 @@ public class Account extends BaseEntity {
     this.role = role;
   }
 
+  public void modifyAccountInfo(String nickname, String password) {
+    this.nickname = nickname;
+    this.password = password;
+  }
+  
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,11 +100,5 @@ public class Account extends BaseEntity {
   public int hashCode() {
     return getClass().hashCode();
   }
-
-  public void modifyAccountInfo(String nickname, String password) {
-    this.nickname = nickname;
-    this.password =  password;
-  }
-
 
 }

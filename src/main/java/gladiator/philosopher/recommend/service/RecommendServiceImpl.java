@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
 
-  private final static int COUNT_FOR_MAKE_THREAD = 3;
+  private final static int COUNT_FOR_MAKE_THREAD = 1;
   private final PostRecommendRepository postRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
   private final CommentRecommendRepository commentRecommendRepository;
@@ -89,7 +89,6 @@ public class RecommendServiceImpl implements RecommendService {
     return postRecommendRepository.countByPost(post);
   }
 
-  @Transactional(readOnly = true)
   private void checkIfUserAlreadyLikedObject(final Object obj, final Account account) {
     if (obj instanceof Post) {
       Post post = (Post) obj;

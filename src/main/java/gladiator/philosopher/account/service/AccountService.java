@@ -3,8 +3,6 @@ package gladiator.philosopher.account.service;
 import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import java.util.List;
 
 public interface AccountService {
 
@@ -14,9 +12,7 @@ public interface AccountService {
 
   UserInfoResponseDto getMyInfo(Account account); // 내 정보 가지고 오기
 
-
   void modifyAccountImage(Account account, String newUrl); // 프로필 이미지 수정
-
 
   String getOldUrl(Account account);
 
