@@ -107,6 +107,6 @@ public class ReportServiceImpl implements ReportService {
    */
   @Override
   public List<PostReportResponseDto> getPostReports() {
-    return postReportRepository.getAllByPostReportResponseDto();
+    return postReportRepository.getAllPostReportDtosByAdmin();
   }
 }
