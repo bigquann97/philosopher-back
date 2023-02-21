@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.FileException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import java.io.IOException;
@@ -67,8 +66,9 @@ public class S3Uploader {
    */
   public List<String> upLoadFileToMulti(List<MultipartFile> multipartFiles, String dirName) {
 
-    if(multipartFiles.get(0).getOriginalFilename().equals(""))
+    if (multipartFiles.get(0).getOriginalFilename().equals("")) {
       return null;
+    }
 
     try {
       List<String> resultUrlList = new ArrayList<>();
@@ -77,7 +77,8 @@ public class S3Uploader {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+        String fileName =
+            dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
         String uploadImageUrl = putS3(multipartFile.getInputStream(), fileName,
             objectMetadata); // s3로 업로드
         log.info("upfile url is :" + uploadImageUrl);
@@ -90,10 +91,10 @@ public class S3Uploader {
 
   }
 
-  public List<String> getFilesUrl(List<MultipartFile> multipartFiles, String dirName){
+  public List<String> getFilesUrl(List<MultipartFile> multipartFiles, String dirName) {
     List<String> resultUrls = new ArrayList<>();
 
-    for(MultipartFile file : multipartFiles){
+    for (MultipartFile file : multipartFiles) {
       ObjectMetadata objectMetadata = new ObjectMetadata();
       objectMetadata.setContentLength(file.getSize());
       objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
@@ -114,13 +115,15 @@ public class S3Uploader {
    * @return
    */
   private String putS3(InputStream file, String fileName, ObjectMetadata objectMetadata) {
-    amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file, objectMetadata).withCannedAcl(
+    amazonS3Client.putObject(
+        new PutObjectRequest(bucket, fileName, file, objectMetadata).withCannedAcl(
             CannedAccessControlList.PublicRead));
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
 
   /**
    * S3 단일 파일 삭제
+   *
    * @param url
    * @param dirName
    */
@@ -134,15 +137,16 @@ public class S3Uploader {
 
   /**
    * S3 다중 파일 삭제
+   *
    * @param urls
    * @param dirName
    */
-  public void DeleteS3Files(List<String> urls, String dirName){
+  public void DeleteS3Files(List<String> urls, String dirName) {
     for (String url : urls) {
       final String[] split = url.split("/");
-      final String fileName = dirName+"/"+split[split.length-1];
+      final String fileName = dirName + "/" + split[split.length - 1];
       DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
-      log.info("delete url : "+request);
+      log.info("delete url : " + request);
       amazonS3Client.deleteObject(request);
     }
   }
@@ -200,12 +204,13 @@ public class S3Uploader {
     }
   }
 
-  public void checkByFileCount(List<MultipartFile> multipartFiles){
-    if(multipartFiles.size()>4)
+  public void checkByFileCount(List<MultipartFile> multipartFiles) {
+    if (multipartFiles.size() > 4) {
       throw new FileException(ExceptionStatus.TO_MUCH_FILES);
+    }
   }
 
-  public void checkFileUpload(List<MultipartFile> multipartFiles){
+  public void checkFileUpload(List<MultipartFile> multipartFiles) {
     checkByFileCount(multipartFiles); // 파일 갯수 확인
     checkFilesExtension(multipartFiles); // 파일 확장자 검사
     checkByFileCount(multipartFiles);

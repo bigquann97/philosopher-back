@@ -1,4 +1,4 @@
-package gladiator.philosopher.common.jwt;
+package gladiator.philosopher.common.security;
 
 
 import java.io.IOException;
@@ -20,7 +20,6 @@ public class CorsFilter implements Filter {
 
   @Override
   public void init(FilterConfig filterConfig) {
-
   }
 
   @Override

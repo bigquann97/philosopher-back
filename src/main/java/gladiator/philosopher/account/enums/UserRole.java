@@ -1,4 +1,4 @@
-package gladiator.philosopher.common.enums;
+package gladiator.philosopher.account.enums;
 
 public enum UserRole {
   ROLE_USER(Authority.ROLE_USER),

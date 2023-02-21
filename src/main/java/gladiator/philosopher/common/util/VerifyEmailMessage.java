@@ -3,7 +3,7 @@ package gladiator.philosopher.common.util;
 import lombok.Getter;
 
 @Getter
-public class EmailMessage {
+public class VerifyEmailMessage {
 
   public final static String MESSAGE_TITLE = "우리 모두 철학자 - 회원가입 인증 메일입니다.\n\n";
 

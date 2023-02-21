@@ -1,4 +1,4 @@
-package gladiator.philosopher.report.entity;
+package gladiator.philosopher.report.enums;
 
 import lombok.Getter;
 

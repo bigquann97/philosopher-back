@@ -1,9 +1,9 @@
 package gladiator.philosopher.account.entity;
 
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.common.enums.Gender;
-import gladiator.philosopher.common.enums.UserRole;
-import gladiator.philosopher.common.enums.UserStatus;
+import gladiator.philosopher.account.enums.Gender;
+import gladiator.philosopher.account.enums.UserRole;
+import gladiator.philosopher.account.enums.UserStatus;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -75,7 +75,7 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-  public void updateAccountRole(UserRole role){
+  public void updateAccountRole(UserRole role) {
     this.role = role;
   }
 
@@ -96,11 +96,11 @@ public class Account extends BaseEntity {
     return getClass().hashCode();
   }
 
-  public void updateNickname(String nickname){
+  public void updateNickname(String nickname) {
     this.nickname = nickname;
   }
 
-  public void updatePassword(String password){
+  public void updatePassword(String password) {
     this.password = password;
   }
 

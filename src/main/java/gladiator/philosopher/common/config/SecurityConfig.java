@@ -4,13 +4,13 @@ import gladiator.philosopher.common.jwt.JwtAuthenticationFilter;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.security.CustomAccessDeniedHandler;
 import gladiator.philosopher.common.security.CustomAuthenticationEntryPoint;
+import gladiator.philosopher.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,15 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final JwtTokenProvider jwtTokenProvider;
-
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    // h2-console 사용 및 resources 접근 허용 설정
-    return (web) -> web.ignoring()
-        .antMatchers("/h2-console/**");
-//                .requestMatchers(PathRequest.toH2Console())
-//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-  }
+  private final RedisUtil redisUtil;
 
   @Bean
   protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -43,13 +35,14 @@ public class SecurityConfig {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
+        .antMatchers("/h2-console/**").permitAll()
         .antMatchers("/api/accounts/**").permitAll()
         .and()
         .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         .and()
         .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
         .and()
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisUtil),
             UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }

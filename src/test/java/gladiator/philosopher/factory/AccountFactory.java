@@ -1,10 +1,9 @@
 package gladiator.philosopher.factory;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.common.enums.Gender;
-import gladiator.philosopher.common.enums.UserRole;
-import gladiator.philosopher.common.enums.UserStatus;
-
+import gladiator.philosopher.account.enums.Gender;
+import gladiator.philosopher.account.enums.UserRole;
+import gladiator.philosopher.account.enums.UserStatus;
 
 
 public class AccountFactory {

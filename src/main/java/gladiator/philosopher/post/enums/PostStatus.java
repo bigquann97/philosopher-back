@@ -1,4 +1,4 @@
-package gladiator.philosopher.post.dto;
+package gladiator.philosopher.post.enums;
 
 public enum PostStatus {
   ACTIVE, DELETED, BLINDED

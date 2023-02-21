@@ -2,7 +2,7 @@ package gladiator.philosopher.factory;
 
 import gladiator.philosopher.report.entity.CommentReport;
 import gladiator.philosopher.report.entity.PostReport;
-import gladiator.philosopher.report.entity.ReportCategory;
+import gladiator.philosopher.report.enums.ReportCategory;
 import gladiator.philosopher.report.entity.ThreadReport;
 
 public class ReportFactory {

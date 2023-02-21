@@ -2,6 +2,8 @@ package gladiator.philosopher.common.security;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +21,7 @@ public class AccountDetailsServiceImpl implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     Account account = accountRepository.findByEmail(email)
-        .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        .orElseThrow(() -> new NotFoundException(ExceptionStatus.NOT_FOUND_ACCOUNT));
     return new AccountDetails(account);
   }
 

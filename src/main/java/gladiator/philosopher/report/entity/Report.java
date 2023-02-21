@@ -1,6 +1,7 @@
 package gladiator.philosopher.report.entity;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.report.enums.ReportCategory;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.EnumType;

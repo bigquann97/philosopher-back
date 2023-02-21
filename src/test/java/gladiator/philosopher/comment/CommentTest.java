@@ -2,7 +2,7 @@ package gladiator.philosopher.comment;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.comment.entity.CommentStatus;
+import gladiator.philosopher.comment.enums.CommentStatus;
 import gladiator.philosopher.factory.AccountFactory;
 import gladiator.philosopher.factory.CommentFactory;
 import gladiator.philosopher.factory.ThreadFactory;

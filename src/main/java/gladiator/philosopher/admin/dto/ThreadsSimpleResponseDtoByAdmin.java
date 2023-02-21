@@ -1,11 +1,8 @@
 package gladiator.philosopher.admin.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadLocation;
-import java.time.LocalDateTime;
-import java.util.List;
+import gladiator.philosopher.thread.enums.ThreadLocation;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

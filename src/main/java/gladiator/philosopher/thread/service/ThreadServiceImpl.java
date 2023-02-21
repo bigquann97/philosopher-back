@@ -4,7 +4,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
-import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
@@ -18,13 +18,12 @@ import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
-import gladiator.philosopher.thread.entity.ThreadLocation;
+import gladiator.philosopher.thread.enums.ThreadLocation;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +64,6 @@ public class ThreadServiceImpl implements ThreadService {
     List<ThreadImage> images = postService.getPostImages(post).stream()
         .map(x -> new ThreadImage(x.getImageUrl(), thread)).
         collect(Collectors.toList());
-
 
     List<ThreadOpinion> opinions = postService.getPostOpinions(post).stream()
         .map(o -> new ThreadOpinion(thread, o.getOpinion())).collect(Collectors.toList());
@@ -177,15 +175,16 @@ public class ThreadServiceImpl implements ThreadService {
       final ThreadSearchCondByAdmin cond,
       final Pageable pageable
   ) {
-    return threadRepository.selectThreadByAdmin(cond,pageable);
+    return threadRepository.selectThreadByAdmin(cond, pageable);
   }
 
   @Override
   @Transactional
-  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto, Category category) {
+  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto,
+      Category category) {
     final Thread thread = threadRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
-    thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(),category);
+    thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(), category);
     threadRepository.saveAndFlush(thread);
     return thread.getId();
   }

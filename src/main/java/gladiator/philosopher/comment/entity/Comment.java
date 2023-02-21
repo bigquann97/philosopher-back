@@ -1,6 +1,7 @@
 package gladiator.philosopher.comment.entity;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.comment.enums.CommentStatus;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.HashSet;
@@ -26,7 +27,7 @@ import org.hibernate.Hibernate;
 
 @Entity
 @Getter
-@NoArgsConstructor(force = true, access =  AccessLevel.PRIVATE)
+@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
   @Id
@@ -81,7 +82,7 @@ public class Comment extends BaseEntity {
     return this.account.equals(account);
   }
 
-  public void chaneStatusDeletedByAdmin(){
+  public void chaneStatusDeletedByAdmin() {
     this.status = CommentStatus.DELETED;
   }
 

@@ -5,7 +5,7 @@ import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
-import gladiator.philosopher.post.dto.PostStatus;
+import gladiator.philosopher.post.enums.PostStatus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -65,13 +65,14 @@ public class Post extends BaseEntity {
     this.category = category;
     this.isThreaded = false;
   }
+
   public void modifyPost(String title, String content, Category category) {
     this.title = title;
     this.content = content;
     this.category = category;
   }
 
-  public void modifyPost(String title, String content){
+  public void modifyPost(String title, String content) {
     this.title = title;
     this.content = content;
   }
@@ -98,7 +99,8 @@ public class Post extends BaseEntity {
   public boolean isBlinded() {
     return this.status == PostStatus.BLINDED;
   }
-  public void changeStatusDeleteByAdmin(){
+
+  public void changeStatusDeleteByAdmin() {
     this.status = PostStatus.DELETED;
   }
 

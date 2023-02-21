@@ -29,10 +29,10 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.QThreadImage;
 import gladiator.philosopher.thread.entity.QThreadOpinion;
-import gladiator.philosopher.thread.entity.Sort;
+import gladiator.philosopher.thread.enums.Sort;
 import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.entity.ThreadLocation;
-import gladiator.philosopher.thread.entity.ThreadStatus;
+import gladiator.philosopher.thread.enums.ThreadLocation;
+import gladiator.philosopher.thread.enums.ThreadStatus;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -252,7 +252,8 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
 
   @Override
-  public MyPage<ThreadsSimpleResponseDtoByAdmin> selectThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable) {
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> selectThreadByAdmin(ThreadSearchCondByAdmin cond,
+      Pageable pageable) {
 
     final List<ThreadsSimpleResponseDtoByAdmin> fetch = jpaQueryFactory.select(
             new QThreadsSimpleResponseDtoByAdmin(thread.id,
@@ -283,12 +284,11 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     return new MyPage<>(new PageImpl<>(fetch, pageable, countThread.fetchOne()));
   }
 
-  private BooleanExpression threadStatusCheck(String threadStatus){
+  private BooleanExpression threadStatusCheck(String threadStatus) {
     return hasText(threadStatus) ? thread.status.eq(ThreadStatus.valueOf(threadStatus)) : null;
   }
 
 }
-
 
 // ===============================================
 

@@ -5,7 +5,7 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
-import gladiator.philosopher.thread.entity.Sort;
+import gladiator.philosopher.thread.enums.Sort;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
