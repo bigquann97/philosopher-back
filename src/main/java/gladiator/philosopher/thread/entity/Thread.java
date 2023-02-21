@@ -101,4 +101,13 @@ public class Thread extends BaseEntity {
   public boolean isBlinded() {
     return this.status == ThreadStatus.BLINDED;
   }
+
+
+  public void modifyThread(String title, String content, Category category){
+    this.title = title;
+    this.content = content;
+    this.category = category;
+  }
+
+
 }

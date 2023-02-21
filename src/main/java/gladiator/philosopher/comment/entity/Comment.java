@@ -79,6 +79,10 @@ public class Comment extends BaseEntity {
     return this.account.equals(account);
   }
 
+  public void changeByCommentStatus(){
+    this.status = CommentStatus.DELETED;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

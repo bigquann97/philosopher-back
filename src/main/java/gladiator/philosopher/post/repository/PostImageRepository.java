@@ -20,9 +20,9 @@ public interface PostImageRepository extends JpaRepository<PostImage, Long>, Pos
   @Query("select p.imageUrl from PostImage p where p.post.id =:id")
   List<String> getUrl(@Param("id") Long id);
 
-  @Modifying
+  @Modifying(clearAutomatically = true)
   @Transactional
-  @Query("delete from PostImage p where p.post= ?1")
-  void deleteAllByPostImage(Post post);
+  @Query("delete from PostImage p where p.post.id =:id")
+  void deleteAllByPostImage(@Param("id") Long id);
 
 }

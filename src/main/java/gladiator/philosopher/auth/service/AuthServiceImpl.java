@@ -97,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
     response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
 
     return SignInResponseDto.of(account.getNickname(), tokenDto.getAccessToken(),
-        tokenDto.getRefreshToken());
+        tokenDto.getRefreshToken(), account.getType());
   }
 
 

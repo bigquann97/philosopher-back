@@ -10,6 +10,7 @@ import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ReportResponseDto;
+import gladiator.philosopher.report.dto.post.PostReportResponseDto;
 import gladiator.philosopher.report.repository.CommentReportRepository;
 import gladiator.philosopher.report.repository.PostReportRepository;
 import gladiator.philosopher.report.repository.ThreadReportRepository;
@@ -101,4 +102,11 @@ public class ReportServiceImpl implements ReportService {
     }
   }
 
+  /**
+   * 게시글 신고 목록 조회 (사용처 : 어드민)
+   */
+  @Override
+  public List<PostReportResponseDto> getPostReports() {
+    return postReportRepository.getAllByPostReportResponseDto();
+  }
 }

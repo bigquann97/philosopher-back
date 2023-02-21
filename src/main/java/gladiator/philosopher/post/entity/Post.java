@@ -41,12 +41,6 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-//  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<PostImage> images = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<PostRecommend> recommends = new ArrayList<>();
-
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostOpinion> opinions = new ArrayList<>();
 
@@ -68,7 +62,6 @@ public class Post extends BaseEntity {
     this.title = title;
     this.content = content;
     this.status = PostStatus.ACTIVE;
-//    this.images = images;
     this.opinions = opinions;
     this.category = category;
     this.isThreaded = false;
@@ -105,6 +98,9 @@ public class Post extends BaseEntity {
 
   public boolean isBlinded() {
     return this.status == PostStatus.BLINDED;
+  }
+  public void StatusChangeByAdmin(){
+    this.status = PostStatus.DELETED;
   }
 
 

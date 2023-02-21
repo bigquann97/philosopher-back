@@ -53,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
   @Transactional
   public void UpdateAccountRole(final Account account) {
     if (account.getType() == (UserRole.ROLE_USER)) {
-      account.UpdateAccountRole(UserRole.ROLE_ADMIN);
+      account.UpdateAccountRole(UserRole.ROLE_MANAGER);
     } else {
       account.UpdateAccountRole(UserRole.ROLE_USER);
     }

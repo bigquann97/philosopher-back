@@ -4,6 +4,8 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
+import gladiator.philosopher.admin.dto.thread.ModifyThreadRequestDto;
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.notification.service.NotificationService;
@@ -12,6 +14,7 @@ import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
+import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +66,6 @@ public class ThreadServiceImpl implements ThreadService {
         .map(x -> new ThreadImage(x.getImageUrl(), thread)).
         collect(Collectors.toList());
 
-//    threadImageRepository.saveAll(images);
 
     List<ThreadOpinion> opinions = postService.getPostOpinions(post).stream()
         .map(o -> new ThreadOpinion(thread, o.getOpinion())).collect(Collectors.toList());
@@ -146,38 +149,6 @@ public class ThreadServiceImpl implements ThreadService {
     return threadRepository.selectArchivedThreadWithCond(cond);
   }
 
-
-  /**
-   * 어드민쪽에서 사용할 threads
-   *
-   * @return
-   */
-//  @Override
-//  public Page<ThreadsSimpleResponseDtoByAdmin> getThreads(ThreadSearchCond cond) {
-//    List<ThreadsSimpleResponseDtoByAdmin> result = new ArrayList<>();
-//    Page<Thread> threads = threadRepository.getThreads(cond);
-//
-//    for (Thread thread : threads) {
-//      ThreadsSimpleResponseDtoByAdmin threadsSimpleResponseDtoByAdmin = new ThreadsSimpleResponseDtoByAdmin(thread);
-//      result.add(threadsSimpleResponseDtoByAdmin);
-//    }
-//    return new PageImpl<>(result);
-//  }
-  @Override // join 관련해서 한번 고민해볼것.
-  @Transactional(readOnly = true)
-  public List<ThreadsSimpleResponseDtoByAdmin> getThreadsV2() {
-//    List<Thread> infoData = threadRepository.findAllThreadsInfo();
-    final List<Thread> all = threadRepository.findAll();
-    List<ThreadsSimpleResponseDtoByAdmin> resultData = new ArrayList<>();
-    all.forEach(entity -> {
-      ThreadsSimpleResponseDtoByAdmin threadsSimpleResponseDtoByAdmin = new ThreadsSimpleResponseDtoByAdmin(
-          entity);
-      resultData.add(threadsSimpleResponseDtoByAdmin);
-    });
-    // 데이터가 있어야먄 join을 해온다는 점?
-    return resultData;
-  }
-
   /**
    * 스케줄링 Thread 상태 제어
    */
@@ -200,4 +171,22 @@ public class ThreadServiceImpl implements ThreadService {
     return threadOpinionRepository.findByThread(thread);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(
+      final ThreadSearchCondByAdmin cond,
+      final Pageable pageable
+  ) {
+    return threadRepository.selectThreadByAdmin(cond,pageable);
+  }
+
+  @Override
+  @Transactional
+  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto, Category category) {
+    final Thread thread = threadRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
+    thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(),category);
+    threadRepository.saveAndFlush(thread);
+    return thread.getId();
+  }
 }
