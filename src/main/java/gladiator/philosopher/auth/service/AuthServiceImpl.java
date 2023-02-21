@@ -66,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void signUp(final SignUpRequestDto signUpRequestDto) {
     checkIfUserEmailDuplicated(signUpRequestDto.getEmail());
-    checkIfUserNickNameDuplicated(signUpRequestDto.getNickname());
+    checkIfUserNicknameDuplicated(signUpRequestDto.getNickname());
     checkIfEmailVerified(signUpRequestDto.getEmail());
     Account account = signUpRequestDto.toEntity(
         passwordEncoder.encode(signUpRequestDto.getPassword()));
@@ -219,7 +219,7 @@ public class AuthServiceImpl implements AuthService {
    * @param nickName
    */
   @Override
-  public void checkIfUserNickNameDuplicated(final String nickName) {
+  public void checkIfUserNicknameDuplicated(final String nickName) {
     if (accountRepository.existsByNickname(nickName)) {
       throw new DuplicatedException(DUPLICATED_NICKNAME);
     }

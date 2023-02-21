@@ -68,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
   @Override
   public Long modifyAccountInfo(Account account,
       ModifyAccountInfoRequestDto infoRequestDto) {
-    authService.checkIfUserNickNameDuplicated(infoRequestDto.getNickname());
+    authService.checkIfUserNicknameDuplicated(infoRequestDto.getNickname());
     String password = passwordEncoder.encode(infoRequestDto.getPassword());
     account.modifyAccountInfo(infoRequestDto.getNickname(), password);
     accountRepository.saveAndFlush(account);
@@ -83,7 +83,6 @@ public class AccountServiceImpl implements AccountService {
     accountImage.updateImageUrl(newUrl);
     accountInfoRepository.saveAndFlush(accountImage);
   }
-
 
 
   @Override
