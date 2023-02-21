@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccountImage {
 
   @Id
@@ -30,7 +30,7 @@ public class AccountImage {
     this.account = account;
   }
 
-  public void updateImageUrl(String url){
+  public void updateImageUrl(String url) {
     this.imageUrl = url;
   }
 
