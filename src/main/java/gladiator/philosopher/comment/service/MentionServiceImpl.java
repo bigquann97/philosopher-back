@@ -34,6 +34,7 @@ public class MentionServiceImpl implements MentionService {
   @Transactional
   public void deleteMentions(final Comment mentioningComment) {
     mentionRepository.deleteByMentioningComment(mentioningComment);
+    mentionRepository.deleteByMentionedComment(mentioningComment);
     mentionRepository.flush();
   }
 

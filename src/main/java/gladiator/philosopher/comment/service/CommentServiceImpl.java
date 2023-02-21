@@ -84,7 +84,7 @@ public class CommentServiceImpl implements CommentService {
     Comment comment = getCommentEntity(commentId);
     checkIfAccountIsWriter(comment, account);
     mentionService.deleteMentions(comment);
-    commentRepository.delete(comment);
+    comment.chaneStatusToDeleted();
   }
 
   @Override
@@ -98,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
   @Transactional
   public void modifyCommentByAdmin(final Long id, final CommentRequestDto commentRequestDto) {
     Comment comment = getCommentEntity(id);
-    comment.modifyComment(commentRequestDto.getOpinion(),commentRequestDto.getContent());
+    comment.modifyComment(commentRequestDto.getOpinion(), commentRequestDto.getContent());
     commentRepository.saveAndFlush(comment);
   }
 
@@ -106,7 +106,7 @@ public class CommentServiceImpl implements CommentService {
   @Transactional
   public void deleteCommentByAdmin(final Long id) {
     Comment comment = getCommentEntity(id);
-    comment.chaneStatusDeletedByAdmin();
+    comment.chaneStatusToDeleted();
     commentRepository.saveAndFlush(comment);
   }
 
