@@ -22,10 +22,4 @@ public interface PostRecommendRepository extends JpaRepository<PostRecommend, Lo
 
   List<PostRecommend> findByPost(@NonNull Post post);
 
-  @Transactional
-  @Modifying(clearAutomatically = true)
-  @Query("delete from PostRecommend p where p.post.id =:id")
-  void deleteAllByPostRecommend(@Param("id")Long id);
-
-
 }

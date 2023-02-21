@@ -39,4 +39,5 @@ public class RedisConfig {
     stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
     return stringRedisTemplate;
   }
+
 }

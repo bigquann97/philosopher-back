@@ -84,11 +84,12 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public long getPostRecommendCount(final Post post) {
     return postRecommendRepository.countByPost(post);
   }
 
+  @Transactional(readOnly = true)
   private void checkIfUserAlreadyLikedObject(final Object obj, final Account account) {
     if (obj instanceof Post) {
       Post post = (Post) obj;

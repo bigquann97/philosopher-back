@@ -9,11 +9,13 @@ import gladiator.philosopher.recommend.service.RecommendService;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,6 +29,7 @@ public class RecommendController {
   private final CommentService commentService;
 
   @PostMapping("/post/{postId}")
+  @ResponseStatus(HttpStatus.CREATED)
   public void createRecommendPost(
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -36,6 +39,7 @@ public class RecommendController {
   }
 
   @DeleteMapping("/post/{postId}")
+  @ResponseStatus(HttpStatus.OK)
   public void deleteRecommendPost(
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -45,6 +49,7 @@ public class RecommendController {
   }
 
   @PostMapping("/thread/{threadId}")
+  @ResponseStatus(HttpStatus.CREATED)
   public void createRecommendThread(
       final @PathVariable Long threadId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -54,6 +59,7 @@ public class RecommendController {
   }
 
   @DeleteMapping("/thread/{threadId}")
+  @ResponseStatus(HttpStatus.OK)
   public void deleteRecommendThread(
       final @PathVariable Long threadId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -63,6 +69,7 @@ public class RecommendController {
   }
 
   @PostMapping("/comment/{commentId}")
+  @ResponseStatus(HttpStatus.CREATED)
   public void createRecommendComment(
       final @PathVariable Long commentId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -72,6 +79,7 @@ public class RecommendController {
   }
 
   @DeleteMapping("/comment/{commentId}")
+  @ResponseStatus(HttpStatus.OK)
   public void deleteRecommendComment(
       final @PathVariable Long commentId,
       final @AuthenticationPrincipal AccountDetails accountDetails
