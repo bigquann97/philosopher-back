@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
-  private final S3Uploader s3Uploader;
-  private final String dirName = "AccountImg";
 
   /**
    * 회원가입

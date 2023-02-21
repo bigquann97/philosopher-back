@@ -1,6 +1,6 @@
 package gladiator.philosopher.comment.service;
 
-import gladiator.philosopher.account.dto.AccountCommentDto;
+import gladiator.philosopher.account.dto.AccountCommentResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
@@ -29,5 +29,5 @@ public interface CommentService {
 
   void deleteCommentByAdmin(Long id);
 
-  List<AccountCommentDto> findMyComments(Account account, int pageNum);
+  List<AccountCommentResponseDto> findMyComments(Account account, int pageNum);
 }

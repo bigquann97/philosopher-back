@@ -24,7 +24,6 @@ public class Account extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "account_id")
   private Long id;
 
   @Column(nullable = false, unique = true)
@@ -36,7 +35,7 @@ public class Account extends BaseEntity {
   @Column(nullable = false)
   private int age;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String nickname;
 
   @Enumerated(EnumType.STRING)
@@ -45,7 +44,7 @@ public class Account extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private UserRole type;
+  private UserRole role;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -53,31 +52,31 @@ public class Account extends BaseEntity {
 
   @Builder
   public Account(String email, String password, int age, String nickname, Gender gender,
-      UserRole type, UserStatus status) {
+      UserRole role, UserStatus status) {
     this.email = email;
     this.password = password;
     this.age = age;
     this.nickname = nickname;
     this.gender = gender;
-    this.type = type;
+    this.role = role;
     this.status = status;
   }
 
   // testcode
   public Account(Long id, String email, String password, int age, String nickname,
-      Gender gender, UserRole type, UserStatus status) {
+      Gender gender, UserRole role, UserStatus status) {
     this.id = id;
     this.email = email;
     this.password = password;
     this.age = age;
     this.nickname = nickname;
     this.gender = gender;
-    this.type = type;
+    this.role = role;
     this.status = status;
   }
 
-  public void UpdateAccountRole(UserRole role){
-    this.type = role;
+  public void updateAccountRole(UserRole role){
+    this.role = role;
   }
 
   @Override
@@ -97,11 +96,11 @@ public class Account extends BaseEntity {
     return getClass().hashCode();
   }
 
-  public void UpdateNickname(String nickname){
+  public void updateNickname(String nickname){
     this.nickname = nickname;
   }
 
-  public void UpdatePassword(String password){
+  public void updatePassword(String password){
     this.password = password;
   }
 

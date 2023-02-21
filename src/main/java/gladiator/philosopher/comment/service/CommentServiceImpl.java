@@ -5,7 +5,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUT
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_OPINION;
 
-import gladiator.philosopher.account.dto.AccountCommentDto;
+import gladiator.philosopher.account.dto.AccountCommentResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
@@ -136,13 +136,13 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public List<AccountCommentDto> findMyComments(Account account, int pageNum) {
+  public List<AccountCommentResponseDto> findMyComments(Account account, int pageNum) {
     Pageable pageable = PageRequest.of(pageNum - 1, 10,
         Sort.by("createdDate").descending());
     Page<Comment> commentPage = commentRepository.findCommentByAccount_Id(account.getId(),
         pageable);
-    List<AccountCommentDto> productResponseList = commentPage.getContent().stream()
-        .map(AccountCommentDto::new).collect(Collectors.toList());
+    List<AccountCommentResponseDto> productResponseList = commentPage.getContent().stream()
+        .map(AccountCommentResponseDto::new).collect(Collectors.toList());
     return productResponseList;
   }
 

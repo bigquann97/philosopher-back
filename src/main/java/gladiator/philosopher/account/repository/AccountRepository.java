@@ -17,9 +17,4 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Account
 
   @Query("select new gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto(a.id, a.email, a.age, a.nickname, a.gender, a.type, a.status) from Account a")
   List<UserInfoByAdminResponseDto> getInfoByAccount();
-
-
-
-  
-
 }

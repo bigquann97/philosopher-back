@@ -4,6 +4,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_EMAIL_OR_PW;
 
 import gladiator.philosopher.common.exception.AuthException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.common.util.EmailMessage;
 import gladiator.philosopher.common.util.RedisUtil;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +25,8 @@ public class EmailService {
   private final JavaMailSender emailSender;
   private final RedisUtil redisUtil;
 
-  public static final String VERIFY_KEY_PREFIX = "EMAIL:VERIFY:"; // EMAIL:VERIFY:email - A3GA1E
-  public static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED:"; // EMAIL:VERIFIED - email, email ...
+  public static final String VERIFY_KEY_PREFIX = "EMAIL:VERIFY:";
+  public static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED:";
 
   public void sendMail(
       final String to,
@@ -38,7 +40,7 @@ public class EmailService {
       message.setSubject(sub, "utf-8");
       message.setText(text, "utf-8", "html");
     } catch (MessagingException e) {
-      throw new IllegalArgumentException("이메일 전송 실패");
+      throw new AuthException(ExceptionStatus.FAIL_TO_SEND_EMAIL);
     }
     emailSender.send(message);
   }
