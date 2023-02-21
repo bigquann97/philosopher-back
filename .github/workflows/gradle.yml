@@ -17,8 +17,11 @@ permissions:
   contents: read
 
 jobs:
-  build:
 
+  philosopher-backend:
+    permissions: write-all
+    name: philosopher-backend
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
