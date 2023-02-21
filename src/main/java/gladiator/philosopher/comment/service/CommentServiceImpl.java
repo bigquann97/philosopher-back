@@ -98,14 +98,15 @@ public class CommentServiceImpl implements CommentService {
   @Transactional
   public void modifyCommentByAdmin(final Long id, final CommentRequestDto commentRequestDto) {
     Comment comment = getCommentEntity(id);
-    comment.modifyComment(comment.getContent(), comment.getOpinion());
+    comment.modifyComment(commentRequestDto.getOpinion(),commentRequestDto.getContent());
+    commentRepository.saveAndFlush(comment);
   }
 
   @Override
   @Transactional
   public void deleteCommentByAdmin(final Long id) {
     Comment comment = getCommentEntity(id);
-    comment.changeByCommentStatus();
+    comment.chaneStatusDeletedByAdmin();
     commentRepository.saveAndFlush(comment);
   }
 
@@ -139,7 +140,7 @@ public class CommentServiceImpl implements CommentService {
   public List<AccountCommentResponseDto> findMyComments(Account account, int pageNum) {
     Pageable pageable = PageRequest.of(pageNum - 1, 10,
         Sort.by("createdDate").descending());
-    Page<Comment> commentPage = commentRepository.findCommentByAccount_Id(account.getId(),
+    Page<Comment> commentPage = commentRepository.findCommentByAccountId(account.getId(),
         pageable);
     List<AccountCommentResponseDto> productResponseList = commentPage.getContent().stream()
         .map(AccountCommentResponseDto::new).collect(Collectors.toList());
