@@ -28,17 +28,6 @@ public class AccountServiceImpl implements AccountService {
   private final AccountInfoRepository accountInfoRepository;
   private final AuthService authService;
 
-
-  @Override
-  @Transactional(readOnly = true)
-  public List<UserInfoByAdminResponseDto> selectAccountsInfo() {
-    return accountRepository.getInfoByAccount();
-  }
-
-  @Override
-  public void adminCheck() {
-  }
-
   /**
    * 유저 식별자로 유저 객체 찾기 id -> entity
    *
