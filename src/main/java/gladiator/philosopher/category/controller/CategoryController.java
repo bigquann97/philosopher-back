@@ -62,6 +62,7 @@ public class CategoryController {
    * @param dto
    */
   @PutMapping("/{categoryId}")
+  @ResponseStatus(HttpStatus.OK)
   public void modifyCategory(
       final @PathVariable Long categoryId,
       final CategoryRequestDto dto
