@@ -40,6 +40,7 @@ public class ReportController {
   }
 
   @PostMapping("/comment")
+  @ResponseStatus(HttpStatus.CREATED)
   public void reportComment(
       final @RequestParam Long id,
       final @RequestBody ReportRequestDto dto,
@@ -50,6 +51,7 @@ public class ReportController {
 
   // api/report/thread?id=3
   @PostMapping("/thread")
+  @ResponseStatus(HttpStatus.CREATED)
   public void reportThread(
       final @RequestParam Long id,
       final @RequestBody ReportRequestDto dto,
