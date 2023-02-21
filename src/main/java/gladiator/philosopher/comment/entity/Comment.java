@@ -39,14 +39,6 @@ public class Comment extends BaseEntity {
 
   private String opinion;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "account_Id")
-  private Account account;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "thread_Id")
-  private Thread thread;
-
   @Enumerated(EnumType.STRING)
   private CommentStatus status;
 
@@ -56,6 +48,14 @@ public class Comment extends BaseEntity {
   @OneToMany(mappedBy = "mentionedComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Mention> mentioneds = new HashSet<>();
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "account_Id")
+  private Account account;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "thread_Id")
+  private Thread thread;
+  
   @Builder
   public Comment(Account account, Thread thread, String content, String opinion) {
     this.account = account;
@@ -82,8 +82,12 @@ public class Comment extends BaseEntity {
     return this.account.equals(account);
   }
 
-  public void chaneStatusDeletedByAdmin() {
+  public void chaneStatusToDeleted() {
     this.status = CommentStatus.DELETED;
+  }
+
+  public boolean isBlinded() {
+    return this.status == CommentStatus.BLINDED;
   }
 
   @Override
@@ -103,7 +107,4 @@ public class Comment extends BaseEntity {
     return getClass().hashCode();
   }
 
-  public boolean isBlinded() {
-    return this.status == CommentStatus.BLINDED;
-  }
 }
