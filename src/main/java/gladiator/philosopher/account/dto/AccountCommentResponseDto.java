@@ -9,8 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class AccountCommentDto {
+public class AccountCommentResponseDto {
 
   private Long commentId;
 
@@ -27,7 +26,7 @@ public class AccountCommentDto {
   private List<Long> mentionedCommentIds;
 
   @Builder
-  public AccountCommentDto(Comment comment) {
+  public AccountCommentResponseDto(Comment comment) {
     this.commentId = comment.getId();
     this.opinion = comment.getOpinion();
     this.content = comment.getContent();

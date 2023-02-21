@@ -16,12 +16,13 @@ import gladiator.philosopher.account.dto.login.SignInRequestDto;
 import gladiator.philosopher.account.dto.login.SignInResponseDto;
 import gladiator.philosopher.account.dto.login.SignUpRequestDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.jwt.TokenDto;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
@@ -30,14 +31,21 @@ import io.jsonwebtoken.Claims;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Component
+@Configuration
 public class AuthServiceImpl implements AuthService {
 
   private final AccountRepository accountRepository;
@@ -46,7 +54,9 @@ public class AuthServiceImpl implements AuthService {
   private final JwtTokenProvider jwtTokenProvider;
   private final EmailService emailService;
   private final RedisUtil redisUtil;
-  private final String imageUrl = "default_image.jpg";
+
+  @Value(value = "${default.image}")
+  private String imageUrl;
 
   /**
    * 회원가입
@@ -56,17 +66,14 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   @Override
   public void signUp(final SignUpRequestDto signUpRequestDto) {
-
     checkIfUserEmailDuplicated(signUpRequestDto.getEmail());
     checkIfUserNickNameDuplicated(signUpRequestDto.getNickname());
     checkIfEmailVerified(signUpRequestDto.getEmail());
-
     Account account = signUpRequestDto.toEntity(
         passwordEncoder.encode(signUpRequestDto.getPassword()));
     accountRepository.save(account);
-
-    AccountInfo accountInfo = new AccountInfo(account, imageUrl);
-    accountInfoRepository.save(accountInfo);
+    AccountImage accountImage = new AccountImage(account, imageUrl);
+    accountInfoRepository.save(accountImage);
 
   }
 
@@ -97,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
     response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
 
     return SignInResponseDto.of(account.getNickname(), tokenDto.getAccessToken(),
-        tokenDto.getRefreshToken(), account.getType());
+        tokenDto.getRefreshToken(), account.getRole());
   }
 
 
@@ -133,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public void signOut(final TokenRequestDto dto) {
     if (!jwtTokenProvider.validateToken(dto.getAccessToken())) {
-      throw new IllegalArgumentException("유효하지 않은 access token");
+      throw new AuthException(ExceptionStatus.INVALID_ACCESS_TOKEN);
     }
 
     Claims claim = jwtTokenProvider.getUserInfoFromToken(dto.getAccessToken());

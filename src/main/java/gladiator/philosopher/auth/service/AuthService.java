@@ -9,12 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface AuthService {
 
-  void signUp(SignUpRequestDto signUpRequestDto); // 회원가입
-
-  SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response); // 로그인
-
+  void signUp(SignUpRequestDto signUpRequestDto);
+  SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response);
   ReissueResponseDto reissue(final TokenRequestDto tokenRequestDto,
-      final HttpServletResponse response); // 토큰 재발행
+      final HttpServletResponse response);
 
   void signOut(TokenRequestDto dto);
 

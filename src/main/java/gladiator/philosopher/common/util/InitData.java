@@ -1,7 +1,7 @@
 package gladiator.philosopher.common.util;
 
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.category.entity.Category;
@@ -32,7 +32,6 @@ import gladiator.philosopher.report.repository.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
-import gladiator.philosopher.thread.entity.ThreadStatus;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
@@ -79,19 +78,19 @@ public class InitData implements ApplicationRunner {
     Account account1 = new Account(1L, "wlsdn7717@naver.com", passwordEncoder.encode("rlawlghks1"),
         20, "김지환", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
     accountRepository.save(account1);
-    AccountInfo accountImage1 = new AccountInfo(account1, "jipang1.jpg");
+    AccountImage accountImage1 = new AccountImage(account1, "jipang1.jpg");
     accountInfoRepository.save(accountImage1);
 
     Account account2 = new Account(2L, "test1@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
         "박정수", Gender.MALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
     accountRepository.save(account2);
-    AccountInfo accountImage2 = new AccountInfo(account2, "jipang2.png");
+    AccountImage accountImage2 = new AccountImage(account2, "jipang2.png");
     accountInfoRepository.save(accountImage2);
 
     Account account3 = new Account(3L, "test2@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
         "이정국", Gender.MALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
     accountRepository.save(account3);
-    AccountInfo accountImage3 = new AccountInfo(account3, "jipang3.jpg");
+    AccountImage accountImage3 = new AccountImage(account3, "jipang3.jpg");
     accountInfoRepository.save(accountImage3);
 
     Account account4 = new Account(4L, "test3@naver.com", passwordEncoder.encode("rlawlghks1"), 80,

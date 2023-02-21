@@ -4,7 +4,7 @@ import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
 import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
 import gladiator.philosopher.account.dto.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.entity.AccountInfo;
+import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
@@ -52,10 +52,10 @@ public class AccountServiceImpl implements AccountService {
 
   @Transactional
   public void UpdateAccountRole(final Account account) {
-    if (account.getType() == (UserRole.ROLE_USER)) {
-      account.UpdateAccountRole(UserRole.ROLE_MANAGER);
+    if (account.getRole() == (UserRole.ROLE_USER)) {
+      account.updateAccountRole(UserRole.ROLE_MANAGER);
     } else {
-      account.UpdateAccountRole(UserRole.ROLE_USER);
+      account.updateAccountRole(UserRole.ROLE_USER);
     }
   }
 
@@ -71,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
       final ModifyNicknameRequestDto modifynicknameRequestDto
   ) {
     log.info("account name is : " + account.getNickname());
-    account.UpdateNickname(modifynicknameRequestDto.getNickname());
+    account.updateNickname(modifynicknameRequestDto.getNickname());
     accountRepository.saveAndFlush(account);
     log.info("new account name is : " + account.getNickname());
   }
@@ -79,10 +79,10 @@ public class AccountServiceImpl implements AccountService {
   @Override
   @Transactional
   public void modifyAccountImage(Account account, String newUrl) {
-    final AccountInfo accountInfo = accountInfoRepository.getAccountInfoByAccountId(
+    final AccountImage accountImage = accountInfoRepository.getAccountInfoByAccountId(
         account.getId());
-    accountInfo.updateImageUrl(newUrl);
-    accountInfoRepository.saveAndFlush(accountInfo);
+    accountImage.updateImageUrl(newUrl);
+    accountInfoRepository.saveAndFlush(accountImage);
   }
 
   @Override
@@ -92,15 +92,15 @@ public class AccountServiceImpl implements AccountService {
   ) {
     log.info("my password is : " + account.getPassword());
     String password = passwordEncoder.encode(modifyPasswordRequestDto.getPassword());
-    account.UpdatePassword(password);
+    account.updatePassword(password);
     accountRepository.saveAndFlush(account);
     log.info("new password is : " + account.getPassword());
   }
 
   @Override
   public String getOldUrl(Account account) {
-    AccountInfo accountInfo = accountInfoRepository.getAccountInfoByAccountId(account.getId());
-    return accountInfo.getImageUrl();
+    AccountImage accountImage = accountInfoRepository.getAccountInfoByAccountId(account.getId());
+    return accountImage.getImageUrl();
   }
 
 }

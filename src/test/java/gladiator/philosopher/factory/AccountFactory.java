@@ -17,7 +17,7 @@ public class AccountFactory {
         .status(UserStatus.ACTIVATED)
         .password("temp")
         .nickname("nick")
-        .type(UserRole.ROLE_USER)
+        .role(UserRole.ROLE_USER)
         .build();
   }
 
@@ -29,7 +29,7 @@ public class AccountFactory {
         .status(UserStatus.ACTIVATED)
         .password("temp2")
         .nickname("nick2")
-        .type(UserRole.ROLE_USER)
+        .role(UserRole.ROLE_USER)
         .build();
   }
 
@@ -41,7 +41,7 @@ public class AccountFactory {
         .status(UserStatus.ACTIVATED)
         .password("manager")
         .nickname("manager")
-        .type(UserRole.ROLE_MANAGER)
+        .role(UserRole.ROLE_MANAGER)
         .build();
   }
 
@@ -53,7 +53,7 @@ public class AccountFactory {
         .status(UserStatus.ACTIVATED)
         .password("admin")
         .nickname("admin")
-        .type(UserRole.ROLE_ADMIN)
+        .role(UserRole.ROLE_ADMIN)
         .build();
   }
 

@@ -43,7 +43,7 @@ public class SignUpRequestDto {
         .age(this.getAge())
         .nickname(this.getNickname())
         .gender(checkGender(this.gender))
-        .type(UserRole.ROLE_USER)
+        .role(UserRole.ROLE_USER)
         .status(UserStatus.ACTIVATED).build();
   }
 

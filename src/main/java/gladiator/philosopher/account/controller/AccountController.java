@@ -1,6 +1,6 @@
 package gladiator.philosopher.account.controller;
 
-import gladiator.philosopher.account.dto.AccountCommentDto;
+import gladiator.philosopher.account.dto.AccountCommentResponseDto;
 import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
 import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
 import gladiator.philosopher.account.dto.UserInfoResponseDto;
@@ -37,7 +37,7 @@ public class AccountController {
    *
    * @param accountDetails
    */ // 기능 수정 할 것
-  @GetMapping()
+  @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public UserInfoResponseDto getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
     return accountService.getMyInfo(accountDetails.getAccount());
@@ -50,7 +50,7 @@ public class AccountController {
    */
   @GetMapping("/comments")
   @ResponseStatus(HttpStatus.OK)
-  public List<AccountCommentDto> getMyComments(
+  public List<AccountCommentResponseDto> getMyComments(
       final @AuthenticationPrincipal AccountDetails accountDetails,
       @RequestParam(name = "page") int pageNum) {
     return commentService.findMyComments(accountDetails.getAccount(), pageNum);
@@ -62,7 +62,7 @@ public class AccountController {
    * @param accountDetails
    * @param modifynicknameRequestDto
    */
-  @PatchMapping("/modify-nickname")
+  @PatchMapping("/nickname")
   @ResponseStatus(HttpStatus.CREATED)
   public void modifyMyNickname(
       final @AuthenticationPrincipal AccountDetails accountDetails,
@@ -77,7 +77,7 @@ public class AccountController {
    * @param accountDetails
    * @param modifyPasswordRequestDto
    */
-  @PatchMapping("/modify-password")
+  @PatchMapping("/password")
   @ResponseStatus(HttpStatus.CREATED)
   public void modifyMyPassword(
       final @AuthenticationPrincipal AccountDetails accountDetails,
@@ -92,7 +92,7 @@ public class AccountController {
    * @param accountDetails
    * @param multipartFile
    */
-  @PatchMapping("/modify-image")
+  @PatchMapping("/image")
   @ResponseStatus(HttpStatus.CREATED)
   public void modifyMyImage(
       final @RequestPart("image") MultipartFile multipartFile,
