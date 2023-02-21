@@ -43,7 +43,7 @@ class CategoryServiceTest {
     List<CategoryResponseDto> result = categoryService.selectAllCategories();
 
     // then
-    Assertions.assertThat(result.size()).isEqualTo(1);
+    Assertions.assertThat(result.size()).isEqualTo(2);
     Assertions.assertThat(result.get(0).getName()).isEqualTo(category1.getName());
     Assertions.assertThat(result.get(1).getName()).isEqualTo(category2.getName());
   }
