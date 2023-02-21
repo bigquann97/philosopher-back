@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
   private final RedisUtil redisUtil;
 
   @Value(value = "${default.image}")
-  private final String imageUrl;
+  private String imageUrl;
 
   /**
    * 회원가입
