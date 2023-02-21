@@ -8,6 +8,8 @@ import org.springframework.lang.NonNull;
 
 public interface MentionRepository extends JpaRepository<Mention, Long> {
 
+  void deleteByMentionedComment(@NonNull Comment mentionedComment);
+
   void deleteByMentioningComment(@NonNull Comment mentioningComment);
 
   List<Mention> findByMentionedComment(@NonNull Comment mentionedComment);
