@@ -96,12 +96,10 @@ public class Account extends BaseEntity {
     return getClass().hashCode();
   }
 
-  public void updateNickname(String nickname) {
+  public void modifyAccountInfo(String nickname, String password) {
     this.nickname = nickname;
+    this.password =  password;
   }
 
-  public void updatePassword(String password) {
-    this.password = password;
-  }
 
 }
