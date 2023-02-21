@@ -42,13 +42,16 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
   public MyPage<CommentResponseDto> selectCommentsWithPaging(Pageable pageable, Long threadId) {
     List<CommentResponseDto> dtos = jpaQueryFactory
         .select(
-            Projections.constructor(CommentResponseDto.class, comment,
-                JPAExpressions.select(commentRecommend.count())
+            Projections.constructor(
+                CommentResponseDto.class,
+                comment,
+                JPAExpressions
+                    .select(commentRecommend.count())
                     .from(commentRecommend)
                     .where(commentRecommend.comment.id.eq(comment.id))))
         .from(comment)
-        .leftJoin(comment.thread, thread).fetchJoin()
-        .leftJoin(comment.account, account).fetchJoin()
+        .leftJoin(comment.thread, thread)
+        .leftJoin(comment.account, account)
         .where(comment.thread.id.eq(threadId))
         .orderBy(comment.id.desc())
         .offset(pageable.getOffset())
@@ -63,7 +66,6 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
 
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
-
 }
 /* 1
   private final JPAQueryFactory jpaQueryFactory;
@@ -158,11 +160,16 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
   public MyPage<CommentResponseDto> selectCommentsWithPaging(Pageable pageable, Long threadId) {
     List<CommentResponseDto> dtos = jpaQueryFactory
         .select(
-            Projections.constructor(CommentResponseDto.class, comment,
-                JPAExpressions.select(commentRecommend.count())
+            Projections.constructor(
+                CommentResponseDto.class,
+                comment,
+                JPAExpressions
+                    .select(commentRecommend.count())
                     .from(commentRecommend)
                     .where(commentRecommend.comment.id.eq(comment.id))))
         .from(comment)
+        .leftJoin(comment.thread, thread).fetchJoin()
+        .leftJoin(comment.account, account).fetchJoin()
         .where(comment.thread.id.eq(threadId))
         .orderBy(comment.id.desc())
         .offset(pageable.getOffset())
@@ -177,4 +184,5 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
 
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
+
  */

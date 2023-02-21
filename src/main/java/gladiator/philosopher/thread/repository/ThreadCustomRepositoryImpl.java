@@ -3,9 +3,12 @@ package gladiator.philosopher.thread.repository;
 import static org.springframework.util.StringUtils.hasText;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -129,16 +132,16 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 .select(Wildcard.count)
                 .from(comment)
                 .where(comment.thread.id.eq(thread.id)),
-            JPAExpressions
-                .select(Wildcard.count)
-                .from(threadRecommend)
-                .where(threadRecommend.thread.id.eq(thread.id)),
+            ExpressionUtils.as(
+                JPAExpressions
+                    .select(Wildcard.count)
+                    .from(threadRecommend)
+                    .where(threadRecommend.thread.id.eq(thread.id)), "likeCount"),
             account.nickname,
             thread.createdDate,
             thread.endDate
         )
         .from(thread)
-        .leftJoin(thread.recommends, threadRecommend)
         .leftJoin(thread.account, account)
         .leftJoin(thread.category, category)
         .where(
@@ -187,10 +190,11 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                     .select(Wildcard.count)
                     .from(comment)
                     .where(comment.thread.id.eq(thread.id)),
-                JPAExpressions
-                    .select(Wildcard.count)
-                    .from(threadRecommend)
-                    .where(threadRecommend.thread.id.eq(thread.id)),
+                ExpressionUtils.as(
+                    JPAExpressions
+                        .select(Wildcard.count)
+                        .from(threadRecommend)
+                        .where(threadRecommend.thread.id.eq(thread.id)), "likeCount"),
                 account.nickname,
                 thread.createdDate,
                 thread.endDate
@@ -198,7 +202,6 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
         .from(thread)
         .leftJoin(account).on(account.id.eq(thread.account.id))
         .leftJoin(category).on(category.id.eq(thread.category.id))
-        .leftJoin(threadRecommend).on(threadRecommend.thread.id.eq(thread.id))
         .groupBy(thread.id)
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),
@@ -222,11 +225,11 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
 
-  private OrderSpecifier<Long> orderByCondSort(Sort sort) {
+  private OrderSpecifier orderByCondSort(Sort sort) {
     if (sort.equals(Sort.NEW)) {
-      return thread.id.desc();
+      return new OrderSpecifier<>(Order.DESC, thread.id);
     } else {
-      return threadRecommend.count().desc();
+      return new OrderSpecifier<>(Order.DESC, Expressions.stringPath("likeCount"));
     }
   }
 

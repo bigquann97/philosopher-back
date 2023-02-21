@@ -2,7 +2,6 @@ package gladiator.philosopher.comment.entity;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.common.entity.BaseEntity;
-import gladiator.philosopher.recommend.entity.CommentRecommend;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.HashSet;
 import java.util.Objects;
@@ -53,9 +52,6 @@ public class Comment extends BaseEntity {
 
   @OneToMany(mappedBy = "mentionedComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Mention> mentioneds = new HashSet<>();
-
-  @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<CommentRecommend> recommends = new HashSet<>();
 
   @Builder
   public Comment(Account account, Thread thread, String content, String opinion) {

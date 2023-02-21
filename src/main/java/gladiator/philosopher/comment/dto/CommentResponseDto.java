@@ -30,21 +30,9 @@ public class CommentResponseDto {
 
   private Long recommendCount;
 
-  private List<MentionResponseDto> mentioningCommentIds;
+  private List<MentionResponseDto> mentioningComments;
 
-  private List<MentionResponseDto> mentionedCommentIds;
-
-  public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
-      LocalDateTime createDate, CommentStatus status, Long recommendCount,
-      Set<Mention> mentionings, Set<Mention> mentioneds) {
-    this.commentId = commentId;
-    this.nickname = nickname;
-    this.opinion = opinion;
-    this.content = content;
-    this.createDate = TimeAdapter.formatToString(createDate);
-    this.status = status.name();
-    this.recommendCount = recommendCount;
-  }
+  private List<MentionResponseDto> mentionedComments;
 
   @Builder
   public CommentResponseDto(Comment comment, Long recommendCount) {
@@ -52,7 +40,7 @@ public class CommentResponseDto {
     this.nickname = comment.getAccount().getNickname();
     this.opinion = comment.getOpinion();
     this.content = comment.getContent();
-    this.mentioningCommentIds = comment.getMentionings().stream()
+    this.mentioningComments = comment.getMentionings().stream()
         .map(x -> {
           Comment c = x.getMentionedComment();
           Long id = c.getId();
@@ -60,7 +48,7 @@ public class CommentResponseDto {
           return MentionResponseDto.of(id, content);
         })
         .collect(Collectors.toList());
-    this.mentionedCommentIds = comment.getMentioneds().stream()
+    this.mentionedComments = comment.getMentioneds().stream()
         .map(x -> {
           Comment c = x.getMentioningComment();
           Long id = c.getId();
@@ -73,7 +61,45 @@ public class CommentResponseDto {
     this.recommendCount = recommendCount;
   }
 
+}
+
+/*
+  public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
+      LocalDateTime createDate, CommentStatus status, Long recommendCount,
+      List<Mention> mentionings, List<Mention> mentioneds) {
+    this.commentId = commentId;
+    this.nickname = nickname;
+    this.opinion = opinion;
+    this.content = content;
+    this.createDate = TimeAdapter.formatToString(createDate);
+    this.status = status.name();
+    this.mentioningComments = mentionings.stream().map(x -> {
+      if (x != null) {
+        Comment c = x.getMentionedComment();
+        Long id = c.getId();
+        String mentionContent = c.getContent();
+        return MentionResponseDto.of(id, mentionContent);
+      } else {
+        return null;
+      }
+    }).collect(Collectors.toList());
+    this.mentionedComments = mentioneds.stream()
+        .map(x -> {
+          if (x != null) {
+            Comment c = x.getMentioningComment();
+            Long id = c.getId();
+            String mentionedContent = c.getContent();
+            return MentionResponseDto.of(id, mentionedContent);
+          } else {
+            return null;
+          }
+        })
+        .collect(Collectors.toList());
+    this.recommendCount = recommendCount;
+  }
+
   public static CommentResponseDto of(Comment comment, Long recommendCount) {
     return CommentResponseDto.builder().comment(comment).recommendCount(recommendCount).build();
   }
-}
+
+ */
