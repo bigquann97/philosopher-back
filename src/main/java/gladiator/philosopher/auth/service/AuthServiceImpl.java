@@ -20,7 +20,6 @@ import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.common.exception.AuthException;
-import gladiator.philosopher.common.exception.CustomException;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
@@ -32,15 +31,21 @@ import io.jsonwebtoken.Claims;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Component
+@Configuration
 public class AuthServiceImpl implements AuthService {
 
   private final AccountRepository accountRepository;
@@ -50,9 +55,8 @@ public class AuthServiceImpl implements AuthService {
   private final EmailService emailService;
   private final RedisUtil redisUtil;
 
-
-  @Value("${Spring.default.image}")
-  private final String imageUrl;
+  @Value(value = "${default.image}")
+  private String imageUrl;
 
   /**
    * 회원가입
