@@ -1,11 +1,14 @@
 package gladiator.philosopher.auth.service;
 
+import static gladiator.philosopher.auth.service.EmailService.VALUE_TRUE;
+import static gladiator.philosopher.auth.service.EmailService.WHITELIST_KEY_PREFIX;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_ACCOUNT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_NICKNAME;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_EMAIL_OR_PW;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_REFRESH_TOKEN;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_ACCOUNT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_VERIFIED_EMAIL;
+import static gladiator.philosopher.common.jwt.JwtAuthenticationFilter.BLACK_LIST_KEY_PREFIX;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.ACCESS_TOKEN_EXPIRE_TIME;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.AUTHORIZATION_HEADER;
 import static gladiator.philosopher.common.jwt.JwtTokenProvider.BEARER_PREFIX;
@@ -23,7 +26,6 @@ import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
-import gladiator.philosopher.common.jwt.JwtAuthenticationFilter;
 import gladiator.philosopher.common.jwt.JwtTokenProvider;
 import gladiator.philosopher.common.jwt.TokenDto;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
@@ -146,8 +148,8 @@ public class AuthServiceImpl implements AuthService {
     String email = claim.getSubject();
     redisUtil.deleteData(email);
 
-    redisUtil.setDataExpire(JwtAuthenticationFilter.BLACK_LIST_KEY_PREFIX + dto.getAccessToken(),
-        "TRUE", ACCESS_TOKEN_EXPIRE_TIME / 1000L);
+    redisUtil.setDataExpire(BLACK_LIST_KEY_PREFIX + dto.getAccessToken(),
+        VALUE_TRUE, ACCESS_TOKEN_EXPIRE_TIME / 1000L);
   }
 
   @Override
@@ -227,7 +229,7 @@ public class AuthServiceImpl implements AuthService {
 
   private void checkIfEmailVerified(String email) {
     try {
-      if (!redisUtil.hasKey(EmailService.WHITELIST_KEY_PREFIX + email)) {
+      if (!redisUtil.hasKey(WHITELIST_KEY_PREFIX + email)) {
         throw new AuthException(NOT_VERIFIED_EMAIL);
       }
     } catch (NullPointerException e) {

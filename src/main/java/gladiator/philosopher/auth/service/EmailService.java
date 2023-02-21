@@ -5,8 +5,8 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID
 
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
-import gladiator.philosopher.common.util.VerifyEmailMessage;
 import gladiator.philosopher.common.util.RedisUtil;
+import gladiator.philosopher.common.util.VerifyEmailMessage;
 import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -24,8 +24,9 @@ public class EmailService {
   private final JavaMailSender emailSender;
   private final RedisUtil redisUtil;
 
-  public static final String VERIFY_KEY_PREFIX = "EMAIL:VERIFY:";
-  public static final String WHITELIST_KEY_PREFIX = "EMAIL:VERIFIED:";
+  public static final String VERIFY_KEY_PREFIX = "EMAIL::VERIFY::";
+  public static final String WHITELIST_KEY_PREFIX = "EMAIL::VERIFIED::";
+  public static final String VALUE_TRUE = "TRUE";
 
   public void sendMail(
       final String to,
@@ -60,7 +61,7 @@ public class EmailService {
     if (!code.equals(validCode)) {
       throw new AuthException(INVALID_CODE);
     }
-    redisUtil.setDataExpire(WHITELIST_KEY_PREFIX + email, "true",
+    redisUtil.setDataExpire(WHITELIST_KEY_PREFIX + email, VALUE_TRUE,
         60L * 60 * 24); // 1일 이메일 화이트리스트 유지
     redisUtil.deleteData(VERIFY_KEY_PREFIX + email);
   }
