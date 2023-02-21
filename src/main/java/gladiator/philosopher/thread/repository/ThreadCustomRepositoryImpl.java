@@ -29,8 +29,8 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.QThreadImage;
 import gladiator.philosopher.thread.entity.QThreadOpinion;
-import gladiator.philosopher.thread.enums.Sort;
 import gladiator.philosopher.thread.entity.Thread;
+import gladiator.philosopher.thread.enums.Sort;
 import gladiator.philosopher.thread.enums.ThreadLocation;
 import gladiator.philosopher.thread.enums.ThreadStatus;
 import java.util.List;
@@ -186,6 +186,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 thread.id,
                 thread.title,
                 category.name,
+                thread.status,
                 JPAExpressions
                     .select(Wildcard.count)
                     .from(comment)

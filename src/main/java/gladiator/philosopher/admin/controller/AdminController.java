@@ -2,9 +2,9 @@ package gladiator.philosopher.admin.controller;
 
 import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.service.CommentService;
@@ -12,7 +12,6 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
-import gladiator.philosopher.report.dto.ReportResponseDto;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
@@ -93,17 +92,7 @@ public class AdminController {
   ) {
     postService.modifyPostByAdmin(id, postRequestDto);
   }
-
-  /**
-   * 신고 목록 조회 ( 페이징 처리 해야함)
-   *
-   * @return
-   */
-  @GetMapping("/reports")
-  public List<ReportResponseDto> getReports() {
-    return adminService.getReports();
-  }
-
+  
   /**
    * 신고 목록 조회 (Post)
    *

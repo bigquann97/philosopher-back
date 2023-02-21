@@ -3,8 +3,8 @@ package gladiator.philosopher.thread.service;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
-import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
@@ -18,8 +18,8 @@ import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
-import gladiator.philosopher.thread.enums.ThreadLocation;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
+import gladiator.philosopher.thread.enums.ThreadLocation;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
@@ -61,16 +61,18 @@ public class ThreadServiceImpl implements ThreadService {
         .endDate(LocalDateTime.now().plusDays(1L))
         .build();
 
+    Thread savedThread = threadRepository.saveAndFlush(thread);
+
     List<ThreadImage> images = postService.getPostImages(post).stream()
         .map(x -> new ThreadImage(x.getImageUrl(), thread)).
         collect(Collectors.toList());
+
+    threadImageRepository.saveAll(images);
 
     List<ThreadOpinion> opinions = postService.getPostOpinions(post).stream()
         .map(o -> new ThreadOpinion(thread, o.getOpinion())).collect(Collectors.toList());
 
     threadOpinionRepository.saveAll(opinions);
-
-    Thread savedThread = threadRepository.saveAndFlush(thread);
 
     notificationService.notifyToRecommendersThatThreadHasStarted(savedThread, recommends);
 

@@ -40,7 +40,8 @@ public class AccountController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public UserInfoResponseDto getMyInfo(
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     return accountService.getMyInfo(accountDetails.getAccount());
   }
 
@@ -53,7 +54,8 @@ public class AccountController {
   @ResponseStatus(HttpStatus.OK)
   public List<AccountCommentResponseDto> getMyComments(
       final @AuthenticationPrincipal AccountDetails accountDetails,
-      @RequestParam(name = "page") int pageNum) {
+      final @RequestParam(name = "page") int pageNum
+  ) {
     return commentService.findMyComments(accountDetails.getAccount(), pageNum);
   }
 
