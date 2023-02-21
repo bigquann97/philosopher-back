@@ -2,8 +2,6 @@ package gladiator.philosopher.account.controller;
 
 import gladiator.philosopher.account.dto.AccountCommentResponseDto;
 import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
-import gladiator.philosopher.account.dto.info.ModifyNicknameRequestDto;
-import gladiator.philosopher.account.dto.info.ModifyPasswordRequestDto;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.comment.service.CommentService;
@@ -41,7 +39,8 @@ public class AccountController {
    */ // 기능 수정 할 것
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public UserInfoResponseDto getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
+  public UserInfoResponseDto getMyInfo(
+      final @AuthenticationPrincipal AccountDetails accountDetails) {
     return accountService.getMyInfo(accountDetails.getAccount());
   }
 
@@ -59,13 +58,12 @@ public class AccountController {
   }
 
 
-
   @PutMapping("/info")
   @ResponseStatus(HttpStatus.CREATED)
   public Long modifyAccountInfo(
       final @AuthenticationPrincipal AccountDetails accountDetails,
       final @RequestBody ModifyAccountInfoRequestDto infoRequestDto
-  ){
+  ) {
     return accountService.modifyAccountInfo(accountDetails.getAccount(), infoRequestDto);
   }
 
