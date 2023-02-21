@@ -5,10 +5,12 @@ import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,6 +22,7 @@ public class NotificationController {
 
   // 나에게 온 모든 알림 조회
   @GetMapping
+  @ResponseStatus(HttpStatus.OK)
   public MyPage<NotificationResponseDto> getMyNotifications(
       final @RequestParam(required = false, defaultValue = "1") int page,
       final @AuthenticationPrincipal AccountDetails accountDetails

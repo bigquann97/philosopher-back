@@ -53,7 +53,6 @@ public class NotificationServiceImpl implements NotificationService {
 
   @Override
   public MyPage<NotificationResponseDto> getMyNotifications(final int page, final Account account) {
-
     PageRequest pageRequest = PageRequest.of(page, 5);
     Page<Notification> paged = notificationRepository.findByAccountOrderByIdDesc(account,
         pageRequest);
