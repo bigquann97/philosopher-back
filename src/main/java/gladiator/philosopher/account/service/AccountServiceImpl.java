@@ -1,14 +1,14 @@
 package gladiator.philosopher.account.service;
 
-import gladiator.philosopher.account.dto.ModifyNicknameRequestDto;
-import gladiator.philosopher.account.dto.ModifyPasswordRequestDto;
-import gladiator.philosopher.account.dto.UserInfoResponseDto;
+import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
+import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
+import gladiator.philosopher.account.enums.UserRole;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
-import gladiator.philosopher.account.enums.UserRole;
+import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import java.util.List;
@@ -26,17 +26,7 @@ public class AccountServiceImpl implements AccountService {
   private final AccountRepository accountRepository;
   private final PasswordEncoder passwordEncoder;
   private final AccountInfoRepository accountInfoRepository;
-
-
-  @Override
-  @Transactional(readOnly = true)
-  public List<UserInfoByAdminResponseDto> selectAccountsInfo() {
-    return accountRepository.getInfoByAccount();
-  }
-
-  @Override
-  public void AdminCheck() {
-  }
+  private final AuthService authService;
 
   /**
    * 유저 식별자로 유저 객체 찾기 id -> entity
@@ -65,15 +55,13 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
-  @Transactional
-  public void modifyMyNickname(
-      final Account account,
-      final ModifyNicknameRequestDto modifynicknameRequestDto
-  ) {
-    log.info("account name is : " + account.getNickname());
-    account.updateNickname(modifynicknameRequestDto.getNickname());
+  public Long modifyAccountInfo(Account account,
+      ModifyAccountInfoRequestDto infoRequestDto) {
+    authService.checkIfUserNicknameDuplicated(infoRequestDto.getNickname());
+    String password = passwordEncoder.encode(infoRequestDto.getPassword());
+    account.modifyAccountInfo(infoRequestDto.getNickname(), password);
     accountRepository.saveAndFlush(account);
-    log.info("new account name is : " + account.getNickname());
+    return account.getId();
   }
 
   @Override
@@ -85,22 +73,12 @@ public class AccountServiceImpl implements AccountService {
     accountInfoRepository.saveAndFlush(accountImage);
   }
 
-  @Override
-  @Transactional
-  public void modifyMyPassword(final Account account,
-      final ModifyPasswordRequestDto modifyPasswordRequestDto
-  ) {
-    log.info("my password is : " + account.getPassword());
-    String password = passwordEncoder.encode(modifyPasswordRequestDto.getPassword());
-    account.updatePassword(password);
-    accountRepository.saveAndFlush(account);
-    log.info("new password is : " + account.getPassword());
-  }
 
   @Override
   public String getOldUrl(Account account) {
     AccountImage accountImage = accountInfoRepository.getAccountInfoByAccountId(account.getId());
     return accountImage.getImageUrl();
   }
+
 
 }

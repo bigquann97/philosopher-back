@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 public interface AuthService {
 
   void signUp(SignUpRequestDto signUpRequestDto);
+
   SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response);
+
   ReissueResponseDto reissue(final TokenRequestDto tokenRequestDto,
       final HttpServletResponse response);
 
@@ -19,5 +21,7 @@ public interface AuthService {
   void sendVerificationMail(String email);
 
   void verifyEmail(String email, String code);
+
+  void checkIfUserNicknameDuplicated(String nickName);
 
 }
