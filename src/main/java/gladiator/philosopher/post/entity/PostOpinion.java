@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "post_opinion")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostOpinion {
 

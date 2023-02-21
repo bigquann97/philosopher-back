@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,17 +84,14 @@ public class PostServiceImpl implements PostService {
   public void deletePost(final Long postId, final Account account) {
     Post post = getPostEntity(postId);
     post.isWriter(account);
-//    postOpinionRepository.deleteAllByPostOpinion(post.getId());
-//    postImageRepository.deleteAllByPostImage(post.getId());
-//    postRecommendRepository.deleteAllByPostRecommend(post.getId());
-    post.StatusChangeByAdmin();
+    post.changeStatusDeleteByAdmin();
     postRepository.saveAndFlush(post);
   }
 
   @Override
   @Transactional
-  public Long modifyPost(Long postId, List<String> urls, PostModifyRequestDto postModifyRequestDto,
-      Account account, Category category) {
+  public Long modifyPost(final Long postId, final List<String> urls, final PostModifyRequestDto postModifyRequestDto,
+      final Account account, final Category category) {
     Post post = getPostEntity(postId);
     log.info(post.getTitle());
     post.isWriter(account);
@@ -116,7 +112,7 @@ public class PostServiceImpl implements PostService {
    * @param postRequestDto
    * @param post
    */
-  private void saveOpinions(PostRequestDto postRequestDto, Post post) {
+  private void saveOpinions(final PostRequestDto postRequestDto, final Post post) {
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
     postOpinionRepository.saveAll(opinions);
@@ -128,7 +124,8 @@ public class PostServiceImpl implements PostService {
    * @param url
    * @param post
    */
-  private void saveImages(List<String> url, Post post) {
+  @Transactional
+  public void saveImages(final List<String> url, final Post post) {
     for (String s : url) {
       PostImage postImage = new PostImage(s, post);
       postImageRepository.save(postImage);
@@ -151,6 +148,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 게시글 삭제 ( 상태 변경 )- 사용처 : 어드민
+   *
    * @param postId
    */
   @Override
@@ -158,11 +156,10 @@ public class PostServiceImpl implements PostService {
   public void deletePostByAdmin(final Long postId) {
     final Post post = postRepository.findById(postId).orElseThrow(
         () -> new CustomException(NOT_FOUND_POST));
-    post.StatusChangeByAdmin();
+    post.changeStatusDeleteByAdmin();
 
     postRepository.saveAndFlush(post);
   }
-
 
 
   /**
@@ -180,6 +177,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 게시글 수정 - 사용처 : 어드민
+   *
    * @param postId
    * @param postRequestDto
    * @return
@@ -195,17 +193,20 @@ public class PostServiceImpl implements PostService {
 
 
   @Override
-  public List<String> getOldUrls(Long id) {
+  @Transactional(readOnly = true)
+  public List<String> getOldUrls(final Long id) {
     return postImageRepository.getUrl(getPostEntity(id).getId());
   }
 
   @Override
-  public List<PostImage> getPostImages(Post post) {
+  @Transactional(readOnly = true)
+  public List<PostImage> getPostImages(final Post post) {
     return postImageRepository.findByPost(post);
   }
 
   @Override
-  public List<PostOpinion> getPostOpinions(Post post) {
+  @Transactional(readOnly = true)
+  public List<PostOpinion> getPostOpinions(final Post post) {
     return postOpinionRepository.findByPost(post);
   }
 

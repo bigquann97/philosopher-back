@@ -6,7 +6,6 @@ import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.post.dto.PostStatus;
-import gladiator.philosopher.recommend.entity.PostRecommend;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -34,7 +33,7 @@ public class Post extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id")
   private Account account;
 
@@ -99,7 +98,7 @@ public class Post extends BaseEntity {
   public boolean isBlinded() {
     return this.status == PostStatus.BLINDED;
   }
-  public void StatusChangeByAdmin(){
+  public void changeStatusDeleteByAdmin(){
     this.status = PostStatus.DELETED;
   }
 

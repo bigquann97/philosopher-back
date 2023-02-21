@@ -25,7 +25,7 @@ public class PostImage extends BaseEntity {
 
   private String imageUrl;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "post_id")
   private Post post;
 

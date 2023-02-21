@@ -16,13 +16,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
-
   // CRUD
-  Long createPost(List<String> urls, PostRequestDto postRequestDto, Account accountDetails, Category category); // 게시물 작성 ( 완료 - C)
-  PostResponseDto getPost(Long postId); // 게시물 단건 조회 ( 완료 - R )
-  MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable); // 게시물 조건조회 ( 완료 - R) - 아직 관호님꺼 적용 x
-  void deletePost(Long postId, Account accountDetails); // 게시물 삭제 ( 완료 - D)
-  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto); // 어드민 - 게시글 - 수정 ( )
+  Long createPost(List<String> urls, PostRequestDto postRequestDto, Account accountDetails, Category category);
+
+  PostResponseDto getPost(Long postId);
+
+  MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
+
+  void deletePost(Long postId, Account accountDetails);
+
+  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
 
   Long modifyPost(Long postId,List<String>urls, PostModifyRequestDto postModifyRequestDto, Account account, Category category);
 
@@ -34,6 +37,9 @@ public interface PostService {
   void deletePostByAdmin(Long id);
 
   List<String> getOldUrls(Long id);
+
   List<PostImage> getPostImages(Post post);
+
   List<PostOpinion> getPostOpinions(Post post);
+
 }

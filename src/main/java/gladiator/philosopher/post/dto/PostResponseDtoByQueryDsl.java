@@ -2,8 +2,10 @@ package gladiator.philosopher.post.dto;
 
 import java.time.LocalDateTime;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 public class PostResponseDtoByQueryDsl {
 
   // post
