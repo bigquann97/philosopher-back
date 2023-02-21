@@ -1,12 +1,8 @@
 package gladiator.philosopher.comment.dto;
 
 import gladiator.philosopher.comment.entity.Comment;
-import gladiator.philosopher.comment.entity.CommentStatus;
-import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.common.util.TimeAdapter;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,18 +29,6 @@ public class CommentResponseDto {
   private List<MentionResponseDto> mentioningComments;
 
   private List<MentionResponseDto> mentionedComments;
-
-  public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
-      LocalDateTime createDate, CommentStatus status, Long recommendCount,
-      Set<Mention> mentionings, Set<Mention> mentioneds) {
-    this.commentId = commentId;
-    this.nickname = nickname;
-    this.opinion = opinion;
-    this.content = content;
-    this.createDate = TimeAdapter.formatToString(createDate);
-    this.status = status.name();
-    this.recommendCount = recommendCount;
-  }
 
   @Builder
   public CommentResponseDto(Comment comment, Long recommendCount) {
@@ -73,8 +57,45 @@ public class CommentResponseDto {
     this.recommendCount = recommendCount;
   }
 
+}
+
+/*
+  public CommentResponseDto(Long commentId, String nickname, String opinion, String content,
+      LocalDateTime createDate, CommentStatus status, Long recommendCount,
+      List<Mention> mentionings, List<Mention> mentioneds) {
+    this.commentId = commentId;
+    this.nickname = nickname;
+    this.opinion = opinion;
+    this.content = content;
+    this.createDate = TimeAdapter.formatToString(createDate);
+    this.status = status.name();
+    this.mentioningComments = mentionings.stream().map(x -> {
+      if (x != null) {
+        Comment c = x.getMentionedComment();
+        Long id = c.getId();
+        String mentionContent = c.getContent();
+        return MentionResponseDto.of(id, mentionContent);
+      } else {
+        return null;
+      }
+    }).collect(Collectors.toList());
+    this.mentionedComments = mentioneds.stream()
+        .map(x -> {
+          if (x != null) {
+            Comment c = x.getMentioningComment();
+            Long id = c.getId();
+            String mentionedContent = c.getContent();
+            return MentionResponseDto.of(id, mentionedContent);
+          } else {
+            return null;
+          }
+        })
+        .collect(Collectors.toList());
+    this.recommendCount = recommendCount;
+  }
+
   public static CommentResponseDto of(Comment comment, Long recommendCount) {
     return CommentResponseDto.builder().comment(comment).recommendCount(recommendCount).build();
   }
 
-}
+ */
