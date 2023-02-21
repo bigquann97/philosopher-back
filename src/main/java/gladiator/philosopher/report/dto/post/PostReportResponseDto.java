@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostReportResponseDto {
 
-  private  Long id;
-  private  String content;
-  private  ReportCategory category;
-  private  String reporter;
-  private  Long postId;
+  private Long id;
+  private String content;
+  private ReportCategory category;
+  private String reporter;
+  private Long postId;
 
   public PostReportResponseDto(Long id, String content, ReportCategory category, String reporter,
       Long postId) {

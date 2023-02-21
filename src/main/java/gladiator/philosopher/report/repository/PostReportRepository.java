@@ -15,7 +15,7 @@ public interface PostReportRepository extends JpaRepository<PostReport, Long> {
 
 
   @Query("select new gladiator.philosopher.report.dto.post.PostReportResponseDto(pr.id, pr.content, pr.category, pr.reporter.nickname, pr.postId)  from PostReport  pr order by pr.id desc ")
-  List<PostReportResponseDto> getAllByPostReportResponseDto();
+  List<PostReportResponseDto> getAllPostReportDtosByAdmin();
 
   boolean existsByReporterAndPostId(@NonNull Account reporter, @NonNull Long postId);
 

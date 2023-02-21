@@ -10,11 +10,13 @@ import gladiator.philosopher.report.service.ReportService;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,6 +30,7 @@ public class ReportController {
   private final CommentService commentService;
 
   @PostMapping("/post")
+  @ResponseStatus(HttpStatus.CREATED)
   public void reportPost(
       final @RequestParam Long id,
       final @RequestBody ReportRequestDto dto,
