@@ -37,7 +37,7 @@ public class AccountCustomRepositoryImpl implements AccountCustomRepository {
                 account.age,
                 account.nickname,
                 account.gender,
-                account.type,
+                account.role,
                 account.status
             ))
         .from(account)
@@ -67,7 +67,7 @@ public class AccountCustomRepositoryImpl implements AccountCustomRepository {
   }
 
   private BooleanExpression userTypeEqual(String userType) {
-    return hasText(userType) ? account.type.eq(UserRole.valueOf(userType)) : null;
+    return hasText(userType) ? account.role.eq(UserRole.valueOf(userType)) : null;
   }
 
 
