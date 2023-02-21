@@ -58,9 +58,9 @@ public class PostController {
   ) {
     s3Uploader.checkFileUpload(multipartFiles);
     List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-    Category Category = categoryService.getCategoryEntity(postRequestDto.getCategory());
+    Category category = categoryService.getCategoryEntity(postRequestDto.getCategory());
     final Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(),
-        Category);
+        category);
     return postId;
   }
 
@@ -83,7 +83,8 @@ public class PostController {
    * @param pageable
    * @return
    */
-  @GetMapping("/")
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
   public MyPage<PostResponseDtoByQueryDsl> searchPost(
       final PostSearchCondition condition,
       final Pageable pageable) {
@@ -109,7 +110,7 @@ public class PostController {
 
 
   /**
-   * 게시글 수정 ( 감이 안 잡히네 어떻게 로직을 풀어야할지 )
+   * 게시글 수정
    *
    * @param postId
    * @param postModifyRequestDto

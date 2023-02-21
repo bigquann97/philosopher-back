@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class PostResponseDto {
 
   private final String title;

@@ -1,10 +1,11 @@
 package gladiator.philosopher.post.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class PostModifyRequestDto {
 
   private String title;
