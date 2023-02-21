@@ -11,12 +11,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +26,7 @@ import org.hibernate.Hibernate;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(force = true, access =  AccessLevel.PRIVATE)
 public class Comment extends BaseEntity {
 
   @Id
@@ -36,11 +38,11 @@ public class Comment extends BaseEntity {
 
   private String opinion;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_Id")
   private Account account;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "thread_Id")
   private Thread thread;
 
@@ -79,7 +81,7 @@ public class Comment extends BaseEntity {
     return this.account.equals(account);
   }
 
-  public void changeByCommentStatus(){
+  public void chaneStatusDeletedByAdmin(){
     this.status = CommentStatus.DELETED;
   }
 

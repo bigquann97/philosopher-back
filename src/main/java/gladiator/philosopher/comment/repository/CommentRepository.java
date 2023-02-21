@@ -17,5 +17,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, Comment
    */
   List<Comment> findAllByThread(Thread thread);
 
-  Page<Comment> findCommentByAccount_Id(Long accountId, Pageable pageable);
+  Page<Comment> findCommentByAccountId(Long accountId, Pageable pageable);
 }
