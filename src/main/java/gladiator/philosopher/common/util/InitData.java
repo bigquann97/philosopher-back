@@ -84,7 +84,7 @@ public class InitData implements ApplicationRunner {
     Account account2 = new Account(2L, "test1@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
         "박정수", Gender.MALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
     accountRepository.save(account2);
-    AccountImage accountImage2 = new AccountImage(account2, "jipang2.png");
+    AccountImage accountImage2 = new AccountImage(account2, "https://the-gladiators.s3.ap-northeast-2.amazonaws.com/AccountImg/cbf685ea-6cb2-4448-872d-0e503a7eddddimage");
     accountInfoRepository.save(accountImage2);
 
     Account account3 = new Account(3L, "test2@naver.com", passwordEncoder.encode("rlawlghks1"), 40,

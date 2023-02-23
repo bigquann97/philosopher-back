@@ -51,7 +51,8 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public UserInfoResponseDto getMyInfo(final Account account) {
-    return new UserInfoResponseDto(account);
+    String accountImageUrl = accountInfoRepository.getAccountImageById(account.getId());
+    return new UserInfoResponseDto(account, accountImageUrl);
   }
 
   @Override

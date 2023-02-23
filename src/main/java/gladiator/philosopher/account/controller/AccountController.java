@@ -36,7 +36,7 @@ public class AccountController {
    * 내 정보 가지고 오기 -> 내용 더 추가할 것.
    *
    * @param accountDetails
-   */ // 기능 수정 할 것
+   */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public UserInfoResponseDto getMyInfo(
