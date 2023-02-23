@@ -8,7 +8,7 @@ public interface AccountService {
 
   Account getAccount(Long id); // 사용자 가지고 오기 ( 단건조회 )
 
-  void UpdateAccountRole(Account account); // 권한 업데이트 ( 어드민 )
+  void updateAccountRole(Account account); // 권한 업데이트 ( 어드민 )
 
   UserInfoResponseDto getMyInfo(Account account); // 내 정보 가지고 오기
 
