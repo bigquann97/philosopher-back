@@ -57,7 +57,8 @@ public class PostController {
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
     s3Uploader.checkFileUpload(multipartFiles);
-    List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+//    List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+  List<String> urls = s3Uploader.uploadResizerTest(multipartFiles, dirName);
     Category category = categoryService.getCategoryEntity(postRequestDto.getCategory());
     final Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(),
         category);

@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import gladiator.philosopher.common.exception.FileException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,11 +16,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import marvin.image.MarvinImage;
+import org.marvinproject.image.transform.scale.Scale;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
@@ -69,11 +75,11 @@ public class S3Uploader {
     if (multipartFiles.get(0).getOriginalFilename().equals("")) {
       return null;
     }
-
     try {
       List<String> resultUrlList = new ArrayList<>();
 
       for (MultipartFile multipartFile : multipartFiles) {
+
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(MediaType.IMAGE_JPEG_VALUE);
@@ -90,6 +96,67 @@ public class S3Uploader {
     }
 
   }
+
+  public List<String> uploadResizerTest(List<MultipartFile> multipartFiles, String dirName) {
+    if (multipartFiles.get(0).getOriginalFilename().equals("")) {
+      return null;
+    }
+    try {
+      log.info("업로드 시작");
+      List<String> imageList = new ArrayList<>(); // 리사이징 된 이미지를 저장할 공간
+
+      for (MultipartFile multipartFile : multipartFiles) {
+        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
+        String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/")+1);
+        MultipartFile resizer = resizer(fileName, fileFormat, multipartFile, 890);
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(resizer.getSize());
+        objectMetadata.setContentType(resizer.getContentType());
+        String uploadUrl = putS3(resizer.getInputStream(), fileName, objectMetadata);
+        log.info("upfile url is :" + uploadUrl);
+        imageList.add(uploadUrl);
+      }
+      return imageList;
+    }catch (IOException e) {
+      throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+    }
+  }
+
+  @Transactional
+  public MultipartFile resizer(String fileName, String fileFormat, MultipartFile multipartFile,
+      int width) {
+    log.info("이미지 리사이징 시작");
+    try {
+      BufferedImage image = ImageIO.read(multipartFile.getInputStream());
+      log.info("기존의 데이터 사이즈(가로)는 다음과 같습니다." + image.getWidth());
+      int originWidth = image.getWidth();
+      log.info("기존의 데이터 사이즈(세로)는 다음과 같습니다." + image.getHeight());
+      int originHeight = image.getHeight();
+
+      if (originWidth < width) {
+        return multipartFile;
+      }
+      MarvinImage imageMarvin = new MarvinImage(image);
+
+      Scale scale = new Scale();
+      scale.load();
+      scale.setAttribute("newWidth", width);
+      scale.setAttribute("newHeight", width * originHeight / originWidth);
+      scale.process(imageMarvin.clone(), imageMarvin, null, null, false);
+
+      BufferedImage imageNoAlpha = imageMarvin.getBufferedImageNoAlpha();
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ImageIO.write(imageNoAlpha, fileFormat, baos);
+      baos.flush();
+
+      return new CustomMultipartFile(fileName, fileFormat, multipartFile.getContentType(),
+          baos.toByteArray());
+    } catch (IOException e) {
+      throw new FileException(ExceptionStatus.FAIL_TO_RESIZE_FILE);
+    }
+  }
+
 
   public List<String> getFilesUrl(List<MultipartFile> multipartFiles, String dirName) {
     List<String> resultUrls = new ArrayList<>();
@@ -213,8 +280,9 @@ public class S3Uploader {
   public void checkFileUpload(List<MultipartFile> multipartFiles) {
     checkByFileCount(multipartFiles); // 파일 갯수 확인
     checkFilesExtension(multipartFiles); // 파일 확장자 검사
-    checkByFileCount(multipartFiles);
   }
+
+
 
 
 }
