@@ -41,7 +41,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void modifyUserRole(final Account account) {
-    accountService.UpdateAccountRole(account);
+    accountService.updateAccountRole(account);
   }
 
 

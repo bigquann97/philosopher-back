@@ -43,6 +43,7 @@ public enum ExceptionStatus {
   // 500 -> INTERNAL SERVER ERROR : 서버에러
   FAIL_TO_POSTING(500, "게시글 작성을 잠시 후 시도해주세요"),
   FAIL_TO_SEND_EMAIL(500, " 이메일 전송 실패 "),
+  FAIL_TO_RESIZE_FILE(500," 파일 리사이징 실패"),
 
   // 401 -> AUTH
   INVALID_REFRESH_TOKEN(401, "유효하지 않은 리프레시 토큰입니다."),

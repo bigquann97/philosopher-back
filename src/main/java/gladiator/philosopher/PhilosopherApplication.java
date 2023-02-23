@@ -13,10 +13,4 @@ public class PhilosopherApplication {
   public static void main(String[] args) {
     SpringApplication.run(PhilosopherApplication.class, args);
   }
-
-//  @Bean
-//  JPAQueryFactory jpaQueryFactory(EntityManager em) {
-//    return new JPAQueryFactory(em);
-//  }
-
 }
