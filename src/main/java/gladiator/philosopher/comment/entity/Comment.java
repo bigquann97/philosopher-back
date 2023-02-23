@@ -55,7 +55,7 @@ public class Comment extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "thread_Id")
   private Thread thread;
-  
+
   @Builder
   public Comment(Account account, Thread thread, String content, String opinion) {
     this.account = account;
@@ -88,6 +88,10 @@ public class Comment extends BaseEntity {
 
   public boolean isBlinded() {
     return this.status == CommentStatus.BLINDED;
+  }
+
+  public boolean isActive() {
+    return this.status == CommentStatus.ACTIVE;
   }
 
   @Override
