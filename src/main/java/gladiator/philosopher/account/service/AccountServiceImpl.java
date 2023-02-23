@@ -41,7 +41,7 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Transactional
-  public void UpdateAccountRole(final Account account) {
+  public void updateAccountRole(final Account account) {
     if (account.getRole() == (UserRole.ROLE_USER)) {
       account.updateAccountRole(UserRole.ROLE_MANAGER);
     } else {
