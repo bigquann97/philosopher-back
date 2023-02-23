@@ -16,18 +16,18 @@ public class PostResponseDtoByQueryDsl {
   // account
   private String nickname;
   //recommend
-  private Long recommend; // 추천수
+  private Long recommendCount;
 
 
   public PostResponseDtoByQueryDsl(Long id, String title, String category,
       LocalDateTime createdDate,
-      PostStatus status, String nickname, Long recommend) {
+      PostStatus status, String nickname, Long recommendCount) {
     this.id = id;
     this.title = title;
     this.category = category;
     this.createdDate = createdDate;
     this.status = status;
     this.nickname = nickname;
-    this.recommend = recommend;
+    this.recommendCount = recommendCount;
   }
 }

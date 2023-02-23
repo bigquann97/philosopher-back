@@ -1,23 +1,16 @@
 package gladiator.philosopher.post.dto;
 
-import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.post.entity.PostImage;
-import gladiator.philosopher.post.entity.PostOpinion;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class PostResponseDto {
 
   private final String title;
   private final String content;
-  private final Long recommend;
+  private final Long recommendCount;
   private final LocalDateTime createDate;
   private final LocalDateTime modifiedDate;
   private final String nickname;
@@ -28,7 +21,7 @@ public class PostResponseDto {
   public PostResponseDto(Post post, Long recommendCount, List<String> urls, List<String> options) {
     this.title = post.getTitle();
     this.content = post.getContent();
-    this.recommend = recommendCount;
+    this.recommendCount = recommendCount;
     this.createDate = post.getCreatedDate();
     this.modifiedDate = post.getModifiedDate();
     this.nickname = post.getAccount().getNickname();
