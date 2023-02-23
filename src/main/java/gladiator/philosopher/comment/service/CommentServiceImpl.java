@@ -56,8 +56,8 @@ public class CommentServiceImpl implements CommentService {
     checkIfThreadIsArchived(foundThread);
     checkIfThreadHasOpinion(foundThread, commentRequestDto);
     Comment comment = commentRequestDto.toEntity(foundThread, account);
+    commentRepository.saveAndFlush(comment);
     mentionService.mentionComment(comment);
-    commentRepository.save(comment);
   }
 
   @Override

@@ -12,6 +12,7 @@ public interface AuthService {
   void signUp(SignUpRequestDto signUpRequestDto);
 
   SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response);
+  
   ReissueResponseDto reissue(final TokenRequestDto tokenRequestDto,
       final HttpServletResponse response);
 

@@ -21,11 +21,12 @@ public class ThreadSimpleResponseDto {
   private String nickname;
   private String createdDate;
   private String endDate;
+  private String accountImageUrl;
 
   @Builder
   public ThreadSimpleResponseDto(Long id, String title, String name, ThreadStatus status,
       Long commentCount, Long recommendCount, String nickname, LocalDateTime createdDate,
-      LocalDateTime endDate) {
+      LocalDateTime endDate, String accountImageUrl) {
     this.id = id;
     this.title = title;
     this.category = name;
@@ -35,6 +36,7 @@ public class ThreadSimpleResponseDto {
     this.nickname = nickname;
     this.createdDate = TimeAdapter.formatToString(createdDate);
     this.endDate = TimeAdapter.formatToString(endDate);
+    this.accountImageUrl = accountImageUrl;
   }
 
 }

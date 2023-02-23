@@ -4,9 +4,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
+import gladiator.philosopher.account.entity.QAccountImage;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
 import gladiator.philosopher.comment.entity.QComment;
-import gladiator.philosopher.comment.entity.QMention;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.recommend.entity.QCommentRecommend;
 import gladiator.philosopher.thread.entity.QThread;
@@ -24,8 +24,8 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
   private final QComment comment;
   private final QAccount account;
   private final QCommentRecommend commentRecommend;
-  private final QMention mention;
   private final QThread thread;
+  private final QAccountImage accountImage;
 
   public CommentCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
     super(Thread.class);
@@ -33,8 +33,8 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
     this.comment = QComment.comment;
     this.account = QAccount.account;
     this.commentRecommend = QCommentRecommend.commentRecommend;
-    this.mention = QMention.mention;
     this.thread = QThread.thread;
+    this.accountImage = QAccountImage.accountImage;
   }
 
   @Override
@@ -48,10 +48,13 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
                 JPAExpressions
                     .select(commentRecommend.count())
                     .from(commentRecommend)
-                    .where(commentRecommend.comment.id.eq(comment.id))))
+                    .where(commentRecommend.comment.id.eq(comment.id)),
+                accountImage.imageUrl
+            ))
         .from(comment)
         .leftJoin(comment.thread, thread)
         .leftJoin(comment.account, account)
+        .leftJoin(accountImage).on(accountImage.account.id.eq(comment.account.id))
         .where(comment.thread.id.eq(threadId))
         .orderBy(comment.id.desc())
         .offset(pageable.getOffset())
