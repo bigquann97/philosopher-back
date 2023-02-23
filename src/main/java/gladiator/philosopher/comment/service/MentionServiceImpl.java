@@ -1,14 +1,13 @@
 package gladiator.philosopher.comment.service;
 
-import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
-
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.comment.repository.MentionRepository;
-import gladiator.philosopher.common.exception.NotFoundException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,57 +26,63 @@ public class MentionServiceImpl implements MentionService {
   @Transactional
   public void mentionComment(final Comment mentioningComment) {
     List<Mention> mentions = extractMentions(mentioningComment);
-    mentionRepository.saveAll(mentions);
+    if (!mentions.isEmpty()) {
+      mentionRepository.saveAll(mentions);
+    }
   }
 
   @Override
   @Transactional
   public void deleteMentions(final Comment mentioningComment) {
     mentionRepository.deleteByMentioningComment(mentioningComment);
-    mentionRepository.deleteByMentionedComment(mentioningComment);
     mentionRepository.flush();
   }
 
   private List<Mention> extractMentions(Comment mentioningComment) {
+    Set<Long> mentionIds = parseAllHashtagNums(mentioningComment.getContent());
     List<Mention> mentions = new ArrayList<>();
 
-    String content = mentioningComment.getContent().replaceAll(" ", ""); // 공백 제거
-
-    while (true) {
-      Long mentionedCommentId = parseFirstHashtagNum(content);
-
-      if (mentionedCommentId == null) {
-        break;
+    for (Long id : mentionIds) {
+      Comment comment = commentRepository.findById(id).orElse(null);
+      if (comment != null) {
+        Mention mention = Mention.builder()
+            .mentioningComment(mentioningComment)
+            .mentionedComment(comment)
+            .build();
+        mentions.add(mention);
       }
-
-      Comment mentionedComment = commentRepository.findById(mentionedCommentId)
-          .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT));
-      Mention mention = Mention.builder()
-          .mentionedComment(mentionedComment)
-          .mentioningComment(mentioningComment)
-          .build();
-      mentions.add(mention);
-      content = content.replaceAll("#" + mentionedCommentId, "");
     }
-
     return mentions;
   }
 
-  private Long parseFirstHashtagNum(String str) {
-    int firstSharpIdx = str.indexOf("#");
-    int pointer = firstSharpIdx + 1;
+  private Set<Long> parseAllHashtagNums(String body) {
+    Set<Long> hashtagNums = new LinkedHashSet<>();
 
-    while (str.charAt(pointer) >= 48 && str.charAt(pointer) <= 57) {
-      pointer++;
+    while (body.contains("#")) {
+      Long num;
+      int sharpIdx = body.indexOf("#");
+      int pointer = sharpIdx + 1;
+
+      while (pointer < body.length() && body.charAt(pointer) >= 48 && body.charAt(pointer) <= 57) {
+        pointer++;
+      }
+
+      String numStr = body.substring(sharpIdx + 1, pointer);
+
+      try {
+        num = Long.parseLong(numStr);
+      } catch (NumberFormatException e) {
+        num = null;
+      }
+
+      if (num != null) {
+        hashtagNums.add(num);
+      }
+
+      body = body.substring(pointer);
     }
 
-    String num = str.substring(firstSharpIdx + 1, pointer);
-
-    try {
-      return Long.parseLong(num);
-    } catch (NumberFormatException e) {
-      return null;
-    }
+    return hashtagNums;
   }
 
 }
