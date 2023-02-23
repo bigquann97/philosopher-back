@@ -25,7 +25,7 @@ public class PostResponseDto {
   private final List<String> opinions;
   private final String category;
 
-  public PostResponseDto(Post post, Long recommendCount, List<String> urls) {
+  public PostResponseDto(Post post, Long recommendCount, List<String> urls, List<String> options) {
     this.title = post.getTitle();
     this.content = post.getContent();
     this.recommend = recommendCount;
@@ -33,7 +33,7 @@ public class PostResponseDto {
     this.modifiedDate = post.getModifiedDate();
     this.nickname = post.getAccount().getNickname();
     this.images = urls;
-    this.opinions = post.getOpinions().stream().map(PostOpinion::getOpinion).collect(Collectors.toList());
+    this.opinions = options;
     this.category = post.getCategory().getName();
   }
 
