@@ -50,7 +50,7 @@ public class MentionServiceImpl implements MentionService {
 
     for (Long id : mentionIds) {
       Comment comment = commentRepository.findById(id).orElse(null);
-      if (comment != null) {
+      if (comment != null && comment.isActive()) {
         Mention mention = Mention.builder()
             .mentioningComment(mentioningComment)
             .mentionedComment(comment)
