@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.dto;
 
+import gladiator.philosopher.common.util.TimeAdapter;
 import gladiator.philosopher.post.enums.PostStatus;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -11,7 +12,7 @@ public class PostResponseDtoByQueryDsl {
   private Long id;
   private String title;
   private String category;
-  private LocalDateTime createdDate;
+  private String createdDate;
   private PostStatus status;
   // account
   private String nickname;
@@ -25,7 +26,7 @@ public class PostResponseDtoByQueryDsl {
     this.id = id;
     this.title = title;
     this.category = category;
-    this.createdDate = createdDate;
+    this.createdDate = TimeAdapter.formatToString(createdDate);
     this.status = status;
     this.nickname = nickname;
     this.recommendCount = recommendCount;
