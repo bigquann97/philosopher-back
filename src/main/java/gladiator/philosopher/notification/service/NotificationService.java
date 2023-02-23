@@ -1,6 +1,7 @@
 package gladiator.philosopher.notification.service;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.notification.dto.NotificationResponseDto;
 import gladiator.philosopher.recommend.entity.PostRecommend;
@@ -13,4 +14,5 @@ public interface NotificationService {
 
   MyPage<NotificationResponseDto> getMyNotifications(int page, final Account member);
 
+  void notifySomeoneMentionedYou(Mention mention);
 }

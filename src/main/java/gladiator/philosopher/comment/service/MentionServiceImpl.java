@@ -4,6 +4,7 @@ import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.entity.Mention;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.comment.repository.MentionRepository;
+import gladiator.philosopher.notification.service.NotificationService;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,12 +21,16 @@ public class MentionServiceImpl implements MentionService {
 
   private final MentionRepository mentionRepository;
   private final CommentRepository commentRepository;
+  private final NotificationService notificationService;
 
   // 댓글 내용 바탕으로 멘션 객체 생성
   @Override
   @Transactional
   public void mentionComment(final Comment mentioningComment) {
     List<Mention> mentions = extractMentions(mentioningComment);
+    for (Mention mention : mentions) {
+      notificationService.notifySomeoneMentionedYou(mention);
+    }
     if (!mentions.isEmpty()) {
       mentionRepository.saveAll(mentions);
     }
