@@ -15,6 +15,7 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
+import gladiator.philosopher.account.entity.QAccountImage;
 import gladiator.philosopher.admin.dto.QThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.QCategory;
@@ -53,7 +54,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   private final QCategory category;
   private final QThreadImage threadImage;
   private final QThreadOpinion threadOpinion;
-  private final ThreadRecommendRepository threadRecommendRepository;
+  private final QAccountImage accountImage;
 
   public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory,
       ThreadRecommendRepository threadRecommendRepository) {
@@ -66,7 +67,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.category = QCategory.category;
     this.threadImage = QThreadImage.threadImage;
     this.threadOpinion = QThreadOpinion.threadOpinion;
-    this.threadRecommendRepository = threadRecommendRepository;
+    this.accountImage = QAccountImage.accountImage;
   }
 
   @Override
@@ -89,11 +90,13 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 JPAExpressions
                     .select(Wildcard.count)
                     .from(threadRecommend)
-                    .where(threadRecommend.thread.id.eq(thread.id))
+                    .where(threadRecommend.thread.id.eq(thread.id)),
+                accountImage.imageUrl
             ))
         .from(thread)
         .leftJoin(account).on(thread.account.id.eq(account.id))
         .leftJoin(category).on(thread.category.id.eq(category.id))
+        .leftJoin(accountImage).on(accountImage.account.id.eq(thread.account.id))
         .where(thread.id.eq(id))
         .fetchFirst();
 
@@ -139,11 +142,13 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                     .where(threadRecommend.thread.id.eq(thread.id)), "likeCount"),
             account.nickname,
             thread.createdDate,
-            thread.endDate
+            thread.endDate,
+            accountImage.imageUrl
         )
         .from(thread)
         .leftJoin(thread.account, account)
         .leftJoin(thread.category, category)
+        .leftJoin(accountImage).on(thread.account.id.eq(accountImage.account.id))
         .where(
             threadStatusEq(ThreadLocation.CONTINUE),
             titleOrContentContainsWord(cond.getWord()),
@@ -166,7 +171,8 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
             tuple.get(5, Long.class),
             tuple.get(account.nickname),
             tuple.get(thread.createdDate),
-            tuple.get(thread.endDate)
+            tuple.get(thread.endDate),
+            tuple.get(accountImage.imageUrl)
         ))
         .collect(Collectors.toList());
 
@@ -198,11 +204,13 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
                         .where(threadRecommend.thread.id.eq(thread.id)), "likeCount"),
                 account.nickname,
                 thread.createdDate,
-                thread.endDate
+                thread.endDate,
+                accountImage.imageUrl
             ))
         .from(thread)
         .leftJoin(account).on(account.id.eq(thread.account.id))
         .leftJoin(category).on(category.id.eq(thread.category.id))
+        .leftJoin(accountImage).on(accountImage.account.id.eq(thread.account.id))
         .groupBy(thread.id)
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),

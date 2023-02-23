@@ -22,10 +22,11 @@ public class ThreadResponseDto {
   private Long recommendCount;
   private List<String> images;
   private List<String> opinions;
+  private String accountImageUrl;
 
   public ThreadResponseDto(Long id, String title, String content, String nickname,
       LocalDateTime createdDate, LocalDateTime endDate, String name,
-      Long commentCount, Long recommendCount) {
+      Long commentCount, Long recommendCount, String accountImageUrl) {
     this.id = id;
     this.title = title;
     this.content = content;
@@ -35,6 +36,7 @@ public class ThreadResponseDto {
     this.category = name;
     this.commentCount = commentCount;
     this.recommendCount = recommendCount;
+    this.accountImageUrl = accountImageUrl;
   }
 
   public void addImages(List<String> images) {
