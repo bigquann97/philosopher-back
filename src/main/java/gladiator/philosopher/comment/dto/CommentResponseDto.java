@@ -28,8 +28,10 @@ public class CommentResponseDto {
 
   private List<MentionResponseDto> mentionedComments;
 
+  private String imageUrl;
+
   @Builder
-  public CommentResponseDto(Comment comment, Long recommendCount) {
+  public CommentResponseDto(Comment comment, Long recommendCount, String imageUrl) {
     this.commentId = comment.getId();
     this.nickname = comment.getAccount().getNickname();
     this.opinion = comment.getOpinion();
@@ -53,6 +55,7 @@ public class CommentResponseDto {
     this.createDate = TimeAdapter.formatToString(comment.getCreatedDate());
     this.status = comment.getStatus().name();
     this.recommendCount = recommendCount;
+    this.imageUrl = imageUrl;
   }
 
 }
