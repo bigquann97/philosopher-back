@@ -131,44 +131,44 @@ public class InitData implements ApplicationRunner {
     categoryRepository.save(category5);
 
     // 게시글 부
-    Post post1 = new Post(account1, " 깻잎 논쟁 보고만 있나요? ", "김지환, 박정수", null, category1);
+    Post post1 = new Post(account1, " 깻잎 논쟁 보고만 있나요? ", "김지환, 박정수",  category1);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, " 닭이 먼저인가요 치킨이 먼저인가요 ", "박정수, 박건하", null, category1);
+    Post post2 = new Post(account2, " 닭이 먼저인가요 치킨이 먼저인가요 ", "박정수, 박건하",  category1);
     postRepository.save(post2);
 
-    Post post3 = new Post(account3, " 아 배고프다 ", "박건하, 이정국", null, category2);
+    Post post3 = new Post(account3, " 아 배고프다 ", "박건하, 이정국", category2);
     postRepository.save(post3);
 
-    Post post4 = new Post(account4, " 5억년 버튼 누르실 건가여? ", "이정국 ,이진호", null, category2);
+    Post post4 = new Post(account4, " 5억년 버튼 누르실 건가여? ", "이정국 ,이진호", category2);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, " 원더걸스 vs 뉴진스 ", "이진호, 이명박", null, category4);
+    Post post5 = new Post(account4, " 원더걸스 vs 뉴진스 ", "이진호, 이명박",  category4);
     postRepository.save(post5);
 
-    Post post6 = new Post(account5, " 여자친구 앞에서 이성 반찬 밀어주기 ", "이명박, 박명수", null, category5);
+    Post post6 = new Post(account5, " 여자친구 앞에서 이성 반찬 밀어주기 ", "이명박, 박명수", category5);
     postRepository.save(post6);
-    Post post7 = new Post(account6, " 팥붕 vs 슈붕 ", "이명박, 존박", null, category3);
+    Post post7 = new Post(account6, " 팥붕 vs 슈붕 ", "이명박, 존박",category3);
     postRepository.save(post7);
-    Post post8 = new Post(account7, " 길가는 사람에게 한대맞으면 5000원? ", "이명박, 박명수", null, category3);
+    Post post8 = new Post(account7, " 길가는 사람에게 한대맞으면 5000원? ", "이명박, 박명수", category3);
     postRepository.save(post8);
-    Post post9 = new Post(account8, " 1년뒤 1억 10년뒤 5억 ", " 9번 게시물의 내용입니다 ", null, category2);
+    Post post9 = new Post(account8, " 1년뒤 1억 10년뒤 5억 ", " 9번 게시물의 내용입니다 ",  category2);
     postRepository.save(post9);
-    Post post10 = new Post(account9, " 수저 세팅 ", "10번 게시물의 내용입니다", null, category5);
+    Post post10 = new Post(account9, " 수저 세팅 ", "10번 게시물의 내용입니다", category5);
     postRepository.save(post10);
-    Post post11 = new Post(account10, " 아 몰라 ", "11번 게시물의 내용입니다", null, category5);
+    Post post11 = new Post(account10, " 아 몰라 ", "11번 게시물의 내용입니다", category5);
     postRepository.save(post11);
-    Post post12 = new Post(account9, " 못참아 ", "12번 게시물의 내용입니다", null, category4);
+    Post post12 = new Post(account9, " 못참아 ", "12번 게시물의 내용입니다",  category4);
     postRepository.save(post12);
-    Post post13 = new Post(account8, " 사후세계? ", "이명박, 박명수", null, category1);
+    Post post13 = new Post(account8, " 사후세계? ", "이명박, 박명수", category1);
     postRepository.save(post13);
-    Post post14 = new Post(account7, " 메이웨더 vs 파퀴아오 ", "이명박, 박명수", null, category1);
+    Post post14 = new Post(account7, " 메이웨더 vs 파퀴아오 ", "이명박, 박명수", category1);
     postRepository.save(post14);
-    Post post15 = new Post(account6, " 안락사 ", "김지환", null, category2);
+    Post post15 = new Post(account6, " 안락사 ", "김지환", category2);
     postRepository.save(post15);
-    Post post16 = new Post(account5, " 죽음이란? ", "배고프다", null, category2);
+    Post post16 = new Post(account5, " 죽음이란? ", "배고프다",  category2);
     postRepository.save(post16);
-    Post post17 = new Post(account4, " 지옥 있나요?  ", "네 없습니다", null, category2);
+    Post post17 = new Post(account4, " 지옥 있나요?  ", "네 없습니다", category2);
     postRepository.save(post17);
 
     // 포스트 이미지

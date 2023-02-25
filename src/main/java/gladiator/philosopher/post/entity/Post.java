@@ -40,9 +40,6 @@ public class Post extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PostOpinion> opinions = new ArrayList<>();
-
   @Column(nullable = false)
   private String content;
 
@@ -56,12 +53,11 @@ public class Post extends BaseEntity {
 
   @Builder
   public Post(Account account, String title, String content,
-      List<PostOpinion> opinions, Category category) {
+       Category category) {
     this.account = account;
     this.title = title;
     this.content = content;
     this.status = PostStatus.ACTIVE;
-    this.opinions = opinions;
     this.category = category;
     this.isThreaded = false;
   }
