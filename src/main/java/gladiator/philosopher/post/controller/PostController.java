@@ -3,6 +3,7 @@ package gladiator.philosopher.post.controller;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.dto.MyPage;
+import gladiator.philosopher.common.entity.PageRequest;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostModifyRequestDto;
@@ -81,14 +82,15 @@ public class PostController {
    * 게시글 검색 ( 완료 )
    *
    * @param condition
-   * @param pageable
+   * @param pageRequest
    * @return
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public MyPage<PostResponseDtoByQueryDsl> searchPost(
       final PostSearchCondition condition,
-      final Pageable pageable) {
+      final PageRequest pageRequest) {
+    Pageable pageable  = pageRequest.of();
     return postService.searchPostByCondition(condition, pageable);
   }
 
@@ -108,7 +110,6 @@ public class PostController {
     postService.deletePost(postId, accountDetails.getAccount());
 //    s3Uploader.DeleteS3Files(oldUrls, dirName);
   }
-
 
   /**
    * 게시글 수정
