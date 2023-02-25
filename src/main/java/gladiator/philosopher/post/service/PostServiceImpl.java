@@ -67,7 +67,8 @@ public class PostServiceImpl implements PostService {
     Post post = getPostEntity(postId);
     final long recommendCount = postRecommendRepository.countByPost(post);
     final List<String> url = postImageRepository.getUrl(post.getId());
-    return new PostResponseDto(post, recommendCount, url);
+    final List<String> options = postOpinionRepository.getOptions(post.getId());
+    return new PostResponseDto(post, recommendCount, url, options);
   }
 
   @Override

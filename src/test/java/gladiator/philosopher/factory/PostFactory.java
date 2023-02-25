@@ -13,7 +13,6 @@ public class PostFactory {
         .title("post title1")
         .content("post content1")
         .category(CategoryFactory.createCategory1())
-        .opinions(List.of(createPostOpinion1(), createPostOpinion2(), createPostOpinion3()))
         .build();
   }
 
@@ -23,7 +22,6 @@ public class PostFactory {
         .title("post title2")
         .content("post content2")
         .category(CategoryFactory.createCategory2())
-        .opinions(List.of(createPostOpinion1(), createPostOpinion2(), createPostOpinion3()))
         .build();
   }
 
