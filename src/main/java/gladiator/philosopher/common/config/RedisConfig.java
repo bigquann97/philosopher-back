@@ -27,13 +27,15 @@ public class RedisConfig {
     RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
     redisTemplate.setKeySerializer(new StringRedisSerializer());
     redisTemplate.setValueSerializer(new StringRedisSerializer());
+    redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+    redisTemplate.setHashValueSerializer(new StringRedisSerializer());
     redisTemplate.setConnectionFactory(redisConnectionFactory());
     return redisTemplate;
   }
 
   @Bean
   public StringRedisTemplate stringRedisTemplate() {
-    final StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+    StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
     stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
     stringRedisTemplate.setValueSerializer(new StringRedisSerializer());
     stringRedisTemplate.setConnectionFactory(redisConnectionFactory());

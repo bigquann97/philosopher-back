@@ -1,7 +1,7 @@
 package gladiator.philosopher.thread.service;
 
-import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
+import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.entity.Post;
@@ -30,8 +30,6 @@ public interface ThreadService {
   Thread finishThread(final Thread thread);
 
   Thread getThreadEntity(final Long id);
-
-  void controllActiveThreads();
 
   List<ThreadOpinion> getOpinions(Thread thread);
 

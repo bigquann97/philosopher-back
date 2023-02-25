@@ -8,6 +8,7 @@ import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.common.util.RedisUtil;
 import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
@@ -19,7 +20,6 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadImage;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
-import gladiator.philosopher.thread.enums.ThreadLocation;
 import gladiator.philosopher.thread.repository.ThreadImageRepository;
 import gladiator.philosopher.thread.repository.ThreadOpinionRepository;
 import gladiator.philosopher.thread.repository.ThreadRepository;
@@ -42,6 +42,8 @@ public class ThreadServiceImpl implements ThreadService {
   private final ThreadRepository threadRepository;
   private final ThreadImageRepository threadImageRepository;
   private final NotificationService notificationService;
+  private final RedisUtil redisUtil;
+  public static final String THREAD_TIME_LIST_KEY = "THREAD::LOOK_UP";
   private final PostService postService;
 
   /**
@@ -58,7 +60,7 @@ public class ThreadServiceImpl implements ThreadService {
         .title(post.getTitle())
         .content(post.getContent())
         .category(post.getCategory())
-        .endDate(LocalDateTime.now().plusDays(1L))
+        .endDate(calculateEndDate())
         .build();
 
     Thread savedThread = threadRepository.saveAndFlush(thread);
@@ -76,15 +78,27 @@ public class ThreadServiceImpl implements ThreadService {
 
     notificationService.notifyToRecommendersThatThreadHasStarted(savedThread, recommends);
 
+    redisUtil.addHashData(THREAD_TIME_LIST_KEY, savedThread.getId().toString(),
+        savedThread.getEndDate().toString());
+
     return savedThread;
   }
 
-  /**
-   * 쓰레드 종료
-   *
-   * @param thread
-   * @return
-   */
+  private LocalDateTime calculateEndDate() {
+    LocalDateTime time = LocalDateTime.now()
+        .plusDays(2)
+        .minusHours(LocalDateTime.now().getHour())
+        .minusMinutes(LocalDateTime.now().getMinute());
+
+    return LocalDateTime.of(
+        time.getYear(),
+        time.getMonthValue(),
+        time.getDayOfMonth(),
+        time.getHour(),
+        time.getMinute()
+    );
+  }
+
   @Override
   @Transactional
   public Thread finishThread(final Thread thread) {
@@ -92,12 +106,6 @@ public class ThreadServiceImpl implements ThreadService {
     return threadRepository.save(archivedThread);
   }
 
-  /**
-   * 쓰레드 찾기 -> id to Entity
-   *
-   * @param id
-   * @return
-   */
   @Override
   @Transactional
   public Thread getThreadEntity(final Long id) {
@@ -105,12 +113,6 @@ public class ThreadServiceImpl implements ThreadService {
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }
 
-  /**
-   * 쓰레드 dto 변환 -> id to Entity finish ThreadResponseDto
-   *
-   * @param threadId
-   * @return
-   */
   @Override
   @Transactional
   public ThreadResponseDto selectThread(final Long threadId) {
@@ -118,12 +120,6 @@ public class ThreadServiceImpl implements ThreadService {
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_POST));
   }
 
-  /**
-   * 활성화 된 쓰레드 가지고 오기
-   *
-   * @param cond
-   * @return
-   */
   @Override
   @Transactional
   public MyPage<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
@@ -137,32 +133,10 @@ public class ThreadServiceImpl implements ThreadService {
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }
 
-  /**
-   * 아카이브된 쓰레드 가지고 오기
-   *
-   * @param cond
-   * @return
-   */
   @Override
   @Transactional(readOnly = true)
   public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond cond) {
     return threadRepository.selectArchivedThreadWithCond(cond);
-  }
-
-  /**
-   * 스케줄링 Thread 상태 제어
-   */
-  @Override
-  @Transactional
-  public void controllActiveThreads() {
-    // 현재 날짜/시간
-    LocalDateTime now = LocalDateTime.now();
-
-    // 현재 시간 이후로 종료되지 않고 활성화 되어 있는 쓰레드 전체
-    List<Thread> targetThread = threadRepository.findAllByEndDateIsBeforeAndLocation(now,
-        ThreadLocation.CONTINUE);
-    targetThread.forEach(Thread::finishThread);
-    threadRepository.saveAll(targetThread);
   }
 
   @Override
@@ -190,4 +164,5 @@ public class ThreadServiceImpl implements ThreadService {
     threadRepository.saveAndFlush(thread);
     return thread.getId();
   }
+
 }
