@@ -105,7 +105,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     return new MyPage<>(new PageImpl<>(dtos, paged.getPageable(), paged.getTotalElements()));
   }
-  
+
+  @Transactional
   public SseEmitter subscribe(Account account, String lastEventId) {
     String emitterId = makeTimeIncludeId(account);
 
