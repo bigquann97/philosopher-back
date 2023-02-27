@@ -6,6 +6,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_OPINION;
 
 import gladiator.philosopher.account.dto.AccountCommentResponseDto;
+import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
@@ -15,7 +16,6 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
-import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.service.ThreadService;
@@ -119,15 +119,12 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  @Transactional
-  public List<AccountCommentResponseDto> findMyComments(Account account, int pageNum) {
-    Pageable pageable = PageRequest.of(pageNum - 1, 10,
-        Sort.by("createdDate").descending());
-    Page<Comment> commentPage = commentRepository.findCommentByAccountId(account.getId(),
-        pageable);
-    List<AccountCommentResponseDto> productResponseList = commentPage.getContent().stream()
-        .map(AccountCommentResponseDto::new).collect(Collectors.toList());
-    return productResponseList;
+  @Transactional(readOnly = true)
+  public MyPage<CommentSimpleResponseDto> getMyComments(
+      final Account account,
+      final Pageable pageable
+  ) {
+    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(account.getId(), pageable);
+    return new MyPage<>(commentsByAccount);
   }
-
 }

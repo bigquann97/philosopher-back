@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.service;
 
+import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
@@ -12,7 +13,6 @@ import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
 import java.util.List;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
@@ -38,4 +38,5 @@ public interface PostService {
 
   List<PostOpinion> getPostOpinions(Post post);
 
+  MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable);
 }

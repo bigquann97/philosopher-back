@@ -2,6 +2,7 @@ package gladiator.philosopher.post.service;
 
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
 
+import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -176,4 +178,12 @@ public class PostServiceImpl implements PostService {
     return postOpinionRepository.findByPost(post);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<PostSimpleResponseDto> getMyPosts(
+      final Account account,
+      final Pageable pageable) {
+    Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(account.getId(), pageable);
+    return new MyPage<>(getPosts);
+  }
 }
