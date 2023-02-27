@@ -5,7 +5,9 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
+import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
+import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
@@ -30,4 +32,5 @@ public interface AdminService {
   Long modifyThread(Long id, ModifyThreadRequestDto threadRequestDto);
 
 
+  Long modifyPostCategory(Post post, Category category);
 }

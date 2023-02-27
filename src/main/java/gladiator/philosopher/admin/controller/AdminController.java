@@ -2,16 +2,21 @@ package gladiator.philosopher.admin.controller;
 
 import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.service.AccountService;
+import gladiator.philosopher.admin.dto.ModifyCategoryRequestDtoByAdmin;
 import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.admin.service.AdminService;
+import gladiator.philosopher.category.entity.Category;
+import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.entity.PageRequest;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
+import gladiator.philosopher.post.dto.PostResponseDto;
+import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
@@ -44,6 +49,7 @@ public class AdminController {
   private final PostService postService;
   private final AccountService accountService;
   private final CommentService commentService;
+  private final CategoryService categoryService;
 
   /**
    * 회원 정보 가지고 오기
@@ -57,7 +63,7 @@ public class AdminController {
   (
       final AccountSearchCondition condition,
       final PageRequest pageRequest) {
-    Pageable pageable  = pageRequest.of();
+    Pageable pageable = pageRequest.of();
     return adminService.getAccounts(condition, pageable);
   }
 
@@ -96,7 +102,7 @@ public class AdminController {
   ) {
     postService.modifyPostByAdmin(id, postRequestDto);
   }
-  
+
   /**
    * 신고 목록 조회 (Post)
    *
@@ -177,6 +183,26 @@ public class AdminController {
   ) {
     Long threadId = adminService.modifyThread(id, threadRequestDto);
     return threadId;
+  }
+
+  /**
+   * 게시글 카테고리 수정
+   * @param accountDetails
+   * @param id
+   * @param requestDtoByAdmin
+   * @return
+   */
+  @PatchMapping("category/{id}")
+  public Long modifyPostCategory(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final @PathVariable("id") Long id,
+      final @RequestBody ModifyCategoryRequestDtoByAdmin requestDtoByAdmin
+  ) {
+    Category newCategory = categoryService.getCategoryEntity(
+        requestDtoByAdmin.getCategoryId());
+    Post post = postService.getPostEntity(id);
+    Long postId = adminService.modifyPostCategory(post, newCategory);
+    return postId;
   }
 
 }

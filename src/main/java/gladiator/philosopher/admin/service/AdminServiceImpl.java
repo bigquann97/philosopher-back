@@ -10,6 +10,8 @@ import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.dto.MyPage;
+import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.report.service.ReportService;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
@@ -18,11 +20,13 @@ import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 
   private final ReportService reportService;
@@ -30,6 +34,7 @@ public class AdminServiceImpl implements AdminService {
   private final ThreadService threadService;
   private final AccountRepository accountRepository;
   private final CategoryService categoryService;
+  private final PostRepository postRepository;
 
   @Override
   public MyPage<UserInfoByAdminResponseDto> getAccounts(
@@ -69,5 +74,12 @@ public class AdminServiceImpl implements AdminService {
         threadRequestDto.getCategoryId());
     return threadService.modifyThreadByAdmin(id, threadRequestDto, category);
   }
-
+  @Override
+  public Long modifyPostCategory(Post post, Category category) {
+    log.info("변경전 post의 category는 :"+post.getCategory().getName());
+    final Post updatePost = post.modifyCategory(category);
+    postRepository.saveAndFlush(updatePost);
+    log.info("변경후 post의 category는 :"+post.getCategory().getName());
+    return updatePost.getId();
+  }
 }

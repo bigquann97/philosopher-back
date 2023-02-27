@@ -100,5 +100,10 @@ public class Post extends BaseEntity {
     this.status = PostStatus.DELETED;
   }
 
+  public Post modifyCategory(Category category){
+    this.category = category;
+    return this;
+  }
+
 
 }
