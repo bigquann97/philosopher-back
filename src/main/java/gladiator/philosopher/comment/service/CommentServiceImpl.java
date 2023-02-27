@@ -36,7 +36,6 @@ public class CommentServiceImpl implements CommentService {
   private final CommentRepository commentRepository;
   private final MentionService mentionService;
   private final ThreadService threadService;
-  private final PostRepository postRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -92,22 +91,6 @@ public class CommentServiceImpl implements CommentService {
   public Comment getCommentEntity(final Long id) {
     return commentRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT));
-  }
-
-  @Override
-  @Transactional
-  public void modifyCommentByAdmin(final Long id, final CommentRequestDto commentRequestDto) {
-    Comment comment = getCommentEntity(id);
-    comment.modifyComment(commentRequestDto.getOpinion(), commentRequestDto.getContent());
-    commentRepository.saveAndFlush(comment);
-  }
-
-  @Override
-  @Transactional
-  public void deleteCommentByAdmin(final Long id) {
-    Comment comment = getCommentEntity(id);
-    comment.chaneStatusToDeleted();
-    commentRepository.saveAndFlush(comment);
   }
 
   private void checkIfAccountIsWriter(final Comment comment, final Account account) {

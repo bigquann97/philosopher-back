@@ -36,5 +36,4 @@ public interface ThreadService {
   MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(ThreadSearchCondByAdmin cond,
       Pageable pageable);
 
-  Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto, Category category);
 }

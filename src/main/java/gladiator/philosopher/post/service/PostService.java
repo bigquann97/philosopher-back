@@ -25,16 +25,12 @@ public interface PostService {
 
   void deletePost(Long postId, Account accountDetails);
 
-  Long modifyPostByAdmin(Long id, PostRequestDto postRequestDto);
-
   Long modifyPost(Long postId,List<String>urls, PostModifyRequestDto postModifyRequestDto, Account account, Category category);
 
   Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
 
   // GET DATA
   Post getPostEntity(Long postId);
-
-  void deletePostByAdmin(Long id);
 
   List<String> getOldUrls(Long id);
 

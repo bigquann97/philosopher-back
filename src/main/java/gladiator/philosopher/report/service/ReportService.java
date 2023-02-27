@@ -1,11 +1,16 @@
 package gladiator.philosopher.report.service;
 
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.report.dto.CommentReportResponseDto;
+import gladiator.philosopher.report.dto.CommentReportSearchCondition;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportSearchCondition;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ThreadReportResponseDto;
+import gladiator.philosopher.report.dto.ThreadReportSearchCondition;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface ReportService {
 
@@ -15,10 +20,10 @@ public interface ReportService {
 
   void reportThread(Long id, ReportRequestDto dto, Account member);
 
-  List<PostReportResponseDto> getPostReports();
+  MyPage<PostReportResponseDto> getPostReports(PostReportSearchCondition condition, Pageable pageable);
 
-  List<CommentReportResponseDto> getCommentReports();
+  MyPage<CommentReportResponseDto> getCommentReports(CommentReportSearchCondition condition, Pageable pageable);
 
-  List<ThreadReportResponseDto> getThreadReports();
+  MyPage<ThreadReportResponseDto> getThreadReports(ThreadReportSearchCondition condition, Pageable pageable);
 
 }

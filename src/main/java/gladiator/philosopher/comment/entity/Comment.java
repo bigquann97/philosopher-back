@@ -111,4 +111,8 @@ public class Comment extends BaseEntity {
     return getClass().hashCode();
   }
 
+  public Comment modifyStatusByAdmin(CommentStatus commentStatus) {
+    this.status = commentStatus;
+    return this;
+  }
 }

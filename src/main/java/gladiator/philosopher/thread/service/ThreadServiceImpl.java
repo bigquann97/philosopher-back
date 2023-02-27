@@ -154,15 +154,4 @@ public class ThreadServiceImpl implements ThreadService {
     return threadRepository.selectThreadByAdmin(cond, pageable);
   }
 
-  @Override
-  @Transactional
-  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto,
-      Category category) {
-    final Thread thread = threadRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
-    thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(), category);
-    threadRepository.saveAndFlush(thread);
-    return thread.getId();
-  }
-
 }
