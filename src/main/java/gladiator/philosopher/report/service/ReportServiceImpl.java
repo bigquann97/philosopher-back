@@ -10,8 +10,11 @@ import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
+import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
+import gladiator.philosopher.report.dto.CommentReportResponseDto;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
 import gladiator.philosopher.report.dto.ReportRequestDto;
+import gladiator.philosopher.report.dto.ThreadReportResponseDto;
 import gladiator.philosopher.report.repository.CommentReportRepository;
 import gladiator.philosopher.report.repository.PostReportRepository;
 import gladiator.philosopher.report.repository.ThreadReportRepository;
@@ -34,6 +37,7 @@ public class ReportServiceImpl implements ReportService {
   private final ThreadService threadService;
   private final PostService postService;
   private final CommentService commentService;
+  private final CommentRecommendRepository commentRecommendRepository;
 
   @Override
   @Transactional
@@ -114,5 +118,15 @@ public class ReportServiceImpl implements ReportService {
   @Transactional(readOnly = true)
   public List<PostReportResponseDto> getPostReports() {
     return postReportRepository.getAllPostReportDtosByAdmin();
+  }
+
+  @Override
+  public List<CommentReportResponseDto> getCommentReports() {
+    return commentReportRepository.getAllCommentReportDtosByAdmin();
+  }
+
+  @Override
+  public List<ThreadReportResponseDto> getThreadReports() {
+    return threadReportRepository.getAllThreadReportDtosByAdmin();
   }
 }
