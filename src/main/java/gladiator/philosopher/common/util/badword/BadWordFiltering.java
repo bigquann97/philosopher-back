@@ -14,15 +14,6 @@ public class BadWordFiltering implements AddRemove {
 
   private String substituteValue = "***";
 
-  //대체 문자 지정
-  //기본값 : *
-  public BadWordFiltering(String substituteValue) {
-    this.substituteValue = substituteValue;
-  }
-
-  public BadWordFiltering() {
-  }
-
   //특정 문자 추가, 삭제
   @Override
   public void add(String... texts) {
