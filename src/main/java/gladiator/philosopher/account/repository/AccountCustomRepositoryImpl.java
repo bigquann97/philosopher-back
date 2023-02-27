@@ -17,6 +17,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.ObjectUtils;
 
 public class AccountCustomRepositoryImpl implements AccountCustomRepository {
 
@@ -42,32 +43,38 @@ public class AccountCustomRepositoryImpl implements AccountCustomRepository {
             ))
         .from(account)
         .where(
-            userTypeEqual(condition.getUserType()),
-            userStatsEqual(condition.getUserStatus()),
-            userGenderEqual(condition.getUserGender()))
+            userTypeEqual(condition.getRole()),
+            userStatsEqual(condition.getStatus()),
+            userGenderEqual(condition.getGender()))
         .orderBy(account.id.desc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
 
     final JPAQuery<Long> count = jpaQueryFactory.select(account.count()).from(account).where(
-        userTypeEqual(condition.getUserType()),
-        userStatsEqual(condition.getUserStatus()),
-        userGenderEqual(condition.getUserGender()));
+        userTypeEqual(condition.getRole()),
+        userStatsEqual(condition.getStatus()),
+        userGenderEqual(condition.getGender()));
 
     return new MyPage<>(new PageImpl<>(fetch, pageable, count.fetchOne()));
   }
 
-  private BooleanExpression userGenderEqual(String userGender) {
-    return hasText(userGender) ? account.gender.eq(Gender.valueOf(userGender)) : null;
+  private BooleanExpression userGenderEqual(Gender gender) {
+    if(ObjectUtils.isEmpty(gender)){
+      return null;
+    }return account.gender.eq(gender);
   }
 
-  private BooleanExpression userStatsEqual(String userStatus) {
-    return hasText(userStatus) ? account.status.eq(UserStatus.valueOf(userStatus)) : null;
+  private BooleanExpression userStatsEqual(UserStatus status) {
+    if(ObjectUtils.isEmpty(status)){
+      return null;
+    }return account.status.eq(status);
   }
 
-  private BooleanExpression userTypeEqual(String userType) {
-    return hasText(userType) ? account.role.eq(UserRole.valueOf(userType)) : null;
+  private BooleanExpression userTypeEqual(UserRole role) {
+    if(ObjectUtils.isEmpty(role)){
+      return null;
+    }return account.role.eq(role);
   }
 
 

@@ -9,6 +9,7 @@ import gladiator.philosopher.admin.service.AdminService;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.dto.MyPage;
+import gladiator.philosopher.common.entity.PageRequest;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.service.PostService;
@@ -48,12 +49,15 @@ public class AdminController {
    * 회원 정보 가지고 오기
    *
    * @param condition
-   * @param pageable
+   * @param pageRequest
    * @return
    */
-  @GetMapping("/accountsV2")
-  public MyPage<UserInfoByAdminResponseDto> searchAccounts(final AccountSearchCondition condition,
-      Pageable pageable) {
+  @GetMapping("/accounts")
+  public MyPage<UserInfoByAdminResponseDto> searchAccounts
+  (
+      final AccountSearchCondition condition,
+      final PageRequest pageRequest) {
+    Pageable pageable  = pageRequest.of();
     return adminService.getAccounts(condition, pageable);
   }
 
@@ -98,8 +102,6 @@ public class AdminController {
    *
    * @return
    */
-  // 신고목록 관련해서 각자 신고 목록 조회를 체크할 수 있도록 해야한다 -> ( 3개 ) -> 이 부분에 관해서 querydsl을 적용하는것이 맞을까?
-  // 조금 더 생각할 것..
   @GetMapping("/reports/posts")
   public List<PostReportResponseDto> getPostsReports() {
     return adminService.getPostsReports();

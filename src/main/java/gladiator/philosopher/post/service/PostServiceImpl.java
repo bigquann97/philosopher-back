@@ -32,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class PostServiceImpl implements PostService {
 
-  private final PostReportRepository postReportRepository;
-
   private final PostRepository postRepository;
   private final PostImageRepository postImageRepository;
   private final PostOpinionRepository postOpinionRepository;
@@ -211,6 +209,5 @@ public class PostServiceImpl implements PostService {
   public List<PostOpinion> getPostOpinions(final Post post) {
     return postOpinionRepository.findByPost(post);
   }
-
 
 }

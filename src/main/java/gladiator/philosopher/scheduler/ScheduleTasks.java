@@ -36,6 +36,13 @@ public class ScheduleTasks {
         redisUtil.deleteHashData(THREAD_TIME_LIST_KEY, id);
       }
     });
+
   }
+  // 매 정시마다 유저 상태 체크해서, 만약 신고가 10건이 넘었다면 자동으로 상태 변경 할 것
+//  @Scheduled(cron = "1 0 0 1/1 * ?")
+//  @Transactional
+//  public void accountStatusCheck(){
+//
+//  }
 
 }
