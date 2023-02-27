@@ -8,7 +8,12 @@ import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.entity.Post;
+import gladiator.philosopher.report.dto.CommentReportResponseDto;
+import gladiator.philosopher.report.dto.CommentReportSearchCondition;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportSearchCondition;
+import gladiator.philosopher.report.dto.ThreadReportResponseDto;
+import gladiator.philosopher.report.dto.ThreadReportSearchCondition;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
@@ -17,12 +22,12 @@ import org.springframework.data.domain.Pageable;
 
 public interface AdminService {
 
-  void modifyUserRole(Account account); // 권한 수정
+  void modifyUserRole(Account account);
 
   MyPage<UserInfoByAdminResponseDto> getAccounts(AccountSearchCondition condition,
       Pageable pageable);
 
-  List<PostReportResponseDto> getPostsReports();
+  MyPage<PostReportResponseDto> getPostsReports(PostReportSearchCondition condition, Pageable pageable);
 
   MyPage<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond of);
 
@@ -33,4 +38,8 @@ public interface AdminService {
 
 
   Long modifyPostCategory(Post post, Category category);
+
+  MyPage<ThreadReportResponseDto> getThreadsReports(ThreadReportSearchCondition condition, Pageable pageable);
+
+  MyPage<CommentReportResponseDto> getCommentsReports(CommentReportSearchCondition condition, Pageable pageable);
 }

@@ -7,21 +7,26 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICA
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.service.CommentService;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
 import gladiator.philosopher.report.dto.CommentReportResponseDto;
+import gladiator.philosopher.report.dto.CommentReportSearchCondition;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportSearchCondition;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.dto.ThreadReportResponseDto;
-import gladiator.philosopher.report.repository.CommentReportRepository;
-import gladiator.philosopher.report.repository.PostReportRepository;
-import gladiator.philosopher.report.repository.ThreadReportRepository;
+import gladiator.philosopher.report.dto.ThreadReportSearchCondition;
+import gladiator.philosopher.report.repository.comment.CommentReportRepository;
+import gladiator.philosopher.report.repository.post.PostReportRepository;
+import gladiator.philosopher.report.repository.thread.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,17 +121,26 @@ public class ReportServiceImpl implements ReportService {
    */
   @Override
   @Transactional(readOnly = true)
-  public List<PostReportResponseDto> getPostReports() {
-    return postReportRepository.getAllPostReportDtosByAdmin();
+  public MyPage<PostReportResponseDto> getPostReports(PostReportSearchCondition condition, Pageable pageable) {
+    return postReportRepository.getPostReports(condition, pageable);
   }
 
+  /**
+   * 댓글 신고 목록 조회 (사용처 : 어드민)
+   */
   @Override
-  public List<CommentReportResponseDto> getCommentReports() {
-    return commentReportRepository.getAllCommentReportDtosByAdmin();
+  public MyPage<CommentReportResponseDto> getCommentReports(CommentReportSearchCondition condition, Pageable pageable) {
+    return commentReportRepository.getCommentReports(condition, pageable);
   }
 
+
+   // 완료
+  /**
+   * 쓰레드 신고 목록 조회 (사용처 : 어드민)
+   */
   @Override
-  public List<ThreadReportResponseDto> getThreadReports() {
-    return threadReportRepository.getAllThreadReportDtosByAdmin();
+  public MyPage<ThreadReportResponseDto> getThreadReports(ThreadReportSearchCondition condition, Pageable pageable) {
+    return threadReportRepository.getThreadReports(condition, pageable);
   }
+
 }

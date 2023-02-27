@@ -18,7 +18,12 @@ import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
+import gladiator.philosopher.report.dto.CommentReportResponseDto;
+import gladiator.philosopher.report.dto.CommentReportSearchCondition;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportSearchCondition;
+import gladiator.philosopher.report.dto.ThreadReportResponseDto;
+import gladiator.philosopher.report.dto.ThreadReportSearchCondition;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
 import gladiator.philosopher.thread.dto.ThreadSimpleResponseDto;
@@ -104,13 +109,40 @@ public class AdminController {
   }
 
   /**
-   * 신고 목록 조회 (Post)
+   * 신고 목록 조회 ( Post )
    *
    * @return
    */
   @GetMapping("/reports/posts")
-  public List<PostReportResponseDto> getPostsReports() {
-    return adminService.getPostsReports();
+  public MyPage<PostReportResponseDto> getPostsReports(
+      final PostReportSearchCondition condition,
+      final PageRequest pageRequest) {
+    Pageable pageable = pageRequest.of();
+    return adminService.getPostsReports(condition, pageable);
+  }
+
+  /**
+   * 신고 목록 조회 ( Thread )
+   * @return
+   */
+  @GetMapping("/reports/threads")
+  public MyPage<ThreadReportResponseDto> getThreadsReports(
+      final ThreadReportSearchCondition condition,
+      final PageRequest pageRequest){
+    Pageable pageable = pageRequest.of();
+    return adminService.getThreadsReports(condition, pageable);
+  }
+
+  /**
+   * 신고 목록 조회 (comment)
+   * @return
+   */
+  @GetMapping("/reports/comments")
+  public MyPage<CommentReportResponseDto> getCommentsReports(
+      final CommentReportSearchCondition condition,
+      final PageRequest pageRequest){
+    Pageable pageable = pageRequest.of();
+    return adminService.getCommentsReports(condition, pageable);
   }
 
   /**
@@ -174,7 +206,7 @@ public class AdminController {
    * @param id
    * @param threadRequestDto
    * @return
-   */
+       */
   @PutMapping("thread/{id}")
   public Long modifyThread(
       final @AuthenticationPrincipal AccountDetails accountDetails,

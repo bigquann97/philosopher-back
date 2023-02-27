@@ -18,7 +18,6 @@ import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
-import gladiator.philosopher.report.repository.PostReportRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

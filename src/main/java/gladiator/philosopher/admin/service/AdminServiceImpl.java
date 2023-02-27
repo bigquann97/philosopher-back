@@ -12,7 +12,12 @@ import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.report.dto.CommentReportResponseDto;
+import gladiator.philosopher.report.dto.CommentReportSearchCondition;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
+import gladiator.philosopher.report.dto.PostReportSearchCondition;
+import gladiator.philosopher.report.dto.ThreadReportResponseDto;
+import gladiator.philosopher.report.dto.ThreadReportSearchCondition;
 import gladiator.philosopher.report.service.ReportService;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
@@ -56,8 +61,18 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<PostReportResponseDto> getPostsReports() {
-    return reportService.getPostReports();
+  public MyPage<PostReportResponseDto> getPostsReports(PostReportSearchCondition condition, Pageable pageable) {
+    return reportService.getPostReports(condition, pageable);
+  }
+
+  @Override
+  public MyPage<ThreadReportResponseDto> getThreadsReports(ThreadReportSearchCondition condition, Pageable pageable) {
+    return reportService.getThreadReports(condition, pageable);
+  }
+
+  @Override
+  public MyPage<CommentReportResponseDto> getCommentsReports(CommentReportSearchCondition condition, Pageable pageable) {
+    return reportService.getCommentReports(condition, pageable);
   }
 
   @Override

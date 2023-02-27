@@ -12,17 +12,12 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.common.dto.MyPage;
-import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
-import gladiator.philosopher.post.entity.Post;
-import gladiator.philosopher.thread.dto.ThreadSearchCond;
+import gladiator.philosopher.post.dto.PostSearchCondition;
 import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @Slf4j
@@ -35,7 +30,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public MyPage<PostResponseDtoByQueryDsl> searchPost(PostSearchCondition condition, Pageable pageable) {
+  public MyPage<PostResponseDtoByQueryDsl> searchPost(PostSearchCondition condition,
+      Pageable pageable) {
 
     final List<PostResponseDtoByQueryDsl> fetch = jpaQueryFactory.select
             (Projections.constructor(PostResponseDtoByQueryDsl.class,
@@ -76,9 +72,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   private BooleanExpression postContentAndTitleEqual(String word) {
-    return hasText(word) ? post.content.containsIgnoreCase(word).or(post.title.containsIgnoreCase(word)) : null;
+    return hasText(word) ? post.content.containsIgnoreCase(word)
+        .or(post.title.containsIgnoreCase(word)) : null;
   }
-
 
 
 }

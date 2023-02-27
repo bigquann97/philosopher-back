@@ -1,4 +1,4 @@
-package gladiator.philosopher.report.repository;
+package gladiator.philosopher.report.repository.comment;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.report.dto.CommentReportResponseDto;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 
-public interface CommentReportRepository extends JpaRepository<CommentReport, Long> {
+public interface CommentReportRepository extends JpaRepository<CommentReport, Long>, CommentReportCustomRepository {
 
   boolean existsByReporterAndCommentId(@NonNull Account reporter, @NonNull Long commentId);
 
