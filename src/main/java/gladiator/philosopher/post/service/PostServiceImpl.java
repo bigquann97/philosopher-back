@@ -18,7 +18,6 @@ import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
-import gladiator.philosopher.report.repository.PostReportRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
-
-  private final PostReportRepository postReportRepository;
 
   private final PostRepository postRepository;
   private final PostImageRepository postImageRepository;
@@ -149,22 +146,6 @@ public class PostServiceImpl implements PostService {
   }
 
   /**
-   * 게시글 삭제 ( 상태 변경 )- 사용처 : 어드민
-   *
-   * @param postId
-   */
-  @Override
-  @Transactional
-  public void deletePostByAdmin(final Long postId) {
-    final Post post = postRepository.findById(postId).orElseThrow(
-        () -> new NotFoundException(NOT_FOUND_POST));
-    post.changeStatusDeleteByAdmin();
-
-    postRepository.saveAndFlush(post);
-  }
-
-
-  /**
    * ID를 이용한 Post 객체 찾기
    *
    * @param postId
@@ -176,23 +157,6 @@ public class PostServiceImpl implements PostService {
         () -> new NotFoundException(NOT_FOUND_POST)
     );
   }
-
-  /**
-   * 게시글 수정 - 사용처 : 어드민
-   *
-   * @param postId
-   * @param postRequestDto
-   * @return
-   */
-  @Override
-  @Transactional
-  public Long modifyPostByAdmin(final Long postId, final PostRequestDto postRequestDto) {
-    Post post = getPostEntity(postId);
-    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
-    postRepository.save(post);
-    return post.getId();
-  }
-
 
   @Override
   @Transactional(readOnly = true)
@@ -211,6 +175,5 @@ public class PostServiceImpl implements PostService {
   public List<PostOpinion> getPostOpinions(final Post post) {
     return postOpinionRepository.findByPost(post);
   }
-
 
 }

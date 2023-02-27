@@ -13,4 +13,5 @@ public class PhilosopherApplication {
   public static void main(String[] args) {
     SpringApplication.run(PhilosopherApplication.class, args);
   }
+
 }

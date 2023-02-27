@@ -33,11 +33,14 @@ public class Notification extends BaseEntity {
 
   private String redirectUrl;
 
+  private boolean isRead;
+
   @Builder
-  public Notification(Account account, String content, String redirectUrl) {
+  public Notification(Account account, String content, String redirectUrl, boolean isRead) {
     this.account = account;
     this.content = content;
     this.redirectUrl = redirectUrl;
+    this.isRead = isRead;
   }
 
   @Override

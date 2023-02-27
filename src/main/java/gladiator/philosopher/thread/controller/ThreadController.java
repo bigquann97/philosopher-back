@@ -24,17 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ThreadController {
 
   private final ThreadService threadService;
-
-  /**
-   * 30초마다 Thread 제어(시간 수정 필요)
-   */
-//  @Scheduled(fixedDelay = 30000)
-//  public void scheduledThreadStop() {
-//    log.info("Thread Active 상태에서 Archived 상태로 변경 시작");
-//    threadService.controllActiveThreads();
-//    log.info("Thread Active 상태에서 Archived 상태로 변경 종료");
-//  }
-
+  
   // 쓰레드 단건 조회
   @GetMapping("/{threadId}")
   @ResponseStatus(HttpStatus.OK)

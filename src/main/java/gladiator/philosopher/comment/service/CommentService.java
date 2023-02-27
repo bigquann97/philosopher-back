@@ -25,9 +25,5 @@ public interface CommentService {
 
   Comment getCommentEntity(Long id);
 
-  void modifyCommentByAdmin(Long id, CommentRequestDto commentRequestDto);
-
-  void deleteCommentByAdmin(Long id);
-
   List<AccountCommentResponseDto> findMyComments(Account account, int pageNum);
 }
