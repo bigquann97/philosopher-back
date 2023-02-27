@@ -6,9 +6,6 @@ import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.post.enums.PostStatus;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -104,6 +100,12 @@ public class Post extends BaseEntity {
     this.category = category;
     return this;
   }
+
+  public Post ModifyStatusByAdmin(PostStatus postStatus){
+    this.status = postStatus;
+    return this;
+  }
+
 
 
 }

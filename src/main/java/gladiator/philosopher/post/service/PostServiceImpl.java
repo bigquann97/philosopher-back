@@ -146,22 +146,6 @@ public class PostServiceImpl implements PostService {
   }
 
   /**
-   * 게시글 삭제 ( 상태 변경 )- 사용처 : 어드민
-   *
-   * @param postId
-   */
-  @Override
-  @Transactional
-  public void deletePostByAdmin(final Long postId) {
-    final Post post = postRepository.findById(postId).orElseThrow(
-        () -> new NotFoundException(NOT_FOUND_POST));
-    post.changeStatusDeleteByAdmin();
-
-    postRepository.saveAndFlush(post);
-  }
-
-
-  /**
    * ID를 이용한 Post 객체 찾기
    *
    * @param postId
@@ -173,23 +157,6 @@ public class PostServiceImpl implements PostService {
         () -> new NotFoundException(NOT_FOUND_POST)
     );
   }
-
-  /**
-   * 게시글 수정 - 사용처 : 어드민
-   *
-   * @param postId
-   * @param postRequestDto
-   * @return
-   */
-  @Override
-  @Transactional
-  public Long modifyPostByAdmin(final Long postId, final PostRequestDto postRequestDto) {
-    Post post = getPostEntity(postId);
-    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
-    postRepository.save(post);
-    return post.getId();
-  }
-
 
   @Override
   @Transactional(readOnly = true)

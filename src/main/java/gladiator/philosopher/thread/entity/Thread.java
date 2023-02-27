@@ -111,5 +111,9 @@ public class Thread extends BaseEntity {
     this.category = category;
   }
 
+  public Thread modifyThreadStatusByAdmin(ThreadStatus threadStatus){
+    this.status = threadStatus;
+    return this;
+  }
 
 }
