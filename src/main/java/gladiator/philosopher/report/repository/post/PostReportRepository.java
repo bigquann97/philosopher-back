@@ -1,4 +1,4 @@
-package gladiator.philosopher.report.repository;
+package gladiator.philosopher.report.repository.post;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface PostReportRepository extends JpaRepository<PostReport, Long> {
+public interface PostReportRepository extends JpaRepository<PostReport, Long>, PostReportCustomRepository {
 
 
   @Query("select new gladiator.philosopher.report.dto.PostReportResponseDto(pr.id, pr.content, pr.category, pr.reporter.nickname, pr.postId)  from PostReport  pr order by pr.id desc ")

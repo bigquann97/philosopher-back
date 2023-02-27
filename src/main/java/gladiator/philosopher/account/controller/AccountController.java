@@ -33,7 +33,7 @@ public class AccountController {
   private final CommentService commentService;
 
   /**
-   * 내 정보 가지고 오기 -> 내용 더 추가할 것.
+   * 내 정보 가지고 오기
    *
    * @param accountDetails
    */
@@ -59,7 +59,12 @@ public class AccountController {
     return commentService.findMyComments(accountDetails.getAccount(), pageNum);
   }
 
-
+  /**
+   * 내 정보 수정 (닉네임, 비밀번호)
+   * @param accountDetails
+   * @param infoRequestDto
+   * @return
+   */
   @PutMapping("/info")
   @ResponseStatus(HttpStatus.CREATED)
   public Long modifyAccountInfo(
@@ -68,7 +73,6 @@ public class AccountController {
   ) {
     return accountService.modifyAccountInfo(accountDetails.getAccount(), infoRequestDto);
   }
-
 
   /**
    * 내 정보 수정(프로필 이미지)

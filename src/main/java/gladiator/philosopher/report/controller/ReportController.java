@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportController {
 
   private final ReportService reportService;
-  private final CommentService commentService;
 
   @PostMapping("/post")
   @ResponseStatus(HttpStatus.CREATED)

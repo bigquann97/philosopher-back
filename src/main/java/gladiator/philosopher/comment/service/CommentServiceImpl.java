@@ -97,22 +97,6 @@ public class CommentServiceImpl implements CommentService {
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT));
   }
 
-  @Override
-  @Transactional
-  public void modifyCommentByAdmin(final Long id, final CommentRequestDto commentRequestDto) {
-    Comment comment = getCommentEntity(id);
-    comment.modifyComment(commentRequestDto.getOpinion(), commentRequestDto.getContent());
-    commentRepository.saveAndFlush(comment);
-  }
-
-  @Override
-  @Transactional
-  public void deleteCommentByAdmin(final Long id) {
-    Comment comment = getCommentEntity(id);
-    comment.chaneStatusToDeleted();
-    commentRepository.saveAndFlush(comment);
-  }
-
   private void checkIfAccountIsWriter(final Comment comment, final Account account) {
     if (!comment.isWriter(account)) {
       throw new AuthException(NOT_AUTHORIZED_COMMENT);
