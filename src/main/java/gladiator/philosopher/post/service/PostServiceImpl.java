@@ -6,6 +6,7 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.common.util.badword.BadWordFiltering;
 import gladiator.philosopher.post.dto.PostModifyRequestDto;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
@@ -38,6 +39,7 @@ public class PostServiceImpl implements PostService {
   private final PostImageRepository postImageRepository;
   private final PostOpinionRepository postOpinionRepository;
   private final PostRecommendRepository postRecommendRepository;
+  private final BadWordFiltering badWordFiltering;
 
   @Override
   @Transactional
@@ -49,6 +51,9 @@ public class PostServiceImpl implements PostService {
   ) {
     postRequestDto.checkByOpinionCount();
     Post post = postRequestDto.toEntity(account, category);
+    String filteredTitle = badWordFiltering.checkAndChange(postRequestDto.getTitle());
+    String filteredContent = badWordFiltering.checkAndChange(postRequestDto.getContent());
+    post.modifyPost(filteredTitle, filteredContent);
     if (url == null) {
       saveOpinions(postRequestDto, post);
       postRepository.save(post);
@@ -97,7 +102,9 @@ public class PostServiceImpl implements PostService {
     Post post = getPostEntity(postId);
     log.info(post.getTitle());
     post.isWriter(account);
-    post.modifyPost(postModifyRequestDto.getTitle(), postModifyRequestDto.getContent(), category);
+    String filteredTitle = badWordFiltering.checkAndChange(postModifyRequestDto.getTitle());
+    String filteredContent = badWordFiltering.checkAndChange(postModifyRequestDto.getContent());
+    post.modifyPost(filteredTitle, filteredContent, category);
     postRepository.saveAndFlush(post);
     if (urls == null) {
       return post.getId();
