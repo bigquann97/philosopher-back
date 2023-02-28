@@ -79,23 +79,6 @@ public class Thread extends BaseEntity {
     this.status = ThreadStatus.ACTIVE;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-      return false;
-    }
-    Thread thread = (Thread) o;
-    return id != null && Objects.equals(id, thread.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
-
   public boolean isArchived() {
     return this.location == ThreadLocation.ARCHIVED;
   }
@@ -111,9 +94,26 @@ public class Thread extends BaseEntity {
     this.category = category;
   }
 
-  public Thread modifyThreadStatusByAdmin(ThreadStatus threadStatus){
+  public Thread modifyThreadStatusByAdmin(ThreadStatus threadStatus) {
     this.status = threadStatus;
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Thread thread = (Thread) o;
+    return id != null && Objects.equals(id, thread.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 
 }

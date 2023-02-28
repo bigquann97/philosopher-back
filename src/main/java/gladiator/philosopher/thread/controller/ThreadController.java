@@ -24,17 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class ThreadController {
 
   private final ThreadService threadService;
-  
-  // 쓰레드 단건 조회
+
   @GetMapping("/{threadId}")
   @ResponseStatus(HttpStatus.OK)
   public ThreadResponseDto selectThread(
-      @PathVariable final Long threadId
+      final @PathVariable Long threadId
   ) {
     return threadService.selectThread(threadId);
   }
 
-  // 쓰레드 객체 페이징 조회
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public MyPage<ThreadSimpleResponseDto> selectActiveThreads(
@@ -50,7 +48,7 @@ public class ThreadController {
   @GetMapping("/archived/{threadId}")
   @ResponseStatus(HttpStatus.OK)
   public ThreadResponseDto selectArchivedThread(
-      @PathVariable final Long threadId
+      final @PathVariable Long threadId
   ) {
     return threadService.selectArchivedThread(threadId);
   }

@@ -21,8 +21,8 @@ import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.QCategory;
 import gladiator.philosopher.comment.entity.QComment;
 import gladiator.philosopher.common.dto.MyPage;
+import gladiator.philosopher.recommend.entity.QCommentRecommend;
 import gladiator.philosopher.recommend.entity.QThreadRecommend;
-import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
@@ -55,9 +55,9 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   private final QThreadImage threadImage;
   private final QThreadOpinion threadOpinion;
   private final QAccountImage accountImage;
+  private final QCommentRecommend commentRecommend;
 
-  public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory,
-      ThreadRecommendRepository threadRecommendRepository) {
+  public ThreadCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
     super(Thread.class);
     this.jpaQueryFactory = jpaQueryFactory;
     this.thread = QThread.thread;
@@ -68,6 +68,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
     this.threadImage = QThreadImage.threadImage;
     this.threadOpinion = QThreadOpinion.threadOpinion;
     this.accountImage = QAccountImage.accountImage;
+    this.commentRecommend = QCommentRecommend.commentRecommend;
   }
 
   @Override
@@ -566,3 +567,20 @@ public MyPage<ThreadSimpleResponseDto> selectActiveThreadsWithCond(ThreadSearchC
 }
 
  */
+
+    /*
+    SELECT c.opinion, a.gender, count(*)
+    FROM comment as c
+    LEFT JOIN account AS a ON a.id = c.account_id
+    WHERE c.thread_id = 2
+    GROUP BY a.gender, c.opinion
+    */
+
+    /*
+    SELECT c.opinion, a.age, count(*)
+    FROM comment as c
+    LEFT JOIN account AS a ON a.id = c.account_id
+    WHERE c.thread_id = 2
+    GROUP BY a.age, c.opinion
+    ORDER BY a.age
+    */

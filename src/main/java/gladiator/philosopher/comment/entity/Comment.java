@@ -4,9 +4,9 @@ import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.enums.CommentStatus;
 import gladiator.philosopher.common.entity.BaseEntity;
 import gladiator.philosopher.thread.entity.Thread;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,16 +37,18 @@ public class Comment extends BaseEntity {
   @Column(nullable = false)
   private String content;
 
+  @Column(nullable = false)
   private String opinion;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private CommentStatus status;
 
   @OneToMany(mappedBy = "mentioningComment", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Mention> mentionings = new HashSet<>();
+  private List<Mention> mentionings = new LinkedList<>();
 
   @OneToMany(mappedBy = "mentionedComment", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Mention> mentioneds = new HashSet<>();
+  private List<Mention> mentioneds = new LinkedList<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_Id")
