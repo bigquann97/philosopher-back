@@ -6,7 +6,6 @@ import gladiator.philosopher.account.dto.login.SignInResponseDto;
 import gladiator.philosopher.account.dto.login.SignUpRequestDto;
 import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
-import gladiator.philosopher.common.s3.S3Uploader;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,18 +27,12 @@ public class AuthController {
 
   private final AuthService authService;
 
-  /**
-   * 회원가입
-   */
   @PostMapping("/sign-up")
   @ResponseStatus(HttpStatus.CREATED)
   public void signUp(final @Valid @RequestBody SignUpRequestDto signUpRequestDto) {
     authService.signUp(signUpRequestDto);
   }
 
-  /**
-   * 로그인
-   */
   @PostMapping("/sign-in")
   @ResponseStatus(HttpStatus.OK)
   public SignInResponseDto login(
@@ -49,24 +42,12 @@ public class AuthController {
     return authService.signIn(signInRequestDto, response);
   }
 
-  /**
-   * 로그아웃 -> redis 속 리프레시 토큰 삭제
-   *
-   * @param dto
-   */
   @DeleteMapping("/sign-out")
   @ResponseStatus(HttpStatus.OK)
   public void signOut(final @RequestBody TokenRequestDto dto) {
     authService.signOut(dto);
   }
 
-  /**
-   * 토큰 재발행
-   *
-   * @param tokenRequestDto
-   * @param response
-   * @return
-   */
   @PostMapping("/re-issue")
   @ResponseStatus(HttpStatus.OK)
   public ReissueResponseDto reissue(
@@ -76,27 +57,31 @@ public class AuthController {
     return authService.reissue(tokenRequestDto, response);
   }
 
-  /**
-   * 비밀번호 재설정 이메일 전송
-   *
-   * @param email
-   */
   @PostMapping("/mail")
   @ResponseStatus(HttpStatus.OK)
   public void verify(final @RequestParam String email) {
     authService.sendVerificationMail(email);
   }
 
-  /**
-   * 인증링크 확인
-   *
-   * @param email
-   * @param code
-   */
   @PostMapping("/mail/{code}")
   @ResponseStatus(HttpStatus.OK)
-  public void getVerify(final @RequestParam String email, final @PathVariable String code) {
-    authService.verifyEmail(email, code);
+  public void verifyMail(final @RequestParam String email, final @PathVariable String code) {
+    authService.verifyMail(email, code);
   }
 
+  @PostMapping("/find-password")
+  @ResponseStatus(HttpStatus.OK)
+  public void findPassword(final @RequestParam String email) {
+    authService.sendFindPasswordMail(email);
+  }
+
+  @PostMapping("/find-password/{code}")
+  @ResponseStatus(HttpStatus.OK)
+  public void verifyFindPasswordMail(
+      final @RequestParam String email,
+      final @PathVariable String code
+  ) {
+    authService.verifyFindPasswordMail(email, code);
+  }
+  
 }

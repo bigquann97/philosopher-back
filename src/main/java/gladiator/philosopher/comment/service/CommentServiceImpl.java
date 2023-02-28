@@ -16,6 +16,7 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.AuthException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
+import gladiator.philosopher.common.util.badword.BadWordFiltering;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.service.ThreadService;
@@ -36,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
   private final CommentRepository commentRepository;
   private final MentionService mentionService;
   private final ThreadService threadService;
+  private final BadWordFiltering badWordFiltering;
 
   @Override
   @Transactional(readOnly = true)
@@ -55,6 +57,8 @@ public class CommentServiceImpl implements CommentService {
     checkIfThreadIsArchived(foundThread);
     checkIfThreadHasOpinion(foundThread, commentRequestDto);
     Comment comment = commentRequestDto.toEntity(foundThread, account);
+    String filteredContent = badWordFiltering.checkAndChange(comment.getContent());
+    comment.modifyComment(filteredContent, comment.getOpinion());
     commentRepository.saveAndFlush(comment);
     mentionService.mentionComment(comment);
   }
@@ -69,7 +73,8 @@ public class CommentServiceImpl implements CommentService {
     Comment comment = getCommentEntity(commentId);
     checkIfAccountIsWriter(comment, account);
     mentionService.deleteMentions(comment);
-    comment.modifyComment(dto.getContent(), dto.getOpinion());
+    String filteredContent = badWordFiltering.checkAndChange(comment.getContent());
+    comment.modifyComment(filteredContent, dto.getOpinion());
     mentionService.mentionComment(comment);
     commentRepository.save(comment);
   }
@@ -127,4 +132,5 @@ public class CommentServiceImpl implements CommentService {
     Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(account.getId(), pageable);
     return new MyPage<>(commentsByAccount);
   }
+
 }
