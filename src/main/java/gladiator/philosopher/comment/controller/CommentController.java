@@ -1,12 +1,15 @@
 package gladiator.philosopher.comment.controller;
 
+import gladiator.philosopher.comment.dto.CommentOpinionStatsDto;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
+import gladiator.philosopher.comment.dto.FavCommentResponseDto;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,12 +32,6 @@ public class CommentController {
   private final CommentService commentService;
   private final ThreadService threadService;
 
-  /**
-   * threadId 로 전체 comment 조회
-   *
-   * @param threadId
-   * @return
-   */
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/thread/{threadId}")
   public MyPage<CommentResponseDto> selectCommentsWithPaging(
@@ -44,20 +41,13 @@ public class CommentController {
     return commentService.selectCommentsWithPaging(threadId, page - 1);
   }
 
-  /**
-   * comment 등록
-   *
-   * @param commentRequestDto
-   * @param threadId
-   * @param accountDetails
-   * @return
-   */
   @ResponseStatus(HttpStatus.OK)
   @PostMapping("/thread/{threadId}")
   public void createComment(
       final @RequestBody CommentRequestDto commentRequestDto,
       final @PathVariable Long threadId,
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     Thread thread = threadService.getThreadEntity(threadId);
     commentService.createComment(commentRequestDto, thread, accountDetails.getAccount());
   }
@@ -67,7 +57,8 @@ public class CommentController {
   public void modifyComment(
       final @RequestBody CommentRequestDto commentRequestDto,
       final @PathVariable Long commentId,
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     commentService.modifyComment(commentRequestDto, commentId, accountDetails.getAccount());
   }
 
@@ -75,8 +66,21 @@ public class CommentController {
   @DeleteMapping("/{commentId}")
   public void deleteComment(
       final @PathVariable Long commentId,
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     commentService.deleteComment(commentId, accountDetails.getAccount());
+  }
+
+  @GetMapping("/stat/{threadId}")
+  @ResponseStatus(HttpStatus.OK)
+  public List<CommentOpinionStatsDto> selectStats(final @PathVariable Long threadId) {
+    return commentService.selectStatistics(threadId);
+  }
+
+  @GetMapping("/fav/{threadId}")
+  @ResponseStatus(HttpStatus.OK)
+  public List<FavCommentResponseDto> selectFavComments(final @PathVariable Long threadId) {
+    return commentService.selectFavComments(threadId);
   }
 
 }

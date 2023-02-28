@@ -1,17 +1,23 @@
 package gladiator.philosopher.comment.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.account.entity.QAccount;
 import gladiator.philosopher.account.entity.QAccountImage;
+import gladiator.philosopher.comment.dto.CommentOpinionStatsDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
+import gladiator.philosopher.comment.dto.FavCommentResponseDto;
 import gladiator.philosopher.comment.entity.QComment;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.recommend.entity.QCommentRecommend;
 import gladiator.philosopher.thread.entity.QThread;
 import gladiator.philosopher.thread.entity.Thread;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -46,7 +52,7 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
                 CommentResponseDto.class,
                 comment,
                 JPAExpressions
-                    .select(commentRecommend.count())
+                    .select(commentRecommend.countDistinct())
                     .from(commentRecommend)
                     .where(commentRecommend.comment.id.eq(comment.id)),
                 accountImage.imageUrl
@@ -69,6 +75,61 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
 
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
+
+  @Override
+  public List<CommentOpinionStatsDto> selectStatistics(Long threadId) {
+    Long total = jpaQueryFactory
+        .select(Wildcard.count)
+        .from(comment)
+        .where(comment.thread.id.eq(threadId))
+        .fetchFirst();
+
+    List<Tuple> opinionTuples = jpaQueryFactory
+        .select(comment.opinion, Wildcard.count)
+        .from(comment)
+        .where(comment.thread.id.eq(threadId))
+        .groupBy(comment.opinion)
+        .fetch();
+
+    List<CommentOpinionStatsDto> opinionStats = opinionTuples
+        .stream()
+        .map(tuple ->
+            new CommentOpinionStatsDto(
+                tuple.get(comment.opinion),
+                BigDecimal.valueOf(tuple.get(Wildcard.count) / (float) total * 100).longValue()
+            ))
+        .collect(Collectors.toList());
+
+    return opinionStats;
+  }
+
+  @Override
+  public List<FavCommentResponseDto> selectFavoriteComments(Long threadId) {
+    List<FavCommentResponseDto> dtos = jpaQueryFactory
+        .select(Projections.constructor(
+            FavCommentResponseDto.class,
+            comment.id,
+            comment.content,
+            account.nickname,
+            accountImage.imageUrl,
+            JPAExpressions
+                .select(commentRecommend.countDistinct())
+                .from(commentRecommend)
+                .where(commentRecommend.comment.id.eq(comment.id))
+        ))
+        .from(comment)
+        .leftJoin(comment.account, account)
+        .leftJoin(accountImage).on(accountImage.account.id.eq(comment.account.id))
+        .leftJoin(commentRecommend).on(commentRecommend.comment.id.eq(comment.id))
+        .where(comment.thread.id.eq(threadId))
+        .groupBy(comment.id)
+        .orderBy(commentRecommend.countDistinct().desc())
+        .limit(3)
+        .fetch();
+
+    return dtos.stream().filter(x -> x.getLikeCount() != 0).collect(Collectors.toList());
+  }
+
 }
 /* 1
   private final JPAQueryFactory jpaQueryFactory;
