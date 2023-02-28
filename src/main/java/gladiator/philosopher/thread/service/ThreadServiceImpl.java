@@ -3,6 +3,7 @@ package gladiator.philosopher.thread.service;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_THREAD;
 
+import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
 import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.category.entity.Category;
@@ -13,6 +14,7 @@ import gladiator.philosopher.notification.service.NotificationService;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
 import gladiator.philosopher.recommend.entity.PostRecommend;
+import gladiator.philosopher.recommend.repository.ThreadRecommendRepository;
 import gladiator.philosopher.thread.dto.ThreadResponseDto;
 import gladiator.philosopher.thread.dto.ThreadSearchCond;
 import gladiator.philosopher.thread.dto.ThreadSearchCondByAdmin;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class ThreadServiceImpl implements ThreadService {
+
+  private final ThreadRecommendRepository threadRecommendRepository;
 
   private final ThreadOpinionRepository threadOpinionRepository;
 
@@ -152,6 +157,15 @@ public class ThreadServiceImpl implements ThreadService {
       final Pageable pageable
   ) {
     return threadRepository.selectThreadByAdmin(cond, pageable);
+  }
+
+  @Override
+  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(
+      final Long accountId,
+      final Pageable pageable
+  ) {
+    Page<SimpleResponseDtoByThread> data= threadRecommendRepository.getRecommendThreadsByAccount(accountId, pageable);
+    return new MyPage<>(data);
   }
 
 }

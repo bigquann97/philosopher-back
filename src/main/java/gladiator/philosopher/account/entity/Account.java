@@ -101,4 +101,13 @@ public class Account extends BaseEntity {
     return getClass().hashCode();
   }
 
+  public Account updatePassword(String encodePassword) {
+    this.password = encodePassword;
+    return this;
+  }
+
+  public Account updateNickname(String nickname){
+    this.nickname = nickname;
+    return this;
+  }
 }

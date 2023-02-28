@@ -1,22 +1,26 @@
 package gladiator.philosopher.account.controller;
 
-import gladiator.philosopher.account.dto.AccountCommentResponseDto;
-import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
+import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
+import gladiator.philosopher.account.dto.PostSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
+import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
+import gladiator.philosopher.account.dto.info.ModifyAccountNicknameRequestDto;
+import gladiator.philosopher.account.dto.info.ModifyAccountPasswordRequestDto;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.comment.service.CommentService;
+import gladiator.philosopher.common.dto.MyPage;
+import gladiator.philosopher.common.entity.PageRequest;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +36,8 @@ public class AccountController {
   private final String dirName = "AccountImg";
   private final CommentService commentService;
 
+  // 정보 조회
+
   /**
    * 내 정보 가지고 오기
    *
@@ -46,32 +52,115 @@ public class AccountController {
   }
 
   /**
-   * 내 댓글 가지고 오기
+   * 내가 쓴 댓글 가지고 오기
    *
    * @param accountDetails
+   * @param pageRequest
+   * @return
    */
   @GetMapping("/comments")
   @ResponseStatus(HttpStatus.OK)
-  public List<AccountCommentResponseDto> getMyComments(
+  public MyPage<CommentSimpleResponseDto> getMyComments(
       final @AuthenticationPrincipal AccountDetails accountDetails,
-      final @RequestParam(name = "page") int pageNum
+      final PageRequest pageRequest
   ) {
-    return commentService.findMyComments(accountDetails.getAccount(), pageNum);
+    Pageable pageable = pageRequest.of();
+    return accountService.getMyComments(accountDetails.getAccount(), pageable);
   }
 
   /**
-   * 내 정보 수정 (닉네임, 비밀번호)
+   * 내가 쓴 게시글 가지고 오기
+   *
+   * @param accountDetails
+   * @param pageRequest
+   * @return
+   */
+  @GetMapping("/posts")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<PostSimpleResponseDto> getMyPosts(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getMyPosts(accountDetails.getAccount(), pageable);
+  }
+
+  /**
+   * 내가 좋아요 누른 게시글 가지고 오기
+   *
+   * @param accountDetails
+   * @param pageRequest
+   * @return
+   */
+  @GetMapping("/recommend/post")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount
+  (
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getRecommendPostsByAccount(accountDetails.getAccount(), pageable);
+  }
+
+  /**
+   * 내가 좋아요 누른 쓰레드 가지고 오기
+   * @param accountDetails
+   * @param pageRequest
+   * @return
+   */
+  @GetMapping("/recommend/thread")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getRecommendThreadsByAccount(accountDetails.getAccount().getId(), pageable);
+  }
+
+  @GetMapping("/recommend/comment")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccout(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getRecommendCommentsByAccount(accountDetails.getAccount().getId(), pageable);
+  }
+
+  /**
+   * 비밀번호 변경
+   *
    * @param accountDetails
    * @param infoRequestDto
    * @return
    */
-  @PutMapping("/info")
+  @PatchMapping("/password/modify")
   @ResponseStatus(HttpStatus.CREATED)
-  public Long modifyAccountInfo(
+  public Long modifyAccountPassword(
       final @AuthenticationPrincipal AccountDetails accountDetails,
-      final @RequestBody ModifyAccountInfoRequestDto infoRequestDto
+      final @RequestBody ModifyAccountPasswordRequestDto infoRequestDto
   ) {
-    return accountService.modifyAccountInfo(accountDetails.getAccount(), infoRequestDto);
+    return accountService.modifyAccountPassword(accountDetails.getAccount(),
+        infoRequestDto.getPassword());
+  }
+
+  /**
+   * 닉네임 변경
+   *
+   * @param accountDetails
+   * @param infoRequestDto
+   * @return
+   */
+  @PatchMapping("/nickname/modify")
+  @ResponseStatus(HttpStatus.CREATED)
+  public Long modifyAccountNickname(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final @RequestBody ModifyAccountNicknameRequestDto infoRequestDto
+  ) {
+    return accountService.modifyAccountNickname(accountDetails.getAccount(),
+        infoRequestDto.getNickname());
   }
 
   /**

@@ -1,9 +1,13 @@
 package gladiator.philosopher.recommend.service;
 
+import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.thread.entity.Thread;
+import org.springframework.data.domain.Pageable;
 
 public interface RecommendService {
 
@@ -21,4 +25,5 @@ public interface RecommendService {
 
   long getPostRecommendCount(final Post post);
 
+  MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId, Pageable pageable);
 }
