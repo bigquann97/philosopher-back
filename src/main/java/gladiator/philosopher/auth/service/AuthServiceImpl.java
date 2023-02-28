@@ -1,9 +1,10 @@
 package gladiator.philosopher.auth.service;
 
 import static gladiator.philosopher.auth.service.EmailService.VALUE_TRUE;
-import static gladiator.philosopher.auth.service.EmailService.WHITELIST_KEY_PREFIX;
+import static gladiator.philosopher.auth.service.EmailService.VERIFIED_KEY_PREFIX;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_ACCOUNT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.DUPLICATED_NICKNAME;
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_CODE;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_EMAIL_OR_PW;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.INVALID_REFRESH_TOKEN;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_ACCOUNT;
@@ -59,32 +60,21 @@ public class AuthServiceImpl implements AuthService {
   @Value(value = "${default.image}")
   private String imageUrl;
 
-  /**
-   * 회원가입
-   *
-   * @param signUpRequestDto
-   */
-  @Transactional
   @Override
+  @Transactional
   public void signUp(final SignUpRequestDto signUpRequestDto) {
     checkIfUserEmailDuplicated(signUpRequestDto.getEmail());
     checkIfUserNicknameDuplicated(signUpRequestDto.getNickname());
     checkIfEmailVerified(signUpRequestDto.getEmail());
+
     Account account = signUpRequestDto.toEntity(
         passwordEncoder.encode(signUpRequestDto.getPassword()));
     accountRepository.save(account);
+
     AccountImage accountImage = new AccountImage(account, imageUrl);
     accountInfoRepository.save(accountImage);
-
   }
 
-  /**
-   * 로그인
-   *
-   * @param signInRequestDto
-   * @param response
-   * @return
-   */
   @Override
   @Transactional
   public SignInResponseDto signIn(
@@ -95,8 +85,8 @@ public class AuthServiceImpl implements AuthService {
     checkIfPasswordIsCorrect(signInRequestDto.getPassword(), account);
 
     // 토큰 발행
-    Authentication authentication = jwtTokenProvider.createAuthentication(
-        signInRequestDto.getEmail());
+    Authentication authentication =
+        jwtTokenProvider.createAuthentication(signInRequestDto.getEmail());
     TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
 
     // 로그인시 Redis - key:email, value: refreshToken 저장;
@@ -104,10 +94,13 @@ public class AuthServiceImpl implements AuthService {
         REFRESH_TOKEN_EXPIRE_TIME);
     response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
 
-    return SignInResponseDto.of(account.getNickname(), tokenDto.getAccessToken(),
-        tokenDto.getRefreshToken(), account.getRole());
+    return SignInResponseDto.of(
+        account.getNickname(),
+        tokenDto.getAccessToken(),
+        tokenDto.getRefreshToken(),
+        account.getRole()
+    );
   }
-
 
   @Override
   @Transactional
@@ -158,23 +151,61 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void verifyEmail(final String email, final String code) {
+  public void verifyMail(final String email, final String code) {
     emailService.verifyEmail(email, code);
   }
 
-  // ===== 내부 메서드 =====
-
-  /**
-   * 유저 이메일로 유저 객체 찾기 email -> entity
-   *
-   * @param email
-   * @return
-   */
-  private Account findAccountByEmail(final String email) {
-    return accountRepository.findByEmail(email)
-        .orElseThrow(() -> new NotFoundException(NOT_FOUND_ACCOUNT));
+  @Override
+  public void sendFindPasswordMail(final String email) {
+    if (!accountRepository.existsByEmail(email)) {
+      throw new NotFoundException(NOT_FOUND_ACCOUNT);
+    }
+    emailService.sendFindPasswordMail(email);
   }
 
+  @Override
+  @Transactional
+  public void verifyFindPasswordMail(final String email, final String code) {
+    Account account = findAccountByEmail(email);
+    if (emailService.verifyFindPasswordMail(email, code)) {
+      String newPw = emailService.sendNewPasswordMail(email);
+      account.modifyAccountInfo(account.getNickname(), passwordEncoder.encode(newPw));
+    } else {
+      throw new AuthException(INVALID_CODE);
+    }
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public void checkIfUserNicknameDuplicated(final String nickName) {
+    if (accountRepository.existsByNickname(nickName)) {
+      throw new DuplicatedException(DUPLICATED_NICKNAME);
+    }
+  }
+
+  // --- Private Methods ---
+
+  private void checkIfPasswordIsCorrect(final String password, final Account account) {
+    if (!passwordEncoder.matches(password, account.getPassword())) {
+      throw new AuthException(INVALID_EMAIL_OR_PW);
+    }
+  }
+
+  private void checkIfUserEmailDuplicated(final String email) {
+    if (accountRepository.existsByEmail(email)) {
+      throw new DuplicatedException(DUPLICATED_ACCOUNT);
+    }
+  }
+
+  private void checkIfEmailVerified(final String email) {
+    try {
+      if (!redisUtil.hasKey(VERIFIED_KEY_PREFIX + email)) {
+        throw new AuthException(NOT_VERIFIED_EMAIL);
+      }
+    } catch (NullPointerException e) {
+      throw new AuthException(NOT_VERIFIED_EMAIL);
+    }
+  }
 
   private void validateRefreshToken(final TokenRequestDto tokenRequestDto) {
     if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
@@ -191,50 +222,9 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-  /**
-   * 로그인 시 비밀번호 확인
-   *
-   * @param password
-   * @param account
-   */
-  private void checkIfPasswordIsCorrect(final String password, final Account account) {
-    if (!passwordEncoder.matches(password, account.getPassword())) {
-      throw new AuthException(INVALID_EMAIL_OR_PW);
-    }
-  }
-
-  /**
-   * 회원가입 시 유저이메일 중복 확인
-   *
-   * @param email
-   * @throws RuntimeException
-   */
-  private void checkIfUserEmailDuplicated(final String email) {
-    if (accountRepository.existsByEmail(email)) {
-      throw new DuplicatedException(DUPLICATED_ACCOUNT);
-    }
-  }
-
-  /**
-   * 회원가입 시 유저 닉네임 중복 확인
-   *
-   * @param nickName
-   */
-  @Override
-  public void checkIfUserNicknameDuplicated(final String nickName) {
-    if (accountRepository.existsByNickname(nickName)) {
-      throw new DuplicatedException(DUPLICATED_NICKNAME);
-    }
-  }
-
-  private void checkIfEmailVerified(String email) {
-    try {
-      if (!redisUtil.hasKey(WHITELIST_KEY_PREFIX + email)) {
-        throw new AuthException(NOT_VERIFIED_EMAIL);
-      }
-    } catch (NullPointerException e) {
-      throw new AuthException(NOT_VERIFIED_EMAIL);
-    }
+  private Account findAccountByEmail(final String email) {
+    return accountRepository.findByEmail(email)
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_ACCOUNT));
   }
 
 }
