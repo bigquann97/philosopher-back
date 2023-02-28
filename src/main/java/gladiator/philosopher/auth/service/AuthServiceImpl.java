@@ -155,19 +155,57 @@ public class AuthServiceImpl implements AuthService {
     emailService.verifyEmail(email, code);
   }
 
-  // ===== 내부 메서드 =====
-
-  /**
-   * 유저 이메일로 유저 객체 찾기 email -> entity
-   *
-   * @param email
-   * @return
-   */
-  private Account findAccountByEmail(final String email) {
-    return accountRepository.findByEmail(email)
-        .orElseThrow(() -> new NotFoundException(NOT_FOUND_ACCOUNT));
+  @Override
+  public void sendFindPasswordMail(final String email) {
+    if (!accountRepository.existsByEmail(email)) {
+      throw new NotFoundException(NOT_FOUND_ACCOUNT);
+    }
+    emailService.sendFindPasswordMail(email);
   }
 
+  @Override
+  @Transactional
+  public void verifyFindPasswordMail(final String email, final String code) {
+    Account account = findAccountByEmail(email);
+    if (emailService.verifyFindPasswordMail(email, code)) {
+      String newPw = emailService.sendNewPasswordMail(email);
+      account.modifyAccountInfo(account.getNickname(), passwordEncoder.encode(newPw));
+    } else {
+      throw new AuthException(INVALID_CODE);
+    }
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public void checkIfUserNicknameDuplicated(final String nickName) {
+    if (accountRepository.existsByNickname(nickName)) {
+      throw new DuplicatedException(DUPLICATED_NICKNAME);
+    }
+  }
+
+  // --- Private Methods ---
+
+  private void checkIfPasswordIsCorrect(final String password, final Account account) {
+    if (!passwordEncoder.matches(password, account.getPassword())) {
+      throw new AuthException(INVALID_EMAIL_OR_PW);
+    }
+  }
+
+  private void checkIfUserEmailDuplicated(final String email) {
+    if (accountRepository.existsByEmail(email)) {
+      throw new DuplicatedException(DUPLICATED_ACCOUNT);
+    }
+  }
+
+  private void checkIfEmailVerified(final String email) {
+    try {
+      if (!redisUtil.hasKey(VERIFIED_KEY_PREFIX + email)) {
+        throw new AuthException(NOT_VERIFIED_EMAIL);
+      }
+    } catch (NullPointerException e) {
+      throw new AuthException(NOT_VERIFIED_EMAIL);
+    }
+  }
 
   private void validateRefreshToken(final TokenRequestDto tokenRequestDto) {
     if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
@@ -184,54 +222,9 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-  @Override
-  public void sendFindPasswordMail(String email) {
-    if (!accountRepository.existsByEmail(email)) {
-      throw new NotFoundException(NOT_FOUND_ACCOUNT);
-    }
-    emailService.sendFindPasswordMail(email);
-  }
-
-  @Override
-  @Transactional
-  public void verifyFindPasswordMail(String email, String code) {
-    Account account = accountRepository.findByEmail(email)
+  private Account findAccountByEmail(final String email) {
+    return accountRepository.findByEmail(email)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_ACCOUNT));
-    if (emailService.verifyFindPasswordMail(email, code)) {
-      String newPw = emailService.sendNewPasswordMail(email);
-      account.modifyAccountInfo(account.getNickname(), passwordEncoder.encode(newPw));
-    } else {
-      throw new AuthException(INVALID_CODE);
-    }
-  }
-
-  @Override
-  public void checkIfUserNicknameDuplicated(final String nickName) {
-    if (accountRepository.existsByNickname(nickName)) {
-      throw new DuplicatedException(DUPLICATED_NICKNAME);
-    }
-  }
-
-  private void checkIfPasswordIsCorrect(final String password, final Account account) {
-    if (!passwordEncoder.matches(password, account.getPassword())) {
-      throw new AuthException(INVALID_EMAIL_OR_PW);
-    }
-  }
-
-  private void checkIfUserEmailDuplicated(final String email) {
-    if (accountRepository.existsByEmail(email)) {
-      throw new DuplicatedException(DUPLICATED_ACCOUNT);
-    }
-  }
-
-  private void checkIfEmailVerified(String email) {
-    try {
-      if (!redisUtil.hasKey(VERIFIED_KEY_PREFIX + email)) {
-        throw new AuthException(NOT_VERIFIED_EMAIL);
-      }
-    } catch (NullPointerException e) {
-      throw new AuthException(NOT_VERIFIED_EMAIL);
-    }
   }
 
 }

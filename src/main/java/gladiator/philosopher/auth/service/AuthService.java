@@ -32,4 +32,5 @@ public interface AuthService {
   void sendFindPasswordMail(final String email);
 
   void verifyFindPasswordMail(final String email, final String code);
+  
 }
