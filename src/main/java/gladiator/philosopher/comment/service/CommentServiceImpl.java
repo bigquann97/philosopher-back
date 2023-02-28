@@ -126,10 +126,10 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional(readOnly = true)
   public MyPage<CommentSimpleResponseDto> getMyComments(
-      final Account account,
+      final Long accountId,
       final Pageable pageable
   ) {
-    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(account.getId(), pageable);
+    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(accountId, pageable);
     return new MyPage<>(commentsByAccount);
   }
 

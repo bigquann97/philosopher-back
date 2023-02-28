@@ -28,6 +28,6 @@ public interface CommentService {
 
   Comment getCommentEntity(Long id);
 
-  MyPage<CommentSimpleResponseDto> getMyComments(Account account, Pageable pageable);
+  MyPage<CommentSimpleResponseDto> getMyComments(Long accountId, Pageable pageable);
 
 }

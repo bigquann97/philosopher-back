@@ -190,17 +190,17 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional(readOnly = true)
   public MyPage<PostSimpleResponseDto> getMyPosts(
-      final Account account,
+      final Long accountId,
       final Pageable pageable) {
-    Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(account.getId(), pageable);
+    Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(accountId, pageable);
     return new MyPage<>(getPosts);
   }
 
   @Override
   public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(
-      final Account account,
+      final Long accountId,
       final Pageable pageable) {
-    Page<PostSimpleResponseDto> results = postRecommendRepository.getAllPosts(account, pageable);
+    Page<PostSimpleResponseDto> results = postRecommendRepository.getAllPosts(accountId, pageable);
     return new MyPage<>(results);
   }
 }

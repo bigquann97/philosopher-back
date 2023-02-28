@@ -27,6 +27,6 @@ public interface PostRecommendRepository extends JpaRepository<PostRecommend, Lo
 
   Page<PostRecommend> findPostRecommendByAccount(Account account, Pageable pageable);
 
-  @Query("select new gladiator.philosopher.account.dto.PostSimpleResponseDto(pr.id,pr.post.title, pr.post.content, pr.post.category.name) from PostRecommend pr where pr.account=:account order by pr.id DESC ")
-  Page<PostSimpleResponseDto> getAllPosts(@Param("account") Account account, Pageable pageable);
+  @Query("select new gladiator.philosopher.account.dto.PostSimpleResponseDto(pr.id,pr.post.title, pr.post.content, pr.post.category.name) from PostRecommend pr where pr.account.id=:accountId order by pr.id DESC ")
+  Page<PostSimpleResponseDto> getAllPosts(@Param("id") Long accountId, Pageable pageable);
 }

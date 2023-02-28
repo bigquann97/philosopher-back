@@ -31,8 +31,7 @@ public interface ThreadService {
 
   List<ThreadOpinion> getOpinions(Thread thread);
 
-  MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(ThreadSearchCondByAdmin cond,
-      Pageable pageable);
+  MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable);
 
   MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId, Pageable pageable);
 

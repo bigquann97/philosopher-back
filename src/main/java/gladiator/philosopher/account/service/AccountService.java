@@ -28,12 +28,11 @@ public interface AccountService {
 
   Long modifyAccountNickname(Account account, String nickname);
 
+  MyPage<PostSimpleResponseDto> getMyPosts(Long accountId, Pageable pageable);
 
-  MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable);
+  MyPage<CommentSimpleResponseDto> getMyComments(Long accountId, Pageable pageable);
 
-  MyPage<CommentSimpleResponseDto> getMyComments(Account account, Pageable pageable);
-
-  MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account, Pageable pageable);
+  MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Long accountId, Pageable pageable);
 
   MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId, Pageable pageable);
 
