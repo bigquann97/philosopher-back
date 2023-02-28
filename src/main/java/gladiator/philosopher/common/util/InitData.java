@@ -88,7 +88,8 @@ public class InitData implements ApplicationRunner {
     Account account2 = new Account(2L, "test1@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
         "박정수", Gender.MALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
     accountRepository.save(account2);
-    AccountImage accountImage2 = new AccountImage(account2, "https://the-gladiators.s3.ap-northeast-2.amazonaws.com/AccountImg/cbf685ea-6cb2-4448-872d-0e503a7eddddimage");
+    AccountImage accountImage2 = new AccountImage(account2,
+        "https://the-gladiators.s3.ap-northeast-2.amazonaws.com/AccountImg/cbf685ea-6cb2-4448-872d-0e503a7eddddimage");
     accountInfoRepository.save(accountImage2);
 
     Account account3 = new Account(3L, "test2@naver.com", passwordEncoder.encode("rlawlghks1"), 40,
@@ -135,10 +136,10 @@ public class InitData implements ApplicationRunner {
     categoryRepository.save(category5);
 
     // 게시글 부
-    Post post1 = new Post(account1, " 깻잎 논쟁 보고만 있나요? ", "김지환, 박정수",  category1);
+    Post post1 = new Post(account1, " 깻잎 논쟁 보고만 있나요? ", "김지환, 박정수", category1);
     postRepository.save(post1);
 
-    Post post2 = new Post(account2, " 닭이 먼저인가요 치킨이 먼저인가요 ", "박정수, 박건하",  category1);
+    Post post2 = new Post(account2, " 닭이 먼저인가요 치킨이 먼저인가요 ", "박정수, 박건하", category1);
     postRepository.save(post2);
 
     Post post3 = new Post(account3, " 아 배고프다 ", "박건하, 이정국", category2);
@@ -147,22 +148,22 @@ public class InitData implements ApplicationRunner {
     Post post4 = new Post(account4, " 5억년 버튼 누르실 건가여? ", "이정국 ,이진호", category2);
     postRepository.save(post4);
 
-    Post post5 = new Post(account4, " 원더걸스 vs 뉴진스 ", "이진호, 이명박",  category4);
+    Post post5 = new Post(account4, " 원더걸스 vs 뉴진스 ", "이진호, 이명박", category4);
     postRepository.save(post5);
 
     Post post6 = new Post(account5, " 여자친구 앞에서 이성 반찬 밀어주기 ", "이명박, 박명수", category5);
     postRepository.save(post6);
-    Post post7 = new Post(account6, " 팥붕 vs 슈붕 ", "이명박, 존박",category3);
+    Post post7 = new Post(account6, " 팥붕 vs 슈붕 ", "이명박, 존박", category3);
     postRepository.save(post7);
     Post post8 = new Post(account7, " 길가는 사람에게 한대맞으면 5000원? ", "이명박, 박명수", category3);
     postRepository.save(post8);
-    Post post9 = new Post(account8, " 1년뒤 1억 10년뒤 5억 ", " 9번 게시물의 내용입니다 ",  category2);
+    Post post9 = new Post(account8, " 1년뒤 1억 10년뒤 5억 ", " 9번 게시물의 내용입니다 ", category2);
     postRepository.save(post9);
     Post post10 = new Post(account9, " 수저 세팅 ", "10번 게시물의 내용입니다", category5);
     postRepository.save(post10);
     Post post11 = new Post(account10, " 아 몰라 ", "11번 게시물의 내용입니다", category5);
     postRepository.save(post11);
-    Post post12 = new Post(account9, " 못참아 ", "12번 게시물의 내용입니다",  category4);
+    Post post12 = new Post(account9, " 못참아 ", "12번 게시물의 내용입니다", category4);
     postRepository.save(post12);
     Post post13 = new Post(account8, " 사후세계? ", "이명박, 박명수", category1);
     postRepository.save(post13);
@@ -170,7 +171,7 @@ public class InitData implements ApplicationRunner {
     postRepository.save(post14);
     Post post15 = new Post(account6, " 안락사 ", "김지환", category2);
     postRepository.save(post15);
-    Post post16 = new Post(account5, " 죽음이란? ", "배고프다",  category2);
+    Post post16 = new Post(account5, " 죽음이란? ", "배고프다", category2);
     postRepository.save(post16);
     Post post17 = new Post(account4, " 지옥 있나요?  ", "네 없습니다", category2);
     postRepository.save(post17);
@@ -232,6 +233,27 @@ public class InitData implements ApplicationRunner {
 
     PostRecommend recommend15 = new PostRecommend(account5, post4);
     postRecommendRepository.save(recommend15);
+
+    PostRecommend recommend26 = new PostRecommend(account4, post1);
+    postRecommendRepository.save(recommend26);
+    PostRecommend recommend27 = new PostRecommend(account4, post17);
+    postRecommendRepository.save(recommend27);
+    PostRecommend recommend18 = new PostRecommend(account4, post16);
+    postRecommendRepository.save(recommend18);
+    PostRecommend recommend19 = new PostRecommend(account4, post15);
+    postRecommendRepository.save(recommend19);
+    PostRecommend recommend20 = new PostRecommend(account4, post14);
+    postRecommendRepository.save(recommend20);
+    PostRecommend recommend21 = new PostRecommend(account4, post13);
+    postRecommendRepository.save(recommend21);
+    PostRecommend recommend22 = new PostRecommend(account4, post12);
+    postRecommendRepository.save(recommend22);
+    PostRecommend recommend23 = new PostRecommend(account4, post3);
+    postRecommendRepository.save(recommend23);
+    PostRecommend recommend24 = new PostRecommend(account4, post5);
+    postRecommendRepository.save(recommend24);
+    PostRecommend recommend25 = new PostRecommend(account4, post7);
+    postRecommendRepository.save(recommend25);
 
     List<String> opinions = Arrays.asList("opinion1", "opinion2", "opinion3");
     List<String> opinion1 = Arrays.asList("한다", "안한다", "입닥쳐라");
@@ -350,20 +372,22 @@ public class InitData implements ApplicationRunner {
         "https://the-gladiators.s3.ap-northeast-2.amazonaws.com/postImg/ec6c575a-7c1b-4f93-9f5c-724137154e66image",
         thread1);
     threadImageRepository.save(threadImage);
-    Thread thread3 = new Thread(post6.getTitle(), post6.getContent(), post6.getAccount(), LocalDateTime.now(),
+    Thread thread3 = new Thread(post6.getTitle(), post6.getContent(), post6.getAccount(),
+        LocalDateTime.now(),
         post6.getCategory());
     threadRepository.save(thread3);
-    Thread thread4 = new Thread(post7.getTitle(), post7.getContent(), post7.getAccount(), LocalDateTime.now(),
+    Thread thread4 = new Thread(post7.getTitle(), post7.getContent(), post7.getAccount(),
+        LocalDateTime.now(),
         post7.getCategory());
     threadRepository.save(thread4);
-    Thread thread5 = new Thread(post8.getTitle(), post8.getContent(), post8.getAccount(), LocalDateTime.now(),
+    Thread thread5 = new Thread(post8.getTitle(), post8.getContent(), post8.getAccount(),
+        LocalDateTime.now(),
         post8.getCategory());
     threadRepository.save(thread5);
-    Thread thread6 = new Thread(post9.getTitle(), post9.getContent(), post9.getAccount(), LocalDateTime.now(),
+    Thread thread6 = new Thread(post9.getTitle(), post9.getContent(), post9.getAccount(),
+        LocalDateTime.now(),
         post9.getCategory());
     threadRepository.save(thread6);
-
-
 
     ThreadOpinion threadOpinion1 = new ThreadOpinion(thread1, "한다");
     ThreadOpinion threadOpinion2 = new ThreadOpinion(thread1, "안한다");
@@ -394,11 +418,43 @@ public class InitData implements ApplicationRunner {
 //    recommendRepository.save(recommend2);
     ThreadRecommend threadRecommend = new ThreadRecommend(account1, thread1);
     threadRecommendRepository.save(threadRecommend);
+//    ThreadRecommend threadRecommend1 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend1);
+//    ThreadRecommend threadRecommend2 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend2);
+//    ThreadRecommend threadRecommend3 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend3);
+//    ThreadRecommend threadRecommend4 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend4);
+//    ThreadRecommend threadRecommend5 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend5);
+//    ThreadRecommend threadRecommend6 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend6);
+//    ThreadRecommend threadRecommend7 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend7);
+//    ThreadRecommend threadRecommend8 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend8);
+//    ThreadRecommend threadRecommend9 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend9);
+//    ThreadRecommend threadRecommend10 = new ThreadRecommend(account4, thread6);
+//    threadRecommendRepository.save(threadRecommend10);
+//    ThreadRecommend threadRecommend11 = new ThreadRecommend(account4, thread4);
+//    threadRecommendRepository.save(threadRecommend11);
+//    ThreadRecommend threadRecommend12 = new ThreadRecommend(account4, thread2);
+//    threadRecommendRepository.save(threadRecommend12);
+//    ThreadRecommend threadRecommend13 = new ThreadRecommend(account4, thread5);
+//    threadRecommendRepository.save(threadRecommend13);
+//    ThreadRecommend threadRecommend14 = new ThreadRecommend(account4, thread3);
+//    threadRecommendRepository.save(threadRecommend14);
+//    ThreadRecommend threadRecommend15 = new ThreadRecommend(account4, thread1);
+//    threadRecommendRepository.save(threadRecommend15);
 
     for (int i = 0; i < 123; i++) {
       Thread thread = new Thread("title" + i, "content" + i, account1,
           LocalDateTime.now().plusDays(1L), category1);
       threadRepository.save(thread);
+      ThreadRecommend threadRecommend10 = new ThreadRecommend(account4, thread);
+      threadRecommendRepository.save(threadRecommend10);
     }
 
     Thread thread = new Thread("테스트용 데이터", "콘텐츠", account1, LocalDateTime.now().plusDays(1L),
@@ -415,76 +471,94 @@ public class InitData implements ApplicationRunner {
       commentRepository.save(comment1);
     }
     // 신고 관련 init 데이터 ( 쓰레드 신고 )
-    ThreadReport threadReport = new ThreadReport("신고입니다", account2, account2,ReportCategory.ABUSE, thread3.getId());
+    ThreadReport threadReport = new ThreadReport("신고입니다", account2, account2, ReportCategory.ABUSE,
+        thread3.getId());
     threadReportRepository.save(threadReport);
 
-    ThreadReport threadReport2 = new ThreadReport("신고입니다1", account3, account1,ReportCategory.SEXUAL_HARASSMENT, thread4.getId());
+    ThreadReport threadReport2 = new ThreadReport("신고입니다1", account3, account1,
+        ReportCategory.SEXUAL_HARASSMENT, thread4.getId());
     threadReportRepository.save(threadReport2);
 
-    ThreadReport threadReport3 = new ThreadReport("신고입니다2", account4, account10,ReportCategory.SPAMMER, thread5.getId());
+    ThreadReport threadReport3 = new ThreadReport("신고입니다2", account4, account10,
+        ReportCategory.SPAMMER, thread5.getId());
     threadReportRepository.save(threadReport3);
 
-    ThreadReport threadReport4 = new ThreadReport("신고입니다3", account5, account9,ReportCategory.IRRELEVANT, thread6.getId());
+    ThreadReport threadReport4 = new ThreadReport("신고입니다3", account5, account9,
+        ReportCategory.IRRELEVANT, thread6.getId());
     threadReportRepository.save(threadReport4);
 
-    ThreadReport threadReport5 = new ThreadReport("신고입니다4", account6, account8,ReportCategory.ABUSE, thread1.getId());
+    ThreadReport threadReport5 = new ThreadReport("신고입니다4", account6, account8,
+        ReportCategory.ABUSE, thread1.getId());
     threadReportRepository.save(threadReport5);
 
-    ThreadReport threadReport6 = new ThreadReport("신고입니다5", account7, account7,ReportCategory.SPAMMER, thread2.getId());
+    ThreadReport threadReport6 = new ThreadReport("신고입니다5", account7, account7,
+        ReportCategory.SPAMMER, thread2.getId());
     threadReportRepository.save(threadReport6);
 
-    ThreadReport threadReport7 = new ThreadReport("신고입니다6", account8, account2,ReportCategory.IRRELEVANT, thread3.getId());
+    ThreadReport threadReport7 = new ThreadReport("신고입니다6", account8, account2,
+        ReportCategory.IRRELEVANT, thread3.getId());
     threadReportRepository.save(threadReport7);
 
-    ThreadReport threadReport8 = new ThreadReport("신고입니다7", account9, account3,ReportCategory.SEXUAL_HARASSMENT, thread2.getId());
+    ThreadReport threadReport8 = new ThreadReport("신고입니다7", account9, account3,
+        ReportCategory.SEXUAL_HARASSMENT, thread2.getId());
     threadReportRepository.save(threadReport8);
 
-    ThreadReport threadReport9 = new ThreadReport("신고입니다8", account1, account4,ReportCategory.SEXUAL_HARASSMENT, thread4.getId());
+    ThreadReport threadReport9 = new ThreadReport("신고입니다8", account1, account4,
+        ReportCategory.SEXUAL_HARASSMENT, thread4.getId());
     threadReportRepository.save(threadReport9);
 
-    ThreadReport threadReport10 = new ThreadReport("신고입니다9", account2, account5,ReportCategory.ABUSE, thread1.getId());
+    ThreadReport threadReport10 = new ThreadReport("신고입니다9", account2, account5,
+        ReportCategory.ABUSE, thread1.getId());
     threadReportRepository.save(threadReport10);
 
-    ThreadReport threadReport11 = new ThreadReport("신고입니다10", account2, account6,ReportCategory.ABUSE, thread2.getId());
+    ThreadReport threadReport11 = new ThreadReport("신고입니다10", account2, account6,
+        ReportCategory.ABUSE, thread2.getId());
     threadReportRepository.save(threadReport11);
 
     // 댓글 신고
-    CommentReport commentReport = new CommentReport("댓글 신고입니다",account2, account6, ReportCategory.ABUSE, comment3.getId());
+    CommentReport commentReport = new CommentReport("댓글 신고입니다", account2, account6,
+        ReportCategory.ABUSE, comment3.getId());
     commentReportRepository.save(commentReport);
 
-    CommentReport commentReport1 = new CommentReport("댓글 신고입니다1",account3, account7, ReportCategory.SEXUAL_HARASSMENT, comment2.getId());
+    CommentReport commentReport1 = new CommentReport("댓글 신고입니다1", account3, account7,
+        ReportCategory.SEXUAL_HARASSMENT, comment2.getId());
     commentReportRepository.save(commentReport1);
 
-    CommentReport commentReport2 = new CommentReport("댓글 신고입니다2",account4, account9, ReportCategory.SPAMMER, comment4.getId());
+    CommentReport commentReport2 = new CommentReport("댓글 신고입니다2", account4, account9,
+        ReportCategory.SPAMMER, comment4.getId());
     commentReportRepository.save(commentReport2);
 
-    CommentReport commentReport3 = new CommentReport("댓글 신고입니다3",account5, account10, ReportCategory.SEXUAL_HARASSMENT, comment.getId());
+    CommentReport commentReport3 = new CommentReport("댓글 신고입니다3", account5, account10,
+        ReportCategory.SEXUAL_HARASSMENT, comment.getId());
     commentReportRepository.save(commentReport3);
 
-    CommentReport commentReport4 = new CommentReport("댓글 신고입니다4",account6, account1, ReportCategory.ABUSE, comment2.getId());
+    CommentReport commentReport4 = new CommentReport("댓글 신고입니다4", account6, account1,
+        ReportCategory.ABUSE, comment2.getId());
     commentReportRepository.save(commentReport4);
 
-    CommentReport commentReport5 = new CommentReport("댓글 신고입니다5",account7, account2, ReportCategory.SPAMMER, comment3.getId());
+    CommentReport commentReport5 = new CommentReport("댓글 신고입니다5", account7, account2,
+        ReportCategory.SPAMMER, comment3.getId());
     commentReportRepository.save(commentReport5);
 
-    CommentReport commentReport6 = new CommentReport("댓글 신고입니다6",account8, account3, ReportCategory.SEXUAL_HARASSMENT, comment.getId());
+    CommentReport commentReport6 = new CommentReport("댓글 신고입니다6", account8, account3,
+        ReportCategory.SEXUAL_HARASSMENT, comment.getId());
     commentReportRepository.save(commentReport6);
 
-    CommentReport commentReport7 = new CommentReport("댓글 신고입니다7",account9, account4, ReportCategory.ABUSE, comment2.getId());
+    CommentReport commentReport7 = new CommentReport("댓글 신고입니다7", account9, account4,
+        ReportCategory.ABUSE, comment2.getId());
     commentReportRepository.save(commentReport7);
 
-    CommentReport commentReport8 = new CommentReport("댓글 신고입니다8",account10, account5, ReportCategory.SPAMMER, comment3.getId());
+    CommentReport commentReport8 = new CommentReport("댓글 신고입니다8", account10, account5,
+        ReportCategory.SPAMMER, comment3.getId());
     commentReportRepository.save(commentReport8);
 
-    CommentReport commentReport9 = new CommentReport("댓글 신고입니다9",account1, account6, ReportCategory.SEXUAL_HARASSMENT, comment.getId());
+    CommentReport commentReport9 = new CommentReport("댓글 신고입니다9", account1, account6,
+        ReportCategory.SEXUAL_HARASSMENT, comment.getId());
     commentReportRepository.save(commentReport9);
 
-    CommentReport commentReport10 = new CommentReport("댓글 신고입니다10",account2, account7, ReportCategory.ABUSE, comment2.getId());
+    CommentReport commentReport10 = new CommentReport("댓글 신고입니다10", account2, account7,
+        ReportCategory.ABUSE, comment2.getId());
     commentReportRepository.save(commentReport10);
-
-
-
-
 
     // 김지환 테스트
 //    Thread thread11 = new Thread("백종원의 스타벅스","내용입니다", account2, LocalDateTime.now().plusDays(1L), category3, ThreadStatus.BLINDED);

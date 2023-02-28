@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CommentSimpleResponseDto {
 
-  private Long id;
+  private Long id; // comment 식별자
   private String title; // thread의 title
   private String content; // thread의 댓글 ( 내가 어떤 댓글을 달았는지 )
 

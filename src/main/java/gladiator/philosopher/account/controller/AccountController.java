@@ -2,6 +2,8 @@ package gladiator.philosopher.account.controller;
 
 import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
+import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
 import gladiator.philosopher.account.dto.info.ModifyAccountNicknameRequestDto;
 import gladiator.philosopher.account.dto.info.ModifyAccountPasswordRequestDto;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
@@ -68,6 +70,7 @@ public class AccountController {
 
   /**
    * 내가 쓴 게시글 가지고 오기
+   *
    * @param accountDetails
    * @param pageRequest
    * @return
@@ -82,17 +85,49 @@ public class AccountController {
     return accountService.getMyPosts(accountDetails.getAccount(), pageable);
   }
 
-//  @GetMapping("/recommend/post")
-//  @ResponseStatus(HttpStatus.OK)
-//  public
-//  // 내가 좋아요 누른 게시글 -> 반환 타입 어떻게 하지?어떤 데이터를 뽑아줄지 내일 이야기 해볼 것
-//  @GetMapping("/recommend/thread")
-//  @ResponseStatus(HttpStatus.OK)
-//  // 내가 좋아요 누른 쓰레드
-//  @GetMapping("/recommend/comment")
-//  @ResponseStatus(HttpStatus.OK)
-//  // 내가 좋아요 누른 댓글
+  /**
+   * 내가 좋아요 누른 게시글 가지고 오기
+   *
+   * @param accountDetails
+   * @param pageRequest
+   * @return
+   */
+  @GetMapping("/recommend/post")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount
+  (
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getRecommendPostsByAccount(accountDetails.getAccount(), pageable);
+  }
 
+  /**
+   * 내가 좋아요 누른 쓰레드 가지고 오기
+   * @param accountDetails
+   * @param pageRequest
+   * @return
+   */
+  @GetMapping("/recommend/thread")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getRecommendThreadsByAccount(accountDetails.getAccount().getId(), pageable);
+  }
+
+  @GetMapping("/recommend/comment")
+  @ResponseStatus(HttpStatus.OK)
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccout(
+      final @AuthenticationPrincipal AccountDetails accountDetails,
+      final PageRequest pageRequest
+  ) {
+    Pageable pageable = pageRequest.of();
+    return accountService.getRecommendCommentsByAccount(accountDetails.getAccount().getId(), pageable);
+  }
 
   /**
    * 비밀번호 변경

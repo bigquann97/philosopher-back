@@ -39,4 +39,6 @@ public interface PostService {
   List<PostOpinion> getPostOpinions(Post post);
 
   MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable);
+
+  MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account, Pageable pageable);
 }

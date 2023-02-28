@@ -18,7 +18,9 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -185,5 +187,13 @@ public class PostServiceImpl implements PostService {
       final Pageable pageable) {
     Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(account.getId(), pageable);
     return new MyPage<>(getPosts);
+  }
+
+  @Override
+  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(
+      final Account account,
+      final Pageable pageable) {
+    Page<PostSimpleResponseDto> results = postRecommendRepository.getAllPosts(account, pageable);
+    return new MyPage<>(results);
   }
 }

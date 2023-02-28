@@ -2,6 +2,8 @@ package gladiator.philosopher.account.service;
 
 import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
+import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
@@ -14,6 +16,8 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
 import gladiator.philosopher.post.service.PostService;
+import gladiator.philosopher.recommend.service.RecommendService;
+import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +36,8 @@ public class AccountServiceImpl implements AccountService {
   private final AuthService authService;
   private final CommentService commentService;
   private final PostService postService;
+  private final ThreadService threadService;
+  private final RecommendService recommendService;
 
   /**
    * 유저 식별자로 유저 객체 찾기 id -> entity
@@ -111,5 +117,23 @@ public class AccountServiceImpl implements AccountService {
   @Override
   public MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable) {
     return postService.getMyPosts(account, pageable);
+  }
+
+  @Override
+  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account,
+      Pageable pageable) {
+    return postService.getRecommendPostsByAccount(account, pageable);
+  }
+
+  @Override
+  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId,
+      Pageable pageable) {
+    return threadService.getRecommendThreadsByAccount(accountId, pageable);
+  }
+
+  @Override
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId,
+      Pageable pageable) {
+    return recommendService.getRecommendCommentsByAccount(accountId, pageable);
   }
 }

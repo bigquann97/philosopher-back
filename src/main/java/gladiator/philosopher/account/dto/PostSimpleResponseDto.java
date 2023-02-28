@@ -16,4 +16,6 @@ public class PostSimpleResponseDto {
     this.content = content;
     this.category = category;
   }
+
+
 }

@@ -2,6 +2,8 @@ package gladiator.philosopher.account.service;
 
 import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
+import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
 import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
 import gladiator.philosopher.account.dto.info.ModifyAccountNicknameRequestDto;
 import gladiator.philosopher.account.dto.info.ModifyAccountPasswordRequestDto;
@@ -30,4 +32,10 @@ public interface AccountService {
   MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable);
 
   MyPage<CommentSimpleResponseDto> getMyComments(Account account, Pageable pageable);
+
+  MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account, Pageable pageable);
+
+  MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId, Pageable pageable);
+
+  MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId, Pageable pageable);
 }
