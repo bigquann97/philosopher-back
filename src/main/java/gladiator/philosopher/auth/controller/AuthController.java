@@ -6,7 +6,6 @@ import gladiator.philosopher.account.dto.login.SignInResponseDto;
 import gladiator.philosopher.account.dto.login.SignUpRequestDto;
 import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.common.jwt.TokenRequestDto;
-import gladiator.philosopher.common.s3.S3Uploader;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -94,8 +93,24 @@ public class AuthController {
    */
   @PostMapping("/mail/{code}")
   @ResponseStatus(HttpStatus.OK)
-  public void getVerify(final @RequestParam String email, final @PathVariable String code) {
-    authService.verifyEmail(email, code);
+  public void verifyMail(final @RequestParam String email, final @PathVariable String code) {
+    authService.verifyMail(email, code);
   }
+
+  @PostMapping("/find-password")
+  @ResponseStatus(HttpStatus.OK)
+  public void findPassword(final @RequestParam String email) {
+    authService.sendFindPasswordMail(email);
+  }
+
+  @PostMapping("/find-password/{code}")
+  @ResponseStatus(HttpStatus.OK)
+  public void verifyFindPasswordMail(
+      final @RequestParam String email,
+      final @PathVariable String code
+  ) {
+    authService.verifyFindPasswordMail(email, code);
+  }
+
 
 }
