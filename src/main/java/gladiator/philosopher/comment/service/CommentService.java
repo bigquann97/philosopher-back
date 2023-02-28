@@ -1,6 +1,7 @@
 package gladiator.philosopher.comment.service;
 
 import gladiator.philosopher.account.dto.AccountCommentResponseDto;
+import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
@@ -8,6 +9,8 @@ import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.thread.entity.Thread;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
 
@@ -25,5 +28,6 @@ public interface CommentService {
 
   Comment getCommentEntity(Long id);
 
-  List<AccountCommentResponseDto> findMyComments(Account account, int pageNum);
+  MyPage<CommentSimpleResponseDto> getMyComments(Account account, Pageable pageable);
+
 }

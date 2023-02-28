@@ -1,19 +1,26 @@
 package gladiator.philosopher.account.service;
 
-import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
+import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
+import gladiator.philosopher.account.dto.PostSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
+import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.enums.UserRole;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
-import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.auth.service.AuthService;
+import gladiator.philosopher.comment.service.CommentService;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.common.exception.dto.ExceptionStatus;
-import java.util.List;
+import gladiator.philosopher.post.service.PostService;
+import gladiator.philosopher.recommend.service.RecommendService;
+import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +34,10 @@ public class AccountServiceImpl implements AccountService {
   private final PasswordEncoder passwordEncoder;
   private final AccountInfoRepository accountInfoRepository;
   private final AuthService authService;
+  private final CommentService commentService;
+  private final PostService postService;
+  private final ThreadService threadService;
+  private final RecommendService recommendService;
 
   /**
    * 유저 식별자로 유저 객체 찾기 id -> entity
@@ -35,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
    * @return
    */
   @Override
+  @Transactional(readOnly = true)
   public Account getAccount(final Long id) {
     return accountRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(ExceptionStatus.NOT_FOUND_ACCOUNT));
@@ -50,20 +62,12 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserInfoResponseDto getMyInfo(final Account account) {
     String accountImageUrl = accountInfoRepository.getAccountImageById(account.getId());
     return new UserInfoResponseDto(account, accountImageUrl);
   }
 
-  @Override
-  public Long modifyAccountInfo(Account account,
-      ModifyAccountInfoRequestDto infoRequestDto) {
-    authService.checkIfUserNicknameDuplicated(infoRequestDto.getNickname());
-    String password = passwordEncoder.encode(infoRequestDto.getPassword());
-    account.modifyAccountInfo(infoRequestDto.getNickname(), password);
-    accountRepository.saveAndFlush(account);
-    return account.getId();
-  }
 
   @Override
   @Transactional
@@ -76,10 +80,60 @@ public class AccountServiceImpl implements AccountService {
 
 
   @Override
+  @Transactional(readOnly = true)
   public String getOldUrl(Account account) {
     AccountImage accountImage = accountInfoRepository.getAccountInfoByAccountId(account.getId());
     return accountImage.getImageUrl();
   }
 
+  @Override
+  @Transactional
+  public Long modifyAccountPassword(
+      final Account account,
+      final String password
+  ) {
+    String encodePassword = passwordEncoder.encode(password);
+    Account resultAccount = account.updatePassword(encodePassword);
+    accountRepository.saveAndFlush(resultAccount);
+    return resultAccount.getId();
+  }
 
+  @Override
+  @Transactional
+  public Long modifyAccountNickname(
+      final Account account,
+      final String nickname) {
+    authService.checkIfUserNicknameDuplicated(nickname);
+    Account resultAccount = account.updateNickname(nickname);
+    accountRepository.saveAndFlush(resultAccount);
+    return resultAccount.getId();
+  }
+
+  @Override
+  public MyPage<CommentSimpleResponseDto> getMyComments(Account account, Pageable pageable) {
+    return commentService.getMyComments(account, pageable);
+  }
+
+  @Override
+  public MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable) {
+    return postService.getMyPosts(account, pageable);
+  }
+
+  @Override
+  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account,
+      Pageable pageable) {
+    return postService.getRecommendPostsByAccount(account, pageable);
+  }
+
+  @Override
+  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId,
+      Pageable pageable) {
+    return threadService.getRecommendThreadsByAccount(accountId, pageable);
+  }
+
+  @Override
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId,
+      Pageable pageable) {
+    return recommendService.getRecommendCommentsByAccount(accountId, pageable);
+  }
 }

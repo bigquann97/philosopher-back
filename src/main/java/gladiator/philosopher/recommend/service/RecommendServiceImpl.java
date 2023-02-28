@@ -8,8 +8,12 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_THREAD;
 
+import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
+import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.comment.entity.Comment;
+import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
@@ -25,6 +29,8 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +44,7 @@ public class RecommendServiceImpl implements RecommendService {
   private final CommentRecommendRepository commentRecommendRepository;
   private final ThreadService threadService;
   private final PostService postService;
+  private final AccountRepository accountRepository;
 
   @Transactional
   public void createRecommendPost(final Post post, final Account account) {
@@ -123,4 +130,11 @@ public class RecommendServiceImpl implements RecommendService {
     }
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId,
+      Pageable pageable) {
+    Page<RecommendCommentResponseDto> data =threadRecommendRepository.findRecommendCommentsByAccount(accountId,pageable);
+    return new MyPage<>(data);
+  }
 }

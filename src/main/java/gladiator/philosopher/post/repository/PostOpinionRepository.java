@@ -12,11 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface PostOpinionRepository extends JpaRepository<PostOpinion, Long> {
 
-  @Transactional
-  @Modifying(clearAutomatically = true)
-  @Query("delete from PostOpinion p where p.post.id =:id")
-  void deleteAllByPostOpinion(@Param("id") Long id);
-
   List<PostOpinion> findByPost(@NonNull Post post);
 
   @Query("select p.opinion from PostOpinion p where p.post.id=:id")
