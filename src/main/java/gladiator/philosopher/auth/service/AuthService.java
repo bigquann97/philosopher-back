@@ -9,19 +9,28 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface AuthService {
 
-  void signUp(SignUpRequestDto signUpRequestDto);
+  void signUp(final SignUpRequestDto signUpRequestDto);
 
-  SignInResponseDto signIn(SignInRequestDto signInRequestDto, HttpServletResponse response);
+  SignInResponseDto signIn(
+      final SignInRequestDto signInRequestDto,
+      final HttpServletResponse response
+  );
+
+  ReissueResponseDto reissue(
+      final TokenRequestDto tokenRequestDto,
+      final HttpServletResponse response
+  );
+
+  void signOut(final TokenRequestDto dto);
+
+  void sendVerificationMail(final String email);
+
+  void verifyMail(final String email, final String code);
+
+  void checkIfUserNicknameDuplicated(final String nickName);
+
+  void sendFindPasswordMail(final String email);
+
+  void verifyFindPasswordMail(final String email, final String code);
   
-  ReissueResponseDto reissue(final TokenRequestDto tokenRequestDto,
-      final HttpServletResponse response);
-
-  void signOut(TokenRequestDto dto);
-
-  void sendVerificationMail(String email);
-
-  void verifyEmail(String email, String code);
-
-  void checkIfUserNicknameDuplicated(String nickName);
-
 }
