@@ -35,16 +35,21 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - uses: actions/checkout@v3
-      - run: touch ./src/main/resources/application-s3Storage.yml
-      - run: echo "${{ secrets.APPLICATION_S3STORAGE_YML}}" > ./src/main/resources/application-s3Storage.yml
-      - run: cat ./src/main/resources/application-s3Storage.yml
-      - run: touch ./src/main/resources/badwords.yml
-      - run: echo "${{ secrets.BADWORDS_YML }}" > ./src/main/resources/badwords.yml
-      - run: cat ./src/main/resources/badwords.yml
-      - run: touch ./src/main/resources/application.yml
-      - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
-      - run: cat ./src/main/resources/application.yml
+      - name: Copy Secret
+        env:
+          OCCUPY_S3_SECRET: ${{ secrets.APPLICATION_S3STORAGE_YML }}
+          OCCUPY_S3_SECRET_DIR: src/main/resources
+          OCCUPY_s3_SECRET_DIR_FILE_NAME: application-s3Storage.yml
+          OCCUPY_BW_SECRET: ${{ secrets.BADWORDS_YML }}
+          OCCUPY_BW_SECRET_DIR: src/main/resources
+          OCCUPY_BW_SECRET_DIR_FILE_NAME: badwords.yml
+          OCCUPY_MAIN_SECRET: ${{ secrets.APPLICATION_YML }}
+          OCCUPY_MAIN_SECRET_DIR: src/main/resources
+          OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
+        run: echo $OCCUPY_S3_SECRET | base64 --decode > $OCCUPY_S3_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
+          echo $OCCUPY_BW_SECRET | base64 --decode > $OCCUPY_BW_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
+          echo $OCCUPY_MAIN_SECRET | base64 --decode > $OCCUPY_MAIN_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
+
 
       - name: Build Gradle 및 전체 테스트 진행
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
