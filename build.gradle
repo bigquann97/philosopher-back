@@ -78,6 +78,10 @@ dependencies {
     //imageResize
     implementation 'com.github.downgoon:marvin:1.5.5'
     implementation 'com.github.downgoon:MarvinPlugins:1.5.5'
+
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.15.3'
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.15.3'
+    testImplementation group: 'org.testcontainers', name: 'mysql', version: '1.15.3'
 }
 
 tasks.named('test') {
