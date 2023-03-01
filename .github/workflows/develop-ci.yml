@@ -47,9 +47,9 @@ jobs:
           OCCUPY_MAIN_SECRET_DIR: src/main/resources/
           OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
         run: cd src && cd main && mkdir resources && cd ../ && cd ../ &&
-          echo $OCCUPY_S3_SECRET | base64 --decode > $OCCUPY_S3_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
-          echo $OCCUPY_BW_SECRET | base64 --decode > $OCCUPY_BW_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
-          echo $OCCUPY_MAIN_SECRET | base64 --decode > $OCCUPY_MAIN_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
+          echo $OCCUPY_S3_SECRET > $OCCUPY_S3_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
+          echo $OCCUPY_BW_SECRET > $OCCUPY_BW_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
+          echo $OCCUPY_MAIN_SECRET > $OCCUPY_MAIN_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
 
 
       - name: Build Gradle 및 전체 테스트 진행
