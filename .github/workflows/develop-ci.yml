@@ -54,12 +54,9 @@ jobs:
           OCCUPY_MAIN_SECRET: ${{ secrets.APPLICATION_YML }}
           OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
         run: cd src && cd main && mkdir resources && cd ../ && cd ../ && cd src && cd test && mkdir resources && cd ../ && cd ../ &&
-          cat $OCCUPY_S3_SECRET | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
-          cat $OCCUPY_S3_SECRET | base64 -d > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
-          cat $OCCUPY_BW_SECRET | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
-          cat $OCCUPY_BW_SECRET | base64 -d > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
-          cat $OCCUPY_MAIN_SECRET | base64 -d > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME &&
-          cat $OCCUPY_MAIN_SECRET | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
+          cat $OCCUPY_S3_SECRET > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
+          cat $OCCUPY_BW_SECRET > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
+          cat $OCCUPY_MAIN_SECRET > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
 
       - name: Build Gradle 및 전체 테스트 진행
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
