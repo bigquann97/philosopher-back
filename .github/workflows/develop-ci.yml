@@ -46,7 +46,7 @@ jobs:
           OCCUPY_MAIN_SECRET: ${{ secrets.APPLICATION_YML }}
           OCCUPY_MAIN_SECRET_DIR: src/main/resources/
           OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
-        run: cd src && ls &&
+        run: cd src && cd main && ls
           echo $OCCUPY_S3_SECRET | base64 --decode > $OCCUPY_S3_SECRET_DIR_FILE_NAME &&
           echo $OCCUPY_BW_SECRET | base64 --decode > $OCCUPY_BW_SECRET_DIR_FILE_NAME &&
           echo $OCCUPY_MAIN_SECRET | base64 --decode > $OCCUPY_MAIN_SECRET_DIR_FILE_NAME
