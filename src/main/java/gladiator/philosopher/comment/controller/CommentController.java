@@ -1,25 +1,25 @@
 package gladiator.philosopher.comment.controller;
 
-import gladiator.philosopher.comment.dto.CommentRequestDto;
-import gladiator.philosopher.comment.dto.CommentResponseDto;
-import gladiator.philosopher.comment.service.CommentService;
-import gladiator.philosopher.common.dto.MyPage;
-import gladiator.philosopher.common.security.AccountDetails;
-import gladiator.philosopher.thread.entity.Thread;
-import gladiator.philosopher.thread.service.ThreadService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+    import gladiator.philosopher.comment.dto.CommentRequestDto;
+    import gladiator.philosopher.comment.dto.CommentResponseDto;
+    import gladiator.philosopher.comment.service.CommentService;
+    import gladiator.philosopher.common.dto.MyPage;
+    import gladiator.philosopher.common.security.AccountDetails;
+    import gladiator.philosopher.thread.entity.Thread;
+    import gladiator.philosopher.thread.service.ThreadService;
+    import lombok.RequiredArgsConstructor;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.security.core.annotation.AuthenticationPrincipal;
+    import org.springframework.web.bind.annotation.DeleteMapping;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestBody;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.ResponseStatus;
+    import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor

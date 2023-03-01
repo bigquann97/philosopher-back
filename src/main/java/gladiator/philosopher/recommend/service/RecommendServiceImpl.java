@@ -19,6 +19,7 @@ import gladiator.philosopher.common.exception.InvalidAccessException;
 import gladiator.philosopher.common.exception.NotFoundException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
+import gladiator.philosopher.rank.service.RankService;
 import gladiator.philosopher.recommend.entity.CommentRecommend;
 import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.recommend.entity.ThreadRecommend;
@@ -45,6 +46,7 @@ public class RecommendServiceImpl implements RecommendService {
   private final ThreadService threadService;
   private final PostService postService;
   private final AccountRepository accountRepository;
+  private final RankService rankService;
 
   @Transactional
   public void createRecommendPost(final Post post, final Account account) {
@@ -122,11 +124,11 @@ public class RecommendServiceImpl implements RecommendService {
     if (post.isThreaded()) { // 이미 쓰레드화 되어있으면 종료
       return;
     }
-
     if (getPostRecommendCount(post) >= COUNT_FOR_MAKE_THREAD) {
       post.makeThread();
       List<PostRecommend> recommends = postRecommendRepository.findByPost(post);
       threadService.startThread(post, recommends);
+      rankService.startRankCount(post.getAccount().getNickname());
     }
   }
 
