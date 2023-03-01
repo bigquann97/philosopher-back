@@ -29,15 +29,16 @@ jobs:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v3
 
-      - run: touch ./philosopher/src/main/resources/application-s3Storage.yml
-      - run: echo "${{ secrets.APPLICATION_S3STORAGE_YML}}" > ./src/main/resources/application-s3Storage.yml
-      - run: cat ./src/main/resources/application-s3Storage.yml
-      - run: touch ./src/main/resources/badwords.yml
-      - run: echo "${{ secrets.BADWORDS_YML }}" > ./src/main/resources/badwords.yml
-      - run: cat ./src/main/resources/badwords.yml
-      - run: touch ./src/main/resources/application.yml
-      - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
-      - run: cat ./src/main/resources/application.yml
+      - name: yml 파일 세팅
+        run: cd ./src/main/resources
+          echo "${{ secrets.APPLICATION_S3STORAGE_YML}}" > ./src/main/resources/application-s3Storage.yml
+          cat ./src/main/resources/application-s3Storage.yml
+          touch ./src/main/resources/badwords.yml
+          echo "${{ secrets.BADWORDS_YML }}" > ./src/main/resources/badwords.yml
+          cat ./src/main/resources/badwords.yml
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+          cat ./src/main/resources/application.yml
 
       - name: JDK 11 설치
         uses: actions/setup-java@v3
