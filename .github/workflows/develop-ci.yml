@@ -50,8 +50,8 @@ jobs:
           echo $OCCUPY_S3_SECRET > $OCCUPY_S3_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
           echo $OCCUPY_BW_SECRET > $OCCUPY_BW_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
           echo $OCCUPY_MAIN_SECRET > $OCCUPY_MAIN_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME &&
-          echo src/main/resources/badwords.yml &&
-          echo src/main/resources/application.yml
+          cat src/main/resources/badwords.yml &&
+          cat src/main/resources/application.yml
 
 
       - name: Build Gradle 및 전체 테스트 진행
