@@ -20,7 +20,7 @@ jobs:
 
   philosopher-backend:
     permissions: write-all
-    name: philosopher-backend
+    name: Philosopher-Backend CD
     environment: dev
     runs-on: ubuntu-latest
 
