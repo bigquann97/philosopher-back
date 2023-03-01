@@ -89,10 +89,5 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws deploy create-deployment 
-          --application-name philosopher 
-          --deployment-group-name philosopher 
-          --file-exists-behavior OVERWRITE 
-          --s3-location bucket=the-gladiators,bundleType=zip,key=philosopher-build.zip 
-          --region ap-northeast-2
+        run:
+          aws deploy create-deployment --application-name philosopher --deployment-group-name philosopher --file-exists-behavior OVERWRITE --s3-location bucket=the-gladiators,bundleType=zip,key=philosopher-build.zip --region ap-northeast-2
