@@ -29,7 +29,7 @@ jobs:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v3
 
-      - run: touch ./src/main/resources/application-s3Storage.yml
+      - run: touch ~/src/main/resources/application-s3Storage.yml
       - run: echo "${{ secrets.APPLICATION_S3STORAGE_YML}}" > ./src/main/resources/application-s3Storage.yml
       - run: cat ./src/main/resources/application-s3Storage.yml
       - run: touch ./src/main/resources/badwords.yml
