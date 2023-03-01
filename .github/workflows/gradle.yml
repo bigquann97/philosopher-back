@@ -63,10 +63,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
 
-      - name: 배포용 Build
-        run: ./gradlew clean build
-
-      - name: 전송할 파일을 담을 디렉토리 생성
+      - name: 빌드 파일 담을 디렉토리 생성
         run: mkdir deploy
 
       - name: Jar 파일 Copy
@@ -78,5 +75,6 @@ jobs:
       - name: S3 Bucket으로 copy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run:
           aws s3 cp --region ap-northeast-2 --acl private ./springboot-intro-build.zip s3://springboot-intro-build/
