@@ -45,7 +45,7 @@ jobs:
           OCCUPY_BW_SECRET_DIR_FILE_NAME: badwords.yml
           OCCUPY_MAIN_SECRET: ${{ secrets.APPLICATION_YML }}
           OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
-        run: cd src && cd main && mkdir resources && cd ../ && cd ../ && cd src && cd test && mkdir resources && cd ../ && cd ../ &&
+        run: cd src && cd main && mkdir resources && cd ../ && cd ../ && cd src && cd test && mkdir resources && cd ../ && cd ../ && base64 --version &&
           echo $OCCUPY_S3_SECRET | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
           echo $OCCUPY_S3_SECRET | base64 -d > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
           echo $OCCUPY_BW_SECRET | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
