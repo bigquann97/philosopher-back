@@ -17,12 +17,16 @@ permissions:
   contents: read
 
 jobs:
-
   philosopher-backend:
     permissions: write-all
     name: Philosopher-Backend CI
     environment: dev
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./
+      APPLICATION: ${{ secrets.APPLICATION_YML }}
+      S3: ${{ secrets.APPLICATION_S3STORAGE_YML }}
+      BW: ${{ secrets.BADWORDS_YML }}
 
     steps:
 
@@ -44,20 +48,37 @@ jobs:
           mysql password: ${{ secrets.MYSQL_PW }} # github Secret 탭에서 설정하세요!
 
       - name: Secret 값 및 yml 복사
-        env:
-          OCCUPY_SECRET_DIR: src/main/resources
-          OCCUPY_SECRET_TEST_DIR: src/test/resources
-          OCCUPY_MAIN_SECRET: ${{ secrets.APPLICATION_YML }}
-          OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
-          OCCUPY_S3_SECRET: ${{ secrets.APPLICATION_S3STORAGE_YML }}
-          OCCUPY_S3_SECRET_DIR_FILE_NAME: application-s3Storage.yml
-          OCCUPY_BW_SECRET: ${{ secrets.BADWORDS_YML }}
-          OCCUPY_BW_SECRET_DIR_FILE_NAME: badwords.yml
+        uses: actions/checkout@v2
         run: cd src/main && mkdir resources && cd ../ && cd test && mkdir resources && cd ../ && cd ../ &&
-          base64 ${{ secrets.APPLICATION_S3STORAGE_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
-          base64 ${{ secrets.BADWORDS_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
-          base64 ${{ secrets.APPLICATION_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME &&
-          base64 ${{ secrets.APPLICATION_YML }} > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
+          touch ./src/main/resources/application-s3Storage.yml &&
+          echo "${{env.S3}}" > ./src/main/resources/application-s3Storage.yml &&
+          touch ./src/main/resources/badwords.yml &&
+          echo "${{env.BW}}" > ./src/main/resources/badwords.yml &&
+          touch ./src/main/resources/application.yml &&
+          echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml &&
+          touch ./src/test/resources/application.yml &&
+          echo "${{env.APPLICATION}}" > ./src/test/resources/application.yml &&
+
+      - name: YML 파일 업로드1
+        uses: actions/upload-artifact@v2
+        with:
+          name: application.yml
+          path: ./src/main/resources/application.yml
+      - name: YML 파일 업로드1-1
+        uses: actions/upload-artifact@v2
+        with:
+          name: application.yml
+          path: ./src/test/resources/application.yml
+      - name: YML 파일 업로드2
+        uses: actions/upload-artifact@v2
+        with:
+          name: application-s3Storage.yml
+          path: ./src/main/resources/application-s3Storage.yml
+      - name: YML 파일 업로드3
+        uses: actions/upload-artifact@v2
+        with:
+          name: badwords.yml
+          path: ./src/main/resources/badwords.yml
 
       - name: Build Gradle 및 전체 테스트 진행
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
@@ -86,3 +107,19 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
+
+      - name: Secret 값 및 yml 복사
+        env:
+          OCCUPY_SECRET_DIR: src/main/resources
+          OCCUPY_SECRET_TEST_DIR: src/test/resources
+          OCCUPY_MAIN_SECRET: ${{ secrets.APPLICATION_YML }}
+          OCCUPY_MAIN_SECRET_DIR_FILE_NAME: application.yml
+          OCCUPY_S3_SECRET: ${{ secrets.APPLICATION_S3STORAGE_YML }}
+          OCCUPY_S3_SECRET_DIR_FILE_NAME: application-s3Storage.yml
+          OCCUPY_BW_SECRET: ${{ secrets.BADWORDS_YML }}
+          OCCUPY_BW_SECRET_DIR_FILE_NAME: badwords.yml
+        run: cd src/main && mkdir resources && cd ../ && cd test && mkdir resources && cd ../ && cd ../ &&
+          base64 ${{ secrets.APPLICATION_S3STORAGE_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
+          base64 ${{ secrets.BADWORDS_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
+          base64 ${{ secrets.APPLICATION_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME &&
+          base64 ${{ secrets.APPLICATION_YML }} > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
