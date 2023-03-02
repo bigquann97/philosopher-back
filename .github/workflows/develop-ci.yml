@@ -45,10 +45,9 @@ jobs:
           character set server: 'utf8'
           mysql database: philosopher
           mysql user: root
-          mysql password: ${{ secrets.MYSQL_PW }} # github Secret 탭에서 설정하세요!
+          mysql password: ${{ secrets.MYSQL_PW }}
 
       - name: Secret 값 및 yml 복사
-        uses: actions/checkout@v2
         run: cd src/main && mkdir resources && cd ../ && cd test && mkdir resources && cd ../ && cd ../ &&
           touch ./src/main/resources/application-s3Storage.yml &&
           echo "${{env.S3}}" > ./src/main/resources/application-s3Storage.yml &&
