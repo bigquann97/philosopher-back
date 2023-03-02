@@ -41,7 +41,7 @@ public class ScheduleTasks {
 
   }
 
-  @Scheduled(cron = "0 1 0 ? * MON *") // 매주 월요일 00시 01분 초기화
+  @Scheduled(cron = "0 1 0 ? * MON ") // 매주 월요일 00시 01분 초기화
   @Transactional
   public void rankingCleaner() {
     log.info("랭킹 서비스 초기화 시작");
