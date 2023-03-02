@@ -37,10 +37,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
 
-  private final static int COUNT_FOR_MAKE_THREAD = 1;
+  private final static int COUNT_FOR_MAKE_THREAD = 10;
+
   private final PostRecommendRepository postRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
   private final CommentRecommendRepository commentRecommendRepository;
+
   private final ThreadService threadService;
   private final PostService postService;
   private final RankService rankService;
@@ -113,6 +115,19 @@ public class RecommendServiceImpl implements RecommendService {
     return postRecommendRepository.countByPost(post);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(
+      final Long accountId,
+      final Pageable pageable
+  ) {
+    Page<RecommendCommentResponseDto> data = threadRecommendRepository.findRecommendCommentsByAccount(
+        accountId, pageable);
+    return new MyPage<>(data);
+  }
+
+  // --- Private Methods ---
+
   private void checkIfUserAlreadyLikedObject(
       final Object obj,
       final Account account
@@ -138,7 +153,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void makeThreadIfRecommendCountSatisfied(final Post post) {
+  protected void makeThreadIfRecommendCountSatisfied(final Post post) {
     if (post.isThreaded()) { // 이미 쓰레드화 되어있으면 종료
       return;
     }
@@ -150,13 +165,4 @@ public class RecommendServiceImpl implements RecommendService {
     }
   }
 
-  @Override
-  @Transactional(readOnly = true)
-  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(
-      final Long accountId,
-      final Pageable pageable) {
-    Page<RecommendCommentResponseDto> data = threadRecommendRepository.findRecommendCommentsByAccount(
-        accountId, pageable);
-    return new MyPage<>(data);
-  }
 }
