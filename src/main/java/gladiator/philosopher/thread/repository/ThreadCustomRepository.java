@@ -17,5 +17,7 @@ public interface ThreadCustomRepository {
 
   MyPage<ThreadSimpleResponseDto> selectArchivedThreadWithCond(ThreadSearchCond cond);
 
-  MyPage<ThreadsSimpleResponseDtoByAdmin> selectThreadByAdmin(ThreadSearchCondByAdmin cond, Pageable pageable);
+  MyPage<ThreadsSimpleResponseDtoByAdmin> selectThreadByAdmin(ThreadSearchCondByAdmin cond,
+      Pageable pageable);
+
 }

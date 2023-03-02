@@ -5,11 +5,12 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_AUT
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_COMMENT;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_OPINION;
 
-import gladiator.philosopher.account.dto.AccountCommentResponseDto;
 import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.comment.dto.CommentOpinionStatsDto;
 import gladiator.philosopher.comment.dto.CommentRequestDto;
 import gladiator.philosopher.comment.dto.CommentResponseDto;
+import gladiator.philosopher.comment.dto.FavCommentResponseDto;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.common.dto.MyPage;
@@ -21,12 +22,10 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.entity.ThreadOpinion;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,13 +97,38 @@ public class CommentServiceImpl implements CommentService {
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT));
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<CommentSimpleResponseDto> getMyComments(
+      final Account account,
+      final Pageable pageable
+  ) {
+    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(
+        account.getId(), pageable);
+    return new MyPage<>(commentsByAccount);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<CommentOpinionStatsDto> selectStatistics(final Long threadId) {
+    return commentRepository.selectStatistics(threadId);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<FavCommentResponseDto> selectFavComments(final Long threadId) {
+    return commentRepository.selectFavoriteComments(threadId);
+  }
+
+  // --- Private Methods ---
+
   private void checkIfAccountIsWriter(final Comment comment, final Account account) {
     if (!comment.isWriter(account)) {
       throw new AuthException(NOT_AUTHORIZED_COMMENT);
     }
   }
 
-  private void checkIfThreadIsArchived(Thread thread) {
+  private void checkIfThreadIsArchived(final Thread thread) {
     if (thread.isArchived()) {
       throw new InvalidAccessException(ARCHIVED_THREAD);
     }

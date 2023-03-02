@@ -11,27 +11,22 @@ import lombok.Getter;
 public class CommentResponseDto {
 
   private Long commentId;
-
   private String nickname;
-
   private String opinion;
-
   private String content;
-
   private String createDate;
-
   private String status;
-
   private Long recommendCount;
-
+  private String imageUrl;
   private List<MentionResponseDto> mentioningComments;
-
   private List<MentionResponseDto> mentionedComments;
 
-  private String imageUrl;
-
   @Builder
-  public CommentResponseDto(Comment comment, Long recommendCount, String imageUrl) {
+  public CommentResponseDto(
+      final Comment comment,
+      final Long recommendCount,
+      final String imageUrl
+  ) {
     this.commentId = comment.getId();
     this.nickname = comment.getAccount().getNickname();
     this.opinion = comment.getOpinion();

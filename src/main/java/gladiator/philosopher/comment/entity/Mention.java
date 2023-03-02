@@ -60,4 +60,5 @@ public class Mention {
   public int hashCode() {
     return getClass().hashCode();
   }
+  
 }

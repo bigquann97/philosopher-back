@@ -254,3 +254,7 @@ gradle-app.setting
 *.jpeg
 *.png
 *.bmp
+
+!develop-ci.yml
+!main-cd.yml
+!appspec.yml

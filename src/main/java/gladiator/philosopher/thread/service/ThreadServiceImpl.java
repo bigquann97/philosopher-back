@@ -51,12 +51,6 @@ public class ThreadServiceImpl implements ThreadService {
   public static final String THREAD_TIME_LIST_KEY = "THREAD::LOOK_UP";
   private final PostService postService;
 
-  /**
-   * 쓰레드 시작
-   *
-   * @param post
-   * @return
-   */
   @Override
   @Transactional
   public Thread startThread(final Post post, final List<PostRecommend> recommends) {
@@ -89,51 +83,36 @@ public class ThreadServiceImpl implements ThreadService {
     return savedThread;
   }
 
-  private LocalDateTime calculateEndDate() {
-    LocalDateTime time = LocalDateTime.now()
-        .plusDays(2)
-        .minusHours(LocalDateTime.now().getHour())
-        .minusMinutes(LocalDateTime.now().getMinute());
-
-    return LocalDateTime.of(
-        time.getYear(),
-        time.getMonthValue(),
-        time.getDayOfMonth(),
-        time.getHour(),
-        time.getMinute()
-    );
-  }
-
   @Override
   @Transactional
-  public Thread finishThread(final Thread thread) {
+  public void finishThread(final Thread thread) {
     Thread archivedThread = thread.finishThread();
-    return threadRepository.save(archivedThread);
+    threadRepository.save(archivedThread);
   }
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public Thread getThreadEntity(final Long id) {
     return threadRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public ThreadResponseDto selectThread(final Long threadId) {
     return threadRepository.selectThread(threadId)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_POST));
   }
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public MyPage<ThreadSimpleResponseDto> selectActiveThreads(final ThreadSearchCond cond) {
     return threadRepository.selectActiveThreadsWithCond(cond);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public ThreadResponseDto selectArchivedThread(Long threadId) {
+  public ThreadResponseDto selectArchivedThread(final Long threadId) {
     return threadRepository.selectThread(threadId)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }
@@ -146,7 +125,7 @@ public class ThreadServiceImpl implements ThreadService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<ThreadOpinion> getOpinions(Thread thread) {
+  public List<ThreadOpinion> getOpinions(final Thread thread) {
     return threadOpinionRepository.findByThread(thread);
   }
 
@@ -166,6 +145,34 @@ public class ThreadServiceImpl implements ThreadService {
   ) {
     Page<SimpleResponseDtoByThread> data= threadRecommendRepository.getRecommendThreadsByAccount(accountId, pageable);
     return new MyPage<>(data);
+  }
+
+  @Override
+  @Transactional
+  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto,
+      Category category) {
+    final Thread thread = threadRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
+    thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(), category);
+    threadRepository.saveAndFlush(thread);
+    return thread.getId();
+  }
+
+  // --- Private Methods ---
+
+  private LocalDateTime calculateEndDate() {
+    LocalDateTime time = LocalDateTime.now()
+        .plusDays(2)
+        .minusHours(LocalDateTime.now().getHour())
+        .minusMinutes(LocalDateTime.now().getMinute());
+
+    return LocalDateTime.of(
+        time.getYear(),
+        time.getMonthValue(),
+        time.getDayOfMonth(),
+        time.getHour(),
+        time.getMinute()
+    );
   }
 
 }

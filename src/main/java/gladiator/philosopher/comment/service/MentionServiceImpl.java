@@ -44,7 +44,9 @@ public class MentionServiceImpl implements MentionService {
     mentionRepository.flush();
   }
 
-  private List<Mention> extractMentions(Comment mentioningComment) {
+  // --- Private Methods ---
+
+  private List<Mention> extractMentions(final Comment mentioningComment) {
     Set<Long> mentionIds = parseAllHashtagNums(mentioningComment.getContent());
     List<Mention> mentions = new ArrayList<>();
 

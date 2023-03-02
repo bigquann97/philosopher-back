@@ -8,16 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(force = true, access =  AccessLevel.PRIVATE)
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class CommentRequestDto {
 
   private String opinion;
   private String content;
-
-  public CommentRequestDto(final String content, final String opinion) {
-    this.opinion = opinion;
-    this.content = content;
-  }
 
   public Comment toEntity(final Thread thread, final Account account) {
     return Comment.builder()
@@ -27,4 +22,5 @@ public class CommentRequestDto {
         .opinion(this.opinion)
         .build();
   }
+  
 }
