@@ -8,10 +8,8 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_RCMND_THREAD;
 
-import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.DuplicatedException;
@@ -45,11 +43,13 @@ public class RecommendServiceImpl implements RecommendService {
   private final CommentRecommendRepository commentRecommendRepository;
   private final ThreadService threadService;
   private final PostService postService;
-  private final AccountRepository accountRepository;
   private final RankService rankService;
 
   @Transactional
-  public void createRecommendPost(final Post post, final Account account) {
+  public void createRecommendPost(
+      final Post post,
+      final Account account
+  ) {
     Post initializedPost = postService.getPostEntity(post.getId());
     checkIfUserAlreadyLikedObject(initializedPost, account);
     PostRecommend postRecommend = new PostRecommend(account, initializedPost);
@@ -58,35 +58,50 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Transactional
-  public void deleteRecommendPost(final Post post, final Account account) {
+  public void deleteRecommendPost(
+      final Post post,
+      final Account account
+  ) {
     PostRecommend postRecommend = postRecommendRepository.findByPostAndAccount(post, account)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_RCMND_POST));
     postRecommendRepository.delete(postRecommend);
   }
 
   @Transactional
-  public void createRecommendThread(final Thread thread, final Account account) {
+  public void createRecommendThread(
+      final Thread thread,
+      final Account account
+  ) {
     checkIfUserAlreadyLikedObject(thread, account);
     ThreadRecommend recommend = new ThreadRecommend(account, thread);
     threadRecommendRepository.save(recommend);
   }
 
   @Transactional
-  public void deleteRecommendThread(final Thread thread, final Account account) {
+  public void deleteRecommendThread(
+      final Thread thread,
+      final Account account
+  ) {
     ThreadRecommend threadRecommend = threadRecommendRepository.findByThreadAndAccount(thread,
         account).orElseThrow(() -> new NotFoundException(NOT_FOUND_RCMND_THREAD));
     threadRecommendRepository.delete(threadRecommend);
   }
 
   @Transactional
-  public void createRecommendComment(final Comment comment, final Account account) {
+  public void createRecommendComment(
+      final Comment comment,
+      final Account account
+  ) {
     checkIfUserAlreadyLikedObject(comment, account);
     CommentRecommend recommend = new CommentRecommend(account, comment);
     commentRecommendRepository.save(recommend);
   }
 
   @Transactional
-  public void deleteRecommendComment(final Comment comment, final Account account) {
+  public void deleteRecommendComment(
+      final Comment comment,
+      final Account account
+  ) {
     CommentRecommend commentRecommend = commentRecommendRepository.findByCommentAndAccount(comment,
         account).orElseThrow(() -> new NotFoundException(NOT_FOUND_RCMND_COMMENT));
     commentRecommendRepository.delete(commentRecommend);
@@ -98,7 +113,10 @@ public class RecommendServiceImpl implements RecommendService {
     return postRecommendRepository.countByPost(post);
   }
 
-  private void checkIfUserAlreadyLikedObject(final Object obj, final Account account) {
+  private void checkIfUserAlreadyLikedObject(
+      final Object obj,
+      final Account account
+  ) {
     if (obj instanceof Post) {
       Post post = (Post) obj;
       if (postRecommendRepository.existsByPostAndAccount(post, account)) {
@@ -134,9 +152,11 @@ public class RecommendServiceImpl implements RecommendService {
 
   @Override
   @Transactional(readOnly = true)
-  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId,
-      Pageable pageable) {
-    Page<RecommendCommentResponseDto> data =threadRecommendRepository.findRecommendCommentsByAccount(accountId,pageable);
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(
+      final Long accountId,
+      final Pageable pageable) {
+    Page<RecommendCommentResponseDto> data = threadRecommendRepository.findRecommendCommentsByAccount(
+        accountId, pageable);
     return new MyPage<>(data);
   }
 }

@@ -1,5 +1,6 @@
 package gladiator.philosopher.account.service;
 
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
@@ -10,6 +11,7 @@ import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.enums.UserRole;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.dto.MyPage;
@@ -144,5 +146,11 @@ public class AccountServiceImpl implements AccountService {
       final Long accountId,
       final Pageable pageable) {
     return recommendService.getRecommendCommentsByAccount(accountId, pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<UserInfoByAdminResponseDto> searchAccounts(AccountSearchCondition condition, Pageable pageable){
+    return accountRepository.searchAccount(condition, pageable);
   }
 }

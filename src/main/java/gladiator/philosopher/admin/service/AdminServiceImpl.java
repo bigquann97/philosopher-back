@@ -6,12 +6,10 @@ import gladiator.philosopher.account.repository.AccountRepository;
 import gladiator.philosopher.account.service.AccountService;
 import gladiator.philosopher.admin.dto.ModifyCommentStatusRequestDtoByAdmin;
 import gladiator.philosopher.admin.dto.ModifyPostStatusRequestDtoByAdmin;
-import gladiator.philosopher.admin.dto.ModifyThreadRequestDto;
 import gladiator.philosopher.admin.dto.ModifyThreadStatusRequestDtoByAdmin;
 import gladiator.philosopher.admin.dto.ThreadsSimpleResponseDtoByAdmin;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.category.entity.Category;
-import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.comment.entity.Comment;
 import gladiator.philosopher.comment.repository.CommentRepository;
 import gladiator.philosopher.common.dto.MyPage;
@@ -41,14 +39,11 @@ import org.springframework.stereotype.Service;
 public class AdminServiceImpl implements AdminService {
 
   private final ThreadRepository threadRepository;
-
   private final CommentRepository commentRepository;
-
   private final ReportService reportService;
   private final AccountService accountService;
   private final ThreadService threadService;
   private final AccountRepository accountRepository;
-  private final CategoryService categoryService;
   private final PostRepository postRepository;
 
   @Override
@@ -56,7 +51,7 @@ public class AdminServiceImpl implements AdminService {
       final AccountSearchCondition condition,
       final Pageable pageable
   ) {
-    return accountRepository.searchAccount(condition, pageable);
+    return accountService.searchAccounts(condition, pageable);
   }
 
   @Override
@@ -71,17 +66,25 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public MyPage<PostReportResponseDto> getPostsReports(PostReportSearchCondition condition, Pageable pageable) {
+  public MyPage<PostReportResponseDto> getPostsReports(
+      final PostReportSearchCondition condition,
+      final Pageable pageable
+  ) {
     return reportService.getPostReports(condition, pageable);
   }
 
   @Override
-  public MyPage<ThreadReportResponseDto> getThreadsReports(ThreadReportSearchCondition condition, Pageable pageable) {
+  public MyPage<ThreadReportResponseDto> getThreadsReports(
+      final ThreadReportSearchCondition condition,
+      final Pageable pageable
+  ) {
     return reportService.getThreadReports(condition, pageable);
   }
 
   @Override
-  public MyPage<CommentReportResponseDto> getCommentsReports(CommentReportSearchCondition condition, Pageable pageable) {
+  public MyPage<CommentReportResponseDto> getCommentsReports(
+      final CommentReportSearchCondition condition,
+      final Pageable pageable) {
     return reportService.getCommentReports(condition, pageable);
   }
 
@@ -102,15 +105,16 @@ public class AdminServiceImpl implements AdminService {
     threadRepository.saveAndFlush(resultThread);
     return resultThread.getId();
   }
+
   @Override
   public Long modifyPostCategory(
       final Post post,
       final Category category
   ) {
-    log.info("변경전 post의 category는 :"+post.getCategory().getName());
+    log.info("변경전 post의 category는 :" + post.getCategory().getName());
     final Post updatePost = post.modifyCategory(category);
     postRepository.saveAndFlush(updatePost);
-    log.info("변경후 post의 category는 :"+post.getCategory().getName());
+    log.info("변경후 post의 category는 :" + post.getCategory().getName());
     return updatePost.getId();
   }
 
@@ -131,4 +135,5 @@ public class AdminServiceImpl implements AdminService {
     commentRepository.saveAndFlush(resultComment);
     return resultComment.getId();
   }
+
 }

@@ -14,7 +14,10 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
 
-  MyPage<CommentResponseDto> selectCommentsWithPaging(final Long threadId, int page);
+  MyPage<CommentResponseDto> selectCommentsWithPaging(
+      final Long threadId,
+      final int page
+  );
 
   void createComment(
       final CommentRequestDto commentRequestDto,
@@ -28,7 +31,9 @@ public interface CommentService {
       final Account account
   );
 
-  void deleteComment(final Long commentId, final Account account);
+  void deleteComment(
+      final Long commentId,
+      final Account account);
 
   Comment getCommentEntity(final Long id);
 
@@ -36,6 +41,8 @@ public interface CommentService {
 
   List<FavCommentResponseDto> selectFavComments(final Long threadId);
 
-  MyPage<CommentSimpleResponseDto> getMyComments(Long accountId, Pageable pageable);
+  MyPage<CommentSimpleResponseDto> getMyComments(
+      final Long accountId,
+      final Pageable pageable);
 
 }

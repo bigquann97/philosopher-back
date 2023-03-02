@@ -26,27 +26,52 @@ import org.springframework.data.domain.Pageable;
 
 public interface AdminService {
 
-  void modifyUserRole(Account account);
+  void modifyUserRole(final Account account);
 
-  MyPage<UserInfoByAdminResponseDto> getAccounts(AccountSearchCondition condition,
-      Pageable pageable);
+  MyPage<UserInfoByAdminResponseDto> getAccounts(
+      final AccountSearchCondition condition,
+      final Pageable pageable
+  );
 
-  MyPage<PostReportResponseDto> getPostsReports(PostReportSearchCondition condition, Pageable pageable);
+  MyPage<PostReportResponseDto> getPostsReports(
+      final PostReportSearchCondition condition,
+      final Pageable pageable
+  );
 
   MyPage<ThreadSimpleResponseDto> selectArchivedThreads(final ThreadSearchCond of);
 
-  MyPage<ThreadsSimpleResponseDtoByAdmin> searchByThreadsAdmin(final ThreadSearchCondByAdmin cond,
-      Pageable pageable);
+  MyPage<ThreadsSimpleResponseDtoByAdmin> searchByThreadsAdmin(
+      final ThreadSearchCondByAdmin cond,
+      final Pageable pageable
+  );
 
-  Long modifyThreadStatus(Thread thread, ModifyThreadStatusRequestDtoByAdmin requestDtoByAdmin);
+  Long modifyThreadStatus(
+      final Thread thread,
+      final ModifyThreadStatusRequestDtoByAdmin requestDtoByAdmin
+  );
 
-  Long modifyPostCategory(Post post, Category category);
+  Long modifyPostCategory(
+      final Post post,
+      final Category category
+  );
 
-  MyPage<ThreadReportResponseDto> getThreadsReports(ThreadReportSearchCondition condition, Pageable pageable);
+  MyPage<ThreadReportResponseDto> getThreadsReports(
+      final ThreadReportSearchCondition condition,
+      final Pageable pageable
+  );
 
-  MyPage<CommentReportResponseDto> getCommentsReports(CommentReportSearchCondition condition, Pageable pageable);
+  MyPage<CommentReportResponseDto> getCommentsReports(
+      final CommentReportSearchCondition condition,
+      final  Pageable pageable
+  );
 
-  Long modifyPostStatus(Post post, ModifyPostStatusRequestDtoByAdmin requestDtoByAdmin);
+  Long modifyPostStatus(
+      final Post post,
+      final ModifyPostStatusRequestDtoByAdmin requestDtoByAdmin
+  );
 
-  Long modifyCommentStatus(Comment comment, ModifyCommentStatusRequestDtoByAdmin requestDtoByAdmin);
+  Long modifyCommentStatus(
+      final Comment comment,
+      final ModifyCommentStatusRequestDtoByAdmin requestDtoByAdmin
+  );
 }

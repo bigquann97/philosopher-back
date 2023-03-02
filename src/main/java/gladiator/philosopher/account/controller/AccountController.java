@@ -44,9 +44,7 @@ public class AccountController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public UserInfoResponseDto getMyInfo(
-      final @AuthenticationPrincipal AccountDetails accountDetails
-  ) {
+  public UserInfoResponseDto getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
     return accountService.getMyInfo(accountDetails.getAccount());
   }
 

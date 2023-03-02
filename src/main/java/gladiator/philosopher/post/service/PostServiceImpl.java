@@ -142,19 +142,6 @@ public class PostServiceImpl implements PostService {
     }
   }
 
-  @Override
-  @Transactional
-  public Long modifyOnlyPost(
-      final Long postId,
-      final PostRequestDto postRequestDto,
-      final Account account
-  ) {
-    Post post = getPostEntity(postId);
-    post.isWriter(account);
-    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
-    postRepository.save(post);
-    return post.getId();
-  }
 
   /**
    * ID를 이용한 Post 객체 찾기

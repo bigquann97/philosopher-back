@@ -18,7 +18,7 @@ public class RankServiceImpl implements RankService {
 
   @Override
   @Transactional
-  public void startRankCount(String nickname) {
+  public void startRankCount(final String nickname) {
     if(rankRepository.existsByNickname(nickname)){
       Rank rank = rankRepository.findbyRank(nickname);
       Rank updateCount = rank.updateCount();

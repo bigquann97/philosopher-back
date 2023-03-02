@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface RankService {
 
-  void startRankCount(String nickname);
+  void startRankCount(final String nickname);
 
   List<UserRankingResponseDto> getNowRankings();
 
