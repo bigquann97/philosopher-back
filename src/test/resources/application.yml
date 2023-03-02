@@ -1,0 +1,53 @@
+spring:
+
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8://testDB
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  jwt:
+    secretKey: Z3Bpb21ucGlvYWp3ZWcwLTkyM2o5YW9pZ25tMG9paTNvYW5nb25kc2xrZ2tkc2FmMzFmMXE=
+
+  redis:
+    host: localhost
+    port: 6379
+
+    lettuce:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: 1
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@gmail.com
+    password: test
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  config:
+    import: application-s3Storage.yml, badwords.yml
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+
+default:
+  image: test_data.jpg
