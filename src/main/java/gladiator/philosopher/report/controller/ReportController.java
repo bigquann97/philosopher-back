@@ -1,6 +1,5 @@
 package gladiator.philosopher.report.controller;
 
-import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.security.AccountDetails;
 import gladiator.philosopher.report.dto.ReportRequestDto;
 import gladiator.philosopher.report.service.ReportService;
@@ -26,7 +25,8 @@ public class ReportController {
   public void reportPost(
       final @RequestParam Long id,
       final @RequestBody ReportRequestDto dto,
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     reportService.reportPost(id, dto, accountDetails.getAccount());
   }
 
@@ -35,17 +35,18 @@ public class ReportController {
   public void reportComment(
       final @RequestParam Long id,
       final @RequestBody ReportRequestDto dto,
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     reportService.reportComment(id, dto, accountDetails.getAccount());
   }
 
-  // api/report/thread?id=3
   @PostMapping("/thread")
   @ResponseStatus(HttpStatus.CREATED)
   public void reportThread(
       final @RequestParam Long id,
       final @RequestBody ReportRequestDto dto,
-      final @AuthenticationPrincipal AccountDetails accountDetails) {
+      final @AuthenticationPrincipal AccountDetails accountDetails
+  ) {
     reportService.reportThread(id, dto, accountDetails.getAccount());
   }
 
