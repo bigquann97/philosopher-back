@@ -155,7 +155,7 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
             titleOrContentContainsWord(cond.getWord()),
             categoryEq(cond)
         )
-        .groupBy(thread.id)
+        .groupBy(thread.id, accountImage.imageUrl)
         .orderBy(orderByCondSort(cond.getSort()), orderByCondSort(Sort.NEW))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize());
@@ -186,52 +186,59 @@ public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implem
   public MyPage<ThreadSimpleResponseDto> selectArchivedThreadWithCond(ThreadSearchCond cond) {
     Pageable pageable = cond.getPageable();
 
-    List<ThreadSimpleResponseDto> dtos = jpaQueryFactory
+    JPQLQuery<Tuple> query = jpaQueryFactory
         .select(
-            Projections.constructor(
-                ThreadSimpleResponseDto.class,
-                thread.id,
-                thread.title,
-                category.name,
-                thread.status,
+            thread.id,
+            thread.title,
+            category.name,
+            thread.status,
+            JPAExpressions
+                .select(Wildcard.count)
+                .from(comment)
+                .where(comment.thread.id.eq(thread.id)),
+            ExpressionUtils.as(
                 JPAExpressions
                     .select(Wildcard.count)
-                    .from(comment)
-                    .where(comment.thread.id.eq(thread.id)),
-                ExpressionUtils.as(
-                    JPAExpressions
-                        .select(Wildcard.count)
-                        .from(threadRecommend)
-                        .where(threadRecommend.thread.id.eq(thread.id)), "likeCount"),
-                account.nickname,
-                thread.createdDate,
-                thread.endDate,
-                accountImage.imageUrl
-            ))
+                    .from(threadRecommend)
+                    .where(threadRecommend.thread.id.eq(thread.id)), "likeCount"),
+            account.nickname,
+            thread.createdDate,
+            thread.endDate,
+            accountImage.imageUrl
+        )
         .from(thread)
-        .leftJoin(account).on(account.id.eq(thread.account.id))
-        .leftJoin(category).on(category.id.eq(thread.category.id))
-        .leftJoin(accountImage).on(accountImage.account.id.eq(thread.account.id))
-        .groupBy(thread.id)
+        .leftJoin(thread.account, account)
+        .leftJoin(thread.category, category)
+        .leftJoin(accountImage).on(thread.account.id.eq(accountImage.account.id))
         .where(
             threadStatusEq(ThreadLocation.ARCHIVED),
             titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond))
-        .orderBy(
-            orderByCondSort(cond.getSort()),
-            orderByCondSort(Sort.NEW))
+            categoryEq(cond)
+        )
+        .groupBy(thread.id, accountImage.imageUrl)
+        .orderBy(orderByCondSort(cond.getSort()), orderByCondSort(Sort.NEW))
         .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
-        .fetch();
+        .limit(pageable.getPageSize());
 
-    Long total = jpaQueryFactory
-        .select(Wildcard.count)
-        .from(thread)
-        .where(
-            threadStatusEq(ThreadLocation.ARCHIVED),
-            titleOrContentContainsWord(cond.getWord()),
-            categoryEq(cond))
-        .fetch().get(0);
+    List<Tuple> tuples = query.fetch();
+
+    List<ThreadSimpleResponseDto> dtos = tuples.stream()
+        .map(tuple -> new ThreadSimpleResponseDto(
+            tuple.get(thread.id),
+            tuple.get(thread.title),
+            tuple.get(category.name),
+            tuple.get(thread.status),
+            tuple.get(4, Long.class),
+            tuple.get(5, Long.class),
+            tuple.get(account.nickname),
+            tuple.get(thread.createdDate),
+            tuple.get(thread.endDate),
+            tuple.get(accountImage.imageUrl)
+        ))
+        .collect(Collectors.toList());
+
+    long total = query.fetchCount();
+
     return new MyPage<>(new PageImpl<>(dtos, pageable, total));
   }
 

@@ -41,15 +41,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class ThreadServiceImpl implements ThreadService {
 
   private final ThreadRecommendRepository threadRecommendRepository;
-
   private final ThreadOpinionRepository threadOpinionRepository;
 
   private final ThreadRepository threadRepository;
   private final ThreadImageRepository threadImageRepository;
   private final NotificationService notificationService;
   private final RedisUtil redisUtil;
-  public static final String THREAD_TIME_LIST_KEY = "THREAD::LOOK_UP";
   private final PostService postService;
+
+  public static final String THREAD_TIME_LIST_KEY = "THREAD::LOOK_UP";
 
   @Override
   @Transactional
@@ -139,18 +139,23 @@ public class ThreadServiceImpl implements ThreadService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(
       final Long accountId,
       final Pageable pageable
   ) {
-    Page<SimpleResponseDtoByThread> data= threadRecommendRepository.getRecommendThreadsByAccount(accountId, pageable);
+    Page<SimpleResponseDtoByThread> data = threadRecommendRepository.getRecommendThreadsByAccount(
+        accountId, pageable);
     return new MyPage<>(data);
   }
 
   @Override
   @Transactional
-  public Long modifyThreadByAdmin(Long id, ModifyThreadRequestDto threadRequestDto,
-      Category category) {
+  public Long modifyThreadByAdmin(
+      final Long id,
+      final ModifyThreadRequestDto threadRequestDto,
+      final Category category
+  ) {
     final Thread thread = threadRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
     thread.modifyThread(threadRequestDto.getTitle(), threadRequestDto.getContent(), category);
