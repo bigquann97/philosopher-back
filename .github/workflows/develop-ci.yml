@@ -54,10 +54,10 @@ jobs:
           OCCUPY_BW_SECRET: ${{ secrets.BADWORDS_YML }}
           OCCUPY_BW_SECRET_DIR_FILE_NAME: badwords.yml
         run: cd src/main && mkdir resources && cd ../ && cd test && mkdir resources && cd ../ && cd ../ &&
-          echo ${{ secrets.APPLICATION_S3STORAGE_YML }} | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
-          echo ${{ secrets.BADWORDS_YML }} | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
-          echo ${{ secrets.APPLICATION_YML }} | base64 -d > $OCCUPY_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME &&
-          echo ${{ secrets.APPLICATION_YML }} | base64 -d > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
+          base64 ${{ secrets.APPLICATION_S3STORAGE_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_S3_SECRET_DIR_FILE_NAME &&
+          base64 ${{ secrets.BADWORDS_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_BW_SECRET_DIR_FILE_NAME &&
+          base64 ${{ secrets.APPLICATION_YML }} > $OCCUPY_SECRET_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME &&
+          base64 ${{ secrets.APPLICATION_YML }} > $OCCUPY_SECRET_TEST_DIR/$OCCUPY_MAIN_SECRET_DIR_FILE_NAME
 
       - name: Build Gradle 및 전체 테스트 진행
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
