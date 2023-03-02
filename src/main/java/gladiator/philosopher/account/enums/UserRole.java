@@ -3,7 +3,8 @@ package gladiator.philosopher.account.enums;
 public enum UserRole {
   ROLE_USER(Authority.ROLE_USER),
   ROLE_ADMIN(Authority.ROLE_ADMIN),
-  ROLE_MANAGER(Authority.ROLE_MANAGER);
+  ROLE_MANAGER(Authority.ROLE_MANAGER),
+  ROLE_JOKER(Authority.ROLE_JOKER);
 
   private final String authority;
 
@@ -20,5 +21,6 @@ public enum UserRole {
     public static final String ROLE_USER = "ROLE_USER";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String ROLE_MANAGER = "ROLE_MANAGER";
+    public static final String ROLE_JOKER = "ROLE_JOKER";
   }
 }

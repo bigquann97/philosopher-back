@@ -74,7 +74,7 @@ public class PostController {
    */
   @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
-  private PostResponseDto getPost(@PathVariable("postId") Long postId) {
+  private PostResponseDto getPost(@PathVariable("postId") final Long postId) {
     return postService.getPost(postId);
   }
 

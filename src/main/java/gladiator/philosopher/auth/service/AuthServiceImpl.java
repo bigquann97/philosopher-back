@@ -151,7 +151,10 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void verifyMail(final String email, final String code) {
+  public void verifyMail(
+      final String email,
+      final String code
+  ) {
     emailService.verifyEmail(email, code);
   }
 
@@ -165,7 +168,10 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   @Transactional
-  public void verifyFindPasswordMail(final String email, final String code) {
+  public void verifyFindPasswordMail(
+      final String email,
+      final String code
+  ) {
     Account account = findAccountByEmail(email);
     if (emailService.verifyFindPasswordMail(email, code)) {
       String newPw = emailService.sendNewPasswordMail(email);
@@ -185,7 +191,9 @@ public class AuthServiceImpl implements AuthService {
 
   // --- Private Methods ---
 
-  private void checkIfPasswordIsCorrect(final String password, final Account account) {
+  private void checkIfPasswordIsCorrect(
+      final String password,
+      final Account account) {
     if (!passwordEncoder.matches(password, account.getPassword())) {
       throw new AuthException(INVALID_EMAIL_OR_PW);
     }

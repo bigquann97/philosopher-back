@@ -1,5 +1,6 @@
 package gladiator.philosopher.account.service;
 
+import gladiator.philosopher.account.dto.AccountSearchCondition;
 import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
@@ -10,6 +11,7 @@ import gladiator.philosopher.account.entity.AccountImage;
 import gladiator.philosopher.account.enums.UserRole;
 import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.repository.AccountRepository;
+import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
 import gladiator.philosopher.auth.service.AuthService;
 import gladiator.philosopher.comment.service.CommentService;
 import gladiator.philosopher.common.dto.MyPage;
@@ -110,30 +112,45 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
-  public MyPage<CommentSimpleResponseDto> getMyComments(Account account, Pageable pageable) {
-    return commentService.getMyComments(account, pageable);
+  public MyPage<CommentSimpleResponseDto> getMyComments(
+      final Long accountId,
+      final Pageable pageable) {
+    return commentService.getMyComments(accountId, pageable);
   }
 
   @Override
-  public MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable) {
-    return postService.getMyPosts(account, pageable);
+  public MyPage<PostSimpleResponseDto> getMyPosts(
+      final Long accountId,
+      final Pageable pageable) {
+    return postService.getMyPosts(accountId, pageable);
   }
 
   @Override
-  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account,
-      Pageable pageable) {
-    return postService.getRecommendPostsByAccount(account, pageable);
+  public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(
+      final Long accountId,
+      final Pageable pageable
+  ) {
+    return postService.getRecommendPostsByAccount(accountId, pageable);
   }
 
   @Override
-  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId,
-      Pageable pageable) {
+  public MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(
+      final Long accountId,
+      final Pageable pageable
+  ) {
     return threadService.getRecommendThreadsByAccount(accountId, pageable);
   }
 
   @Override
-  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(Long accountId,
-      Pageable pageable) {
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(
+      final Long accountId,
+      final Pageable pageable) {
     return recommendService.getRecommendCommentsByAccount(accountId, pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<UserInfoByAdminResponseDto> searchAccounts(AccountSearchCondition condition, Pageable pageable){
+    return accountRepository.searchAccount(condition, pageable);
   }
 }

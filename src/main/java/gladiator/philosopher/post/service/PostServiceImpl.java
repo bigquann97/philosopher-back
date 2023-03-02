@@ -142,19 +142,6 @@ public class PostServiceImpl implements PostService {
     }
   }
 
-  @Override
-  @Transactional
-  public Long modifyOnlyPost(
-      final Long postId,
-      final PostRequestDto postRequestDto,
-      final Account account
-  ) {
-    Post post = getPostEntity(postId);
-    post.isWriter(account);
-    post.modifyPost(postRequestDto.getTitle(), postRequestDto.getContent());
-    postRepository.save(post);
-    return post.getId();
-  }
 
   /**
    * ID를 이용한 Post 객체 찾기
@@ -190,17 +177,17 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional(readOnly = true)
   public MyPage<PostSimpleResponseDto> getMyPosts(
-      final Account account,
+      final Long accountId,
       final Pageable pageable) {
-    Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(account.getId(), pageable);
+    Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(accountId, pageable);
     return new MyPage<>(getPosts);
   }
 
   @Override
   public MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(
-      final Account account,
+      final Long accountId,
       final Pageable pageable) {
-    Page<PostSimpleResponseDto> results = postRecommendRepository.getAllPosts(account, pageable);
+    Page<PostSimpleResponseDto> results = postRecommendRepository.getAllPosts(accountId, pageable);
     return new MyPage<>(results);
   }
 }

@@ -17,28 +17,48 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostService {
   // CRUD
-  Long createPost(List<String> urls, PostRequestDto postRequestDto, Account accountDetails, Category category);
+  Long createPost(
+      final List<String> urls,
+      final PostRequestDto postRequestDto,
+      final Account accountDetails,
+      final Category category
+  );
 
-  PostResponseDto getPost(Long postId);
+  PostResponseDto getPost(final Long postId);
 
-  MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(PostSearchCondition condition, Pageable pageable);
+  MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(
+      final PostSearchCondition condition,
+      final Pageable pageable
+  );
 
-  void deletePost(Long postId, Account accountDetails);
+  void deletePost(
+      final Long postId,
+      final Account accountDetails
+  );
 
-  Long modifyPost(Long postId,List<String>urls, PostModifyRequestDto postModifyRequestDto, Account account, Category category);
-
-  Long modifyOnlyPost(Long postId, PostRequestDto postRequestDto, Account account);
+  Long modifyPost(final Long postId,List<String>urls,
+      final PostModifyRequestDto postModifyRequestDto,
+      final Account account,
+      final Category category);
 
   // GET DATA
-  Post getPostEntity(Long postId);
+  Post getPostEntity(final Long postId);
 
-  List<String> getOldUrls(Long id);
+  List<String> getOldUrls(final Long id);
 
-  List<PostImage> getPostImages(Post post);
+  List<PostImage> getPostImages(final Post post);
 
-  List<PostOpinion> getPostOpinions(Post post);
+  List<PostOpinion> getPostOpinions(final Post post);
 
-  MyPage<PostSimpleResponseDto> getMyPosts(Account account, Pageable pageable);
+  MyPage<PostSimpleResponseDto> getMyPosts
+      (
+      final Long accountId,
+      final Pageable pageable
+      );
 
-  MyPage<PostSimpleResponseDto> getRecommendPostsByAccount(Account account, Pageable pageable);
+  MyPage<PostSimpleResponseDto> getRecommendPostsByAccount
+      (
+          final Long accountId,
+          final Pageable pageable
+      );
 }

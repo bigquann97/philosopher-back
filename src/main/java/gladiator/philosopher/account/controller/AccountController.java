@@ -36,7 +36,6 @@ public class AccountController {
   private final String dirName = "AccountImg";
   private final CommentService commentService;
 
-  // 정보 조회
 
   /**
    * 내 정보 가지고 오기
@@ -45,9 +44,7 @@ public class AccountController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public UserInfoResponseDto getMyInfo(
-      final @AuthenticationPrincipal AccountDetails accountDetails
-  ) {
+  public UserInfoResponseDto getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
     return accountService.getMyInfo(accountDetails.getAccount());
   }
 
@@ -65,7 +62,7 @@ public class AccountController {
       final PageRequest pageRequest
   ) {
     Pageable pageable = pageRequest.of();
-    return accountService.getMyComments(accountDetails.getAccount(), pageable);
+    return accountService.getMyComments(accountDetails.getAccount().getId(), pageable);
   }
 
   /**
@@ -82,7 +79,7 @@ public class AccountController {
       final PageRequest pageRequest
   ) {
     Pageable pageable = pageRequest.of();
-    return accountService.getMyPosts(accountDetails.getAccount(), pageable);
+    return accountService.getMyPosts(accountDetails.getAccount().getId(), pageable);
   }
 
   /**
@@ -100,7 +97,7 @@ public class AccountController {
       final PageRequest pageRequest
   ) {
     Pageable pageable = pageRequest.of();
-    return accountService.getRecommendPostsByAccount(accountDetails.getAccount(), pageable);
+    return accountService.getRecommendPostsByAccount(accountDetails.getAccount().getId(), pageable);
   }
 
   /**
@@ -119,9 +116,15 @@ public class AccountController {
     return accountService.getRecommendThreadsByAccount(accountDetails.getAccount().getId(), pageable);
   }
 
+  /**
+   * 내가 좋아요 누른 댓글 가지고 오기
+   * @param accountDetails
+   * @param pageRequest
+   * @return
+   */
   @GetMapping("/recommend/comment")
   @ResponseStatus(HttpStatus.OK)
-  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccout(
+  public MyPage<RecommendCommentResponseDto> getRecommendCommentsByAccount(
       final @AuthenticationPrincipal AccountDetails accountDetails,
       final PageRequest pageRequest
   ) {
@@ -142,8 +145,7 @@ public class AccountController {
       final @AuthenticationPrincipal AccountDetails accountDetails,
       final @RequestBody ModifyAccountPasswordRequestDto infoRequestDto
   ) {
-    return accountService.modifyAccountPassword(accountDetails.getAccount(),
-        infoRequestDto.getPassword());
+    return accountService.modifyAccountPassword(accountDetails.getAccount(), infoRequestDto.getPassword());
   }
 
   /**

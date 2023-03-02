@@ -64,10 +64,10 @@ public class AdminController {
    * @return
    */
   @GetMapping("/accounts")
-  public MyPage<UserInfoByAdminResponseDto> searchAccounts
-  (
+  public MyPage<UserInfoByAdminResponseDto> searchAccounts(
       final AccountSearchCondition condition,
-      final PageRequest pageRequest) {
+      final PageRequest pageRequest
+  ) {
     Pageable pageable = pageRequest.of();
     return adminService.getAccounts(condition, pageable);
   }
@@ -80,7 +80,8 @@ public class AdminController {
   @GetMapping("/reports/posts")
   public MyPage<PostReportResponseDto> getPostsReports(
       final PostReportSearchCondition condition,
-      final PageRequest pageRequest) {
+      final PageRequest pageRequest
+  ) {
     Pageable pageable = pageRequest.of();
     return adminService.getPostsReports(condition, pageable);
   }
@@ -93,7 +94,8 @@ public class AdminController {
   @GetMapping("/reports/threads")
   public MyPage<ThreadReportResponseDto> getThreadsReports(
       final ThreadReportSearchCondition condition,
-      final PageRequest pageRequest) {
+      final PageRequest pageRequest
+  ) {
     Pageable pageable = pageRequest.of();
     return adminService.getThreadsReports(condition, pageable);
   }
@@ -106,7 +108,8 @@ public class AdminController {
   @GetMapping("/reports/comments")
   public MyPage<CommentReportResponseDto> getCommentsReports(
       final CommentReportSearchCondition condition,
-      final PageRequest pageRequest) {
+      final PageRequest pageRequest
+  ) {
     Pageable pageable = pageRequest.of();
     return adminService.getCommentsReports(condition, pageable);
   }
@@ -139,7 +142,8 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreads(
       final ThreadSearchCondByAdmin cond,
-      final Pageable pageable) {
+      final Pageable pageable
+  ) {
     return adminService.searchByThreadsAdmin(cond, pageable);
   }
 

@@ -19,6 +19,8 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
+import gladiator.philosopher.rank.entity.Rank;
+import gladiator.philosopher.rank.repository.RankRepository;
 import gladiator.philosopher.recommend.entity.CommentRecommend;
 import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.recommend.entity.ThreadRecommend;
@@ -72,6 +74,7 @@ public class InitData implements ApplicationRunner {
   private final ThreadReportRepository threadReportRepository;
   private final ThreadImageRepository threadImageRepository;
   private final CommentReportRepository commentReportRepository;
+  private final RankRepository rankRepository;
 
 
   @Override
@@ -113,7 +116,7 @@ public class InitData implements ApplicationRunner {
         "김미란", Gender.MALE, UserRole.ROLE_USER, UserStatus.SUSPENDED);
     accountRepository.save(account7);
     Account account8 = new Account(8L, "test7@naver.com", passwordEncoder.encode("rlawlghks1"), 31,
-        "김도화", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
+        "박도화", Gender.FEMALE, UserRole.ROLE_MANAGER, UserStatus.ACTIVATED);
     accountRepository.save(account8);
     Account account9 = new Account(9L, "test8@naver.com", passwordEncoder.encode("rlawlghks1"), 35,
         "박연주", Gender.FEMALE, UserRole.ROLE_USER, UserStatus.ACTIVATED);
@@ -559,6 +562,19 @@ public class InitData implements ApplicationRunner {
     CommentReport commentReport10 = new CommentReport("댓글 신고입니다10", account2, account7,
         ReportCategory.ABUSE, comment2.getId());
     commentReportRepository.save(commentReport10);
+
+    Rank rank1 = Rank.builder().nickname("하규호").count(3L).build();
+    rankRepository.save(rank1);
+    Rank rank2 = Rank.builder().nickname("이정국").count(1L).build();
+    rankRepository.save(rank2);
+    Rank rank3 = Rank.builder().nickname("박정수").count(5L).build();
+    rankRepository.save(rank3);
+    Rank rank4 = Rank.builder().nickname("박도화").count(4L).build();
+    rankRepository.save(rank4);
+    Rank rank5 = Rank.builder().nickname("박연주").count(7L).build();
+    rankRepository.save(rank5);
+    Rank rank6 = Rank.builder().nickname("김지환").count(6L).build();
+    rankRepository.save(rank6);
 
     // 김지환 테스트
 //    Thread thread11 = new Thread("백종원의 스타벅스","내용입니다", account2, LocalDateTime.now().plusDays(1L), category3, ThreadStatus.BLINDED);
