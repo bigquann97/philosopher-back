@@ -258,3 +258,4 @@ gradle-app.setting
 !develop-ci.yml
 !main-cd.yml
 !appspec.yml
+!src/test/resources/*.yml
