@@ -3,6 +3,7 @@ package gladiator.philosopher.scheduler;
 import static gladiator.philosopher.thread.service.ThreadServiceImpl.THREAD_TIME_LIST_KEY;
 
 import gladiator.philosopher.common.util.RedisUtil;
+import gladiator.philosopher.rank.service.RankService;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class ScheduleTasks {
 
   private final RedisUtil redisUtil;
   private final ThreadService threadService;
+  private final RankService rankService;
 
   // 0 0 0 1/1 * ?- 매일 00:00:01 마다
   @Scheduled(cron = "1 0 0 1/1 * ?")
@@ -38,11 +40,13 @@ public class ScheduleTasks {
     });
 
   }
-  // 매 정시마다 유저 상태 체크해서, 만약 신고가 10건이 넘었다면 자동으로 상태 변경 할 것
-//  @Scheduled(cron = "1 0 0 1/1 * ?")
-//  @Transactional
-//  public void accountStatusCheck(){
-//
-//  }
+
+  @Scheduled(cron = "0 1 0 ? * MON *") // 매주 월요일 00시 01분 초기화
+  @Transactional
+  public void rankingCleaner() {
+    log.info("랭킹 서비스 초기화 시작");
+    rankService.deleteRankingAll();
+    log.info("랭킹 서비스 초기화 종료");
+  }
 
 }
