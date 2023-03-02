@@ -111,7 +111,6 @@ public class NotificationServiceImpl implements NotificationService {
     String emitterId = makeTimeIncludeId(account);
 
     SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(timeout));
-
     emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
     emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
@@ -134,6 +133,12 @@ public class NotificationServiceImpl implements NotificationService {
   public void send(NotificationRequestDto request) {
     Notification notification = saveNotification(request);
     sendNotification(request, notification);
+  }
+
+  @Override
+  @Transactional
+  public void deleteNotification(Long notificationId, Account account) {
+    notificationRepository.deleteById(notificationId);
   }
 
   @Async

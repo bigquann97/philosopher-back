@@ -26,6 +26,11 @@ public class EmitterRepositoryImpl implements EmitterRepository {
   }
 
   @Override
+  public void deleteEventCache(String eventCacheId, Object event) {
+    eventCache.remove(eventCacheId, event);
+  }
+
+  @Override
   public Map<String, SseEmitter> findAllEmitterStartWithByAccountId(String accountId) {
     return emitters.entrySet().stream()
         .filter(entry -> entry.getKey().split("_")[0].equals(accountId))
