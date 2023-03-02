@@ -100,11 +100,10 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional(readOnly = true)
   public MyPage<CommentSimpleResponseDto> getMyComments(
-      final Account account,
+      final Long accountId,
       final Pageable pageable
   ) {
-    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(
-        account.getId(), pageable);
+    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(accountId, pageable);
     return new MyPage<>(commentsByAccount);
   }
 
@@ -128,7 +127,7 @@ public class CommentServiceImpl implements CommentService {
     }
   }
 
-  private void checkIfThreadIsArchived(final Thread thread) {
+  private void checkIfThreadIsArchived(Thread thread) {
     if (thread.isArchived()) {
       throw new InvalidAccessException(ARCHIVED_THREAD);
     }
@@ -145,16 +144,6 @@ public class CommentServiceImpl implements CommentService {
     if (!threadHasOpinion) {
       throw new InvalidAccessException(NOT_FOUND_OPINION);
     }
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public MyPage<CommentSimpleResponseDto> getMyComments(
-      final Long accountId,
-      final Pageable pageable
-  ) {
-    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(accountId, pageable);
-    return new MyPage<>(commentsByAccount);
   }
 
 }
