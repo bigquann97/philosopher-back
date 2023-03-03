@@ -22,4 +22,5 @@ public interface NotificationService {
 
   void send(NotificationRequestDto request);
 
+  void deleteNotification(Long notificationId, Account account);
 }
