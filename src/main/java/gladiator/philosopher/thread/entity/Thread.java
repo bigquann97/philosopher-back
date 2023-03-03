@@ -7,7 +7,6 @@ import gladiator.philosopher.thread.enums.ThreadLocation;
 import gladiator.philosopher.thread.enums.ThreadStatus;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -39,11 +38,9 @@ public class Thread extends BaseEntity {
   private LocalDateTime endDate;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
   private ThreadLocation location;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
   private ThreadStatus status;
 
   @ManyToOne(fetch = FetchType.LAZY)
