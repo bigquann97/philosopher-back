@@ -35,6 +35,17 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: yml 파일 생성
+        run: |
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+          touch ./application-s3Storage.yml
+          echo "${{ secrets.APPLICATION_S3STORAGE_YML }}" > ./application-s3Storage.yml
+          touch ./badwords.yml
+          echo "${{ secrets.BADWORDS_YML }}" > ./badwords.yml
+        shell: bash
+
       - name: Build Gradle 및 전체 테스트 진행
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
