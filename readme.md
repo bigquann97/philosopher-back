@@ -117,13 +117,66 @@
 ---
 
 ## 04. 프로젝트의 핵심 가치
-
+- 
+- 
+- 
+- 
+- 
 
 ## 05. 프로젝트 MVP 시연
 
 ## 06. 기술적 의사결정
 
+<details>
+<summary> 1. Querydsl 😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
+
+<details>
+<summary> 2. Github Actions 😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
+
+<details>
+<summary> 3. Redis 😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
+
+<details>
+<summary> 4. SSE Emitter 😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
+
 ## 06. 트러블 슈팅
+
+<details>
+<summary> 1.  😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
+
+<details>
+<summary> 2.  😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
+
+<details>
+<summary> 3.  😀</summary>
+<div markdown="1"> 
+
+</div>
+</details>
 
 
 ## 07. ERD 설계도
