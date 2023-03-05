@@ -60,7 +60,7 @@ class CategoryControllerTest {
   @Test
   void test_2() throws Exception {
     // given
-    CategoryRequestDto dto = new CategoryRequestDto("철학");
+    CategoryRequestDto dto = new CategoryRequestDto("Category");
 
     mockMvc
         .perform(
