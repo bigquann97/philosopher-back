@@ -17,7 +17,7 @@
   <br><br>
 **“궁금한건 못참아 !”, “ 다른 사람의 생각도 궁금해 “**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c8ab1545-adf3-4370-a444-8ebecb553ec5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T195536Z&X-Amz-Expires=86400&X-Amz-Signature=b335c00d4d1c2bd21ae18c0a22be0d3f97f34720dff0431853c1cb5499048e31&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![philosopher](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c8ab1545-adf3-4370-a444-8ebecb553ec5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T195536Z&X-Amz-Expires=86400&X-Amz-Signature=b335c00d4d1c2bd21ae18c0a22be0d3f97f34720dff0431853c1cb5499048e31&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 우리 삶 주변에는 우리들의 호기심을 자극하는 요소들이 많습니다. <br>
 언제나 우리는 이러한 요소들로 하여금 재미있는 상상의 나래를 펼치고 이 상상의 날개는 호기심과 궁금증을 유발하며, <br>
@@ -125,6 +125,9 @@
 
 ## 05. 프로젝트 MVP 시연
 
+## 07. 서비스 아키텍쳐
+![Arch](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/090fe6cd-4dc9-4d2b-bc04-595205ab8613/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T202134Z&X-Amz-Expires=86400&X-Amz-Signature=d0357f68388920d57c8d06e8934f94b4928868e06c7d007c298ff1f0f4be6e97&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
 ## 06. 기술적 의사결정
 
 <details>
@@ -180,6 +183,9 @@
 
 
 ## 07. ERD 설계도
-
+![image](https://user-images.githubusercontent.com/62071906/222983895-19460fbd-47b7-44fe-b7e7-d277ed805615.png)
+[ERD 원본 확인하기 - ERD Cloud](https://www.erdcloud.com/d/nruo9xdTwK4DNbKnD)
 
 ## 08. API 설계도
+
+[API 스펙 원본 확인하기 - Google Spreadsheet](https://docs.google.com/spreadsheets/d/14_rE71JfKZD7DUaTCJmSuh-ol-pqmgdyEybgZavywR0/edit?usp=sharing)
