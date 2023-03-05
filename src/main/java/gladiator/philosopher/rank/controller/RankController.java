@@ -19,7 +19,6 @@ public class RankController {
 
   private final RankService rankService;
 
-
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
   public List<UserRankingResponseDto> getRankings(){
@@ -31,4 +30,5 @@ public class RankController {
   public void deleteTodayRanks(){
     rankService.deleteRankingAll();
   }
+
 }

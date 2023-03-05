@@ -4,10 +4,11 @@ import gladiator.philosopher.category.dto.CategoryRequestDto;
 import gladiator.philosopher.category.dto.CategoryResponseDto;
 import gladiator.philosopher.category.entity.Category;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface CategoryService {
 
-  void createCategory(final CategoryRequestDto dto);
+  void createCategory(final String name);
 
   List<CategoryResponseDto> selectAllCategories();
 

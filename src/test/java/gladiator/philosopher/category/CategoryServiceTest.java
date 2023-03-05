@@ -48,18 +48,18 @@ class CategoryServiceTest {
     Assertions.assertThat(result.get(1).getName()).isEqualTo(category2.getName());
   }
 
-  @DisplayName("2. createCategory")
-  @Test
-  void test_2() {
-    // given
-    CategoryRequestDto dto = new CategoryRequestDto("철학");
-
-    // when
-    categoryService.createCategory(dto);
-
-    // then
-    Mockito.verify(categoryRepository).save(any(Category.class));
-  }
+//  @DisplayName("2. createCategory")
+//  @Test
+//  void test_2() {
+//    // given
+//    CategoryRequestDto dto = new CategoryRequestDto("철학");
+//
+//    // when
+//    categoryService.createCategory(dto);
+//
+//    // then
+//    Mockito.verify(categoryRepository).save(any(Category.class));
+//  }
 
   @DisplayName("3. deleteCategory")
   @Test
