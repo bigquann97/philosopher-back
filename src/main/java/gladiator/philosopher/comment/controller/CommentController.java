@@ -12,6 +12,7 @@ import gladiator.philosopher.thread.service.ThreadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/thread/{threadId}")
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<CommentResponseDto> selectCommentsWithPaging(
       final @PathVariable Long threadId,
       final @RequestParam(required = false, defaultValue = "1") int page
@@ -43,6 +45,7 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @PostMapping("/thread/{threadId}")
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void createComment(
       final @RequestBody CommentRequestDto commentRequestDto,
       final @PathVariable Long threadId,
@@ -54,6 +57,7 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{commentId}")
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void modifyComment(
       final @RequestBody CommentRequestDto commentRequestDto,
       final @PathVariable Long commentId,
@@ -64,6 +68,7 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/{commentId}")
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deleteComment(
       final @PathVariable Long commentId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -73,12 +78,14 @@ public class CommentController {
 
   @GetMapping("/stat/{threadId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<CommentOpinionStatsDto> selectStats(final @PathVariable Long threadId) {
     return commentService.selectStatistics(threadId);
   }
 
-  @GetMapping("/fav/{threadId}")
+  @GetMapping("/favorite/{threadId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<FavCommentResponseDto> selectFavComments(final @PathVariable Long threadId) {
     return commentService.selectFavComments(threadId);
   }

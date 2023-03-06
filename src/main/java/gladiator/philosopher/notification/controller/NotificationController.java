@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,8 @@ public class NotificationController {
   private final NotificationService notificationService;
 
   @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public SseEmitter subscribe(
       final @AuthenticationPrincipal AccountDetails accountDetails,
       final @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId,
@@ -38,9 +41,9 @@ public class NotificationController {
     return notificationService.subscribe(accountDetails.getAccount(), lastEventId);
   }
 
-  // 나에게 온 모든 알림 조회
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<NotificationResponseDto> getMyNotifications(
       final @RequestParam(required = false, defaultValue = "1") int page,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -51,6 +54,7 @@ public class NotificationController {
 
   @DeleteMapping("/{notificationId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deleteNotification(
       final @PathVariable Long notificationId,
       final @AuthenticationPrincipal AccountDetails accountDetails

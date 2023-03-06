@@ -1,11 +1,11 @@
 package gladiator.philosopher.rank.controller;
 
 import gladiator.philosopher.rank.dto.UserRankingResponseDto;
-import gladiator.philosopher.rank.repository.RankRepository;
 import gladiator.philosopher.rank.service.RankService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,15 +20,16 @@ public class RankController {
   private final RankService rankService;
 
 
-  @GetMapping()
+  @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<UserRankingResponseDto> getRankings(){
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+  public List<UserRankingResponseDto> getRankings() {
     return rankService.getNowRankings();
   }
 
-  @DeleteMapping()
+  @DeleteMapping
   @ResponseStatus(HttpStatus.OK)
-  public void deleteTodayRanks(){
+  public void deleteTodayRanks() {
     rankService.deleteRankingAll();
   }
 }

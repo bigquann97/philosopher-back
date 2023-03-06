@@ -24,6 +24,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -44,9 +45,11 @@ public class Comment extends BaseEntity {
   @Column(nullable = false)
   private CommentStatus status;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "mentioningComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Mention> mentionings = new LinkedList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "mentionedComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Mention> mentioneds = new LinkedList<>();
 

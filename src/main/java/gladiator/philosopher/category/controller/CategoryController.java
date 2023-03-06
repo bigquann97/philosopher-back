@@ -6,6 +6,7 @@ import gladiator.philosopher.category.service.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class CategoryController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void createCategory(final CategoryRequestDto dto) {
     categoryService.createCategory(dto);
   }
@@ -40,6 +42,7 @@ public class CategoryController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<CategoryResponseDto> selectCategories() {
     return categoryService.selectAllCategories();
   }
@@ -51,6 +54,7 @@ public class CategoryController {
    */
   @DeleteMapping("/{categoryId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deleteCategory(final @PathVariable Long categoryId) {
     categoryService.deleteCategory(categoryId);
   }
@@ -63,6 +67,7 @@ public class CategoryController {
    */
   @PutMapping("/{categoryId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void modifyCategory(
       final @PathVariable Long categoryId,
       final CategoryRequestDto dto
