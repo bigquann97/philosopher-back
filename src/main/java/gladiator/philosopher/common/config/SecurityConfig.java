@@ -27,14 +27,11 @@ public class SecurityConfig {
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisUtil redisUtil;
 
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    // h2-console 사용 및 resources 접근 허용 설정
-    return (web) -> web.ignoring()
-        .antMatchers("/h2-console/**");
-//                .requestMatchers(PathRequest.toH2Console())
-//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-  }
+//  @Bean
+//  public WebSecurityCustomizer webSecurityCustomizer() {
+//    return (web) -> web.ignoring()
+//        .antMatchers("/h2-console/**");
+//  }
 
   @Bean
   protected SecurityFilterChain configure(HttpSecurity http) throws Exception {

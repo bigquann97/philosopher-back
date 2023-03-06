@@ -6,7 +6,6 @@ import gladiator.philosopher.rank.repository.RankRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +18,11 @@ public class RankServiceImpl implements RankService {
   @Override
   @Transactional
   public void startRankCount(final String nickname) {
-    if(rankRepository.existsByNickname(nickname)){
+    if (rankRepository.existsByNickname(nickname)) {
       Rank rank = rankRepository.findbyRank(nickname);
       Rank updateCount = rank.updateCount();
       rankRepository.saveAndFlush(updateCount);
-    }else{
+    } else {
       Rank rank = Rank.builder()
           .nickname(nickname)
           .count(0L)
@@ -36,7 +35,8 @@ public class RankServiceImpl implements RankService {
   @Transactional(readOnly = true)
   public List<UserRankingResponseDto> getNowRankings() {
     PageRequest pageRequest = PageRequest.of(0, 5);
-    List<UserRankingResponseDto> userRankingResponseDtos = rankRepository.searchRankByCount(pageRequest);
+    List<UserRankingResponseDto> userRankingResponseDtos = rankRepository.searchRankByCount(
+        pageRequest);
     return userRankingResponseDtos;
   }
 
@@ -46,4 +46,5 @@ public class RankServiceImpl implements RankService {
     List<Long> getIds = rankRepository.getAllById();
     rankRepository.deleteAllById(getIds);
   }
+
 }

@@ -5,9 +5,6 @@ import gladiator.philosopher.account.dto.CommentSimpleResponseDto;
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.dto.RecommendCommentResponseDto;
 import gladiator.philosopher.account.dto.SimpleResponseDtoByThread;
-import gladiator.philosopher.account.dto.info.ModifyAccountInfoRequestDto;
-import gladiator.philosopher.account.dto.info.ModifyAccountNicknameRequestDto;
-import gladiator.philosopher.account.dto.info.ModifyAccountPasswordRequestDto;
 import gladiator.philosopher.account.dto.info.UserInfoResponseDto;
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.admin.dto.UserInfoByAdminResponseDto;
@@ -68,4 +65,5 @@ public interface AccountService {
       final AccountSearchCondition condition,
       final Pageable pageable
   );
+
 }

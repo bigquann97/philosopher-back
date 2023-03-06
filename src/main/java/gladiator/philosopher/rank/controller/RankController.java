@@ -1,6 +1,7 @@
 package gladiator.philosopher.rank.controller;
 
 import gladiator.philosopher.rank.dto.UserRankingResponseDto;
+import gladiator.philosopher.rank.repository.RankRepository;
 import gladiator.philosopher.rank.service.RankService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class RankController {
   private final RankService rankService;
 
 
-  @GetMapping
+  @GetMapping()
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<UserRankingResponseDto> getRankings() {

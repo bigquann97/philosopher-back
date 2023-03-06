@@ -70,7 +70,7 @@ class CategoryControllerTest {
         .andExpect(
             status().isCreated());
 
-    Mockito.verify(categoryService).createCategory(any(CategoryRequestDto.class));
+    Mockito.verify(categoryService).createCategory(any(String.class));
   }
 
   @DisplayName("3. 카테고리 삭제")

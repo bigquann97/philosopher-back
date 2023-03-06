@@ -7,8 +7,8 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.dto.PostModifyRequestDto;
 import gladiator.philosopher.post.dto.PostRequestDto;
 import gladiator.philosopher.post.dto.PostResponseDto;
-import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
+import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
@@ -16,6 +16,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
+
   // CRUD
   Long createPost(
       final List<String> urls,
@@ -24,7 +25,7 @@ public interface PostService {
       final Category category
   );
 
-  PostResponseDto getPost(final Long postId);
+  PostResponseDto getPost(final Long id);
 
   MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(
       final PostSearchCondition condition,
@@ -36,7 +37,7 @@ public interface PostService {
       final Account accountDetails
   );
 
-  Long modifyPost(final Long postId,List<String>urls,
+  Long modifyPost(final Long postId, List<String> urls,
       final PostModifyRequestDto postModifyRequestDto,
       final Account account,
       final Category category);
@@ -52,8 +53,8 @@ public interface PostService {
 
   MyPage<PostSimpleResponseDto> getMyPosts
       (
-      final Long accountId,
-      final Pageable pageable
+          final Long accountId,
+          final Pageable pageable
       );
 
   MyPage<PostSimpleResponseDto> getRecommendPostsByAccount

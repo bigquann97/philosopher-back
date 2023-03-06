@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.controller;
 
+import gladiator.philosopher.account.service.AccountInfoService;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.dto.MyPage;
@@ -69,14 +70,14 @@ public class PostController {
   /**
    * 게시물 단건 조회 ( 완료 )
    *
-   * @param postId
+   * @param id
    * @return
    */
-  @GetMapping("/{postId}")
+  @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-  private PostResponseDto getPost(@PathVariable("postId") final Long postId) {
-    return postService.getPost(postId);
+  public PostResponseDto getPost(@PathVariable("id") final Long id) {
+    return postService.getPost(id);
   }
 
   /**
@@ -109,9 +110,7 @@ public class PostController {
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-//    List<String> oldUrls = postService.getOldUrls(postId);
     postService.deletePost(postId, accountDetails.getAccount());
-//    s3Uploader.DeleteS3Files(oldUrls, dirName);
   }
 
   /**

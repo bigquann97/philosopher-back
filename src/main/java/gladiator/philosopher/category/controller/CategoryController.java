@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,8 +32,8 @@ public class CategoryController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-  public void createCategory(final CategoryRequestDto dto) {
-    categoryService.createCategory(dto);
+  public void createCategory(@RequestBody final  CategoryRequestDto dto) {
+    categoryService.createCategory(dto.getName());
   }
 
   /**
@@ -70,7 +71,7 @@ public class CategoryController {
   @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void modifyCategory(
       final @PathVariable Long categoryId,
-      final CategoryRequestDto dto
+      final @RequestBody CategoryRequestDto dto
   ) {
     categoryService.modifyCategory(categoryId, dto);
   }

@@ -4,6 +4,7 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
+import gladiator.philosopher.account.service.AccountInfoService;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.NotFoundException;
@@ -19,9 +20,7 @@ import gladiator.philosopher.post.entity.PostOpinion;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
-import gladiator.philosopher.recommend.entity.PostRecommend;
 import gladiator.philosopher.recommend.repository.PostRecommendRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +40,8 @@ public class PostServiceImpl implements PostService {
   private final PostOpinionRepository postOpinionRepository;
   private final PostRecommendRepository postRecommendRepository;
   private final BadWordFiltering badWordFiltering;
+  private final AccountInfoService accountInfoService;
+
 
   @Override
   @Transactional
@@ -69,12 +70,13 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public PostResponseDto getPost(final Long postId) {
-    Post post = getPostEntity(postId);
+  public PostResponseDto getPost(final Long id) {
+    Post post = getPostEntity(id);
+    String accountImageUrl = accountInfoService.selectAccountImageUrl(post.getAccount().getId());
     final long recommendCount = postRecommendRepository.countByPost(post);
     final List<String> url = postImageRepository.getUrl(post.getId());
     final List<String> options = postOpinionRepository.getOptions(post.getId());
-    return new PostResponseDto(post, recommendCount, url, options);
+    return new PostResponseDto(post, recommendCount, url, options, accountImageUrl);
   }
 
   @Override
@@ -179,7 +181,7 @@ public class PostServiceImpl implements PostService {
   public MyPage<PostSimpleResponseDto> getMyPosts(
       final Long accountId,
       final Pageable pageable) {
-    Page<PostSimpleResponseDto>getPosts = postRepository.getPostsByAccount(accountId, pageable);
+    Page<PostSimpleResponseDto> getPosts = postRepository.getPostsByAccount(accountId, pageable);
     return new MyPage<>(getPosts);
   }
 
