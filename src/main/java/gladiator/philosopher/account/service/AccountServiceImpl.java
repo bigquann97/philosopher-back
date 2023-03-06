@@ -153,4 +153,5 @@ public class AccountServiceImpl implements AccountService {
   public MyPage<UserInfoByAdminResponseDto> searchAccounts(AccountSearchCondition condition, Pageable pageable){
     return accountRepository.searchAccount(condition, pageable);
   }
+
 }

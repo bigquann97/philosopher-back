@@ -68,4 +68,5 @@ public interface AccountService {
       final AccountSearchCondition condition,
       final Pageable pageable
   );
+
 }

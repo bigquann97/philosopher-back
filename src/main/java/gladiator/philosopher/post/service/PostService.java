@@ -24,7 +24,7 @@ public interface PostService {
       final Category category
   );
 
-  PostResponseDto getPost(final Long postId);
+  PostResponseDto getPost(final Long id);
 
   MyPage<PostResponseDtoByQueryDsl> searchPostByCondition(
       final PostSearchCondition condition,

@@ -31,4 +31,5 @@ public class PostResponseDtoByQueryDsl {
     this.nickname = nickname;
     this.recommendCount = recommendCount;
   }
+
 }

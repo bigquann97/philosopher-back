@@ -54,5 +54,5 @@ public class RedisUtil {
     HashOperations<String, String, String> valueOperations = redisTemplate.opsForHash();
     valueOperations.delete(key, id);
   }
-  
+
 }

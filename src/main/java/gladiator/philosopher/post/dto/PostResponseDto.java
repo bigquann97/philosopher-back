@@ -18,8 +18,9 @@ public class PostResponseDto {
   private final List<String> images;
   private final List<String> opinions;
   private final String category;
+  private final String accountImage;
 
-  public PostResponseDto(Post post, Long recommendCount, List<String> urls, List<String> options) {
+  public PostResponseDto(Post post, Long recommendCount, List<String> urls, List<String> options, String url) {
     this.title = post.getTitle();
     this.content = post.getContent();
     this.recommendCount = recommendCount;
@@ -29,6 +30,7 @@ public class PostResponseDto {
     this.images = urls;
     this.opinions = options;
     this.category = post.getCategory().getName();
+    this.accountImage = url;
   }
 
 }
