@@ -1,6 +1,5 @@
 package gladiator.philosopher.post.controller;
 
-import gladiator.philosopher.account.service.AccountInfoService;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.category.service.CategoryService;
 import gladiator.philosopher.common.dto.MyPage;
@@ -75,7 +74,6 @@ public class PostController {
    */
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public PostResponseDto getPost(@PathVariable("id") final Long id) {
     return postService.getPost(id);
   }
@@ -89,7 +87,6 @@ public class PostController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<PostResponseDtoByQueryDsl> searchPost(
       final PostSearchCondition condition,
       final PageRequest pageRequest) {

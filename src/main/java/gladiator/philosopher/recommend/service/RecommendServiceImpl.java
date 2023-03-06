@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
 
-  private final static int COUNT_FOR_MAKE_THREAD = 1;
+  private final static int COUNT_FOR_MAKE_THREAD = 5;
 
   private final PostRecommendRepository postRecommendRepository;
   private final ThreadRecommendRepository threadRecommendRepository;
