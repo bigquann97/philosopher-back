@@ -1,5 +1,7 @@
 ## 01. 프로젝트 소개
+
 ### 서비스 명: 🏛️ 우리 모두 철학자 🏛️
+
 **“일상에서 시작된 궁금한 혹은 작은 이슈를 기반으로 생성되는 토론의 장 기반의 커뮤니티 서비스”** <br>
 **“일상에서 피식하며 넘어갈법한 혹은 진지하게 다룰만한 주제를 기반으로 토론을 진행할 수 있도록 도와주는 서비스”**
 
@@ -14,7 +16,7 @@
 <summary> 프로젝트에 대한 더 자세한 소개가 보고싶다면? 😀</summary>
 <div markdown="1"> 
 
-  <br><br>
+<br><br>
 **“궁금한건 못참아 !”, “ 다른 사람의 생각도 궁금해 “**
 
 ![philosopher](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c8ab1545-adf3-4370-a444-8ebecb553ec5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T195536Z&X-Amz-Expires=86400&X-Amz-Signature=b335c00d4d1c2bd21ae18c0a22be0d3f97f34720dff0431853c1cb5499048e31&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
@@ -23,7 +25,7 @@
 언제나 우리는 이러한 요소들로 하여금 재미있는 상상의 나래를 펼치고 이 상상의 날개는 호기심과 궁금증을 유발하며, <br>
 흥미있는 토픽들을 이용해 타인과 소통하기도 합니다. <br>
 이러한 다양한 이슈들을 누구나 한 번쯤은 고민해보고 접해봤을 것입니다.<br>
-이 속에는 다양한 논쟁거리가 존재합니다. <br> 
+이 속에는 다양한 논쟁거리가 존재합니다. <br>
 여러 사람들과의 언어적 상호작용 속에서 새로운 인사이트를 얻기도 하며, <br>
 타인의 생각을 읽고 논리적으로 반박하기도 합니다. <br>
 이렇게 우리는 커뮤니티를 이용해 상호간 언어적 의사소통을 이용해 새로운 관계를 형성하고, <br>
@@ -61,18 +63,19 @@
 
 ---
 
-
 ## 02. 팀원 소개
 
-|리더|부리더|팀원|팀원|팀원|
-|:---:|:---:|:---:|:---:|:---:|
-|사진|<img src="https://velog.velcdn.com/images/bigquann97/profile/bc0264b5-b0d6-4436-8572-e2e13daf2676/image.png"  width="100" height="120">|사진|사진|사진|
-|김지환|김관호|김미란|박도화|이승윤|
-|역할|역할|역할|역할|역할|
-|[Github](https://github.com/jipang9)<br>[Blog](https://www.naver.com)|[Github](https://github.com/bigquann97)<br>[Blog](https://velog.io/@bigquann97)|[Github](https://github.com/lssy32)<br>[Blog](https://www.naver.com)|[Github](https://github.com/dohwapark)<br>[Blog](https://www.naver.com)|[Github](https://github.com/h7359841)<br>[Blog](https://www.naver.com)|
+|리더|부리더|팀원|팀원|                                      팀원                                      |
+|:---:|:---:|:---:|:---:|:----------------------------------------------------------------------------:|
+|사진|<img src="https://velog.velcdn.com/images/bigquann97/profile/bc0264b5-b0d6-4436-8572-e2e13daf2676/image.png"  width="100" height="120">|사진|사진|<img src="./image/sylee.jpeg" width="100", height="120>|
+|김지환|김관호|김미란|박도화|                                     이승윤                                      |
+|역할|역할|역할|역할|                                      역할                                      |
+|[Github](https://github.com/jipang9)<br>[Blog](https://www.naver.com)|[Github](https://github.com/bigquann97)<br>[Blog](https://velog.io/@bigquann97)|[Github](https://github.com/h7359841)<br>[Blog](https://www.naver.com)|[Github](https://github.com/dohwapark)<br>[Blog](https://www.naver.com)| [Github](https://github.com/lssy32)<br>[Blog](https://yuniday2.tistory.com/) |
 
 ## 03. 기술 스택
+
 #### Front-End
+
 <div>
 <img src="https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white">
 <img src="https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white">
@@ -80,6 +83,7 @@
 </div>
 
 #### Back-End
+
 <div>
 <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white"/>
 <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white"/>
@@ -95,19 +99,21 @@
   <img src="https://img.shields.io/badge/Hibernate-59666C?style=flat&logo=Hibernate&logoColor=white"/>
   <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=Postman&logoColor=white"/>
   <img src="https://img.shields.io/badge/Apache_Jmeter-D22128?style=flat&logo=apachejmeter&logoColor=white"/>
-  
-  
+
+
 </div>
 
 #### Server
+
 <div>
 <img src="https://img.shields.io/badge/Amazon_RDS-527FFF?style=flat&logo=amazonrds&logoColor=white"/>
 <img src="https://img.shields.io/badge/Amazon_EC2-FF9900?style=flat&logo=amazonec2&logoColor=white"/>
 <img src="https://img.shields.io/badge/Amazon_S3-569A31?style=flat&logo=amazons3&logoColor=white"/>
 <img src="https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black">
 </div>
-  
+
 #### Etc
+
 <div>
 <img src="https://img.shields.io/badge/Github-181717?style=flat&logo=github&logoColor=white">
 <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white">
@@ -118,14 +124,16 @@
 
 ## 04. 프로젝트의 핵심 가치
 - 
-- 
-- 
-- 
-- 
+
+-
+-
+-
+-
 
 ## 05. 프로젝트 MVP 시연
 
 ## 07. 서비스 아키텍쳐
+
 ![Arch](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/090fe6cd-4dc9-4d2b-bc04-595205ab8613/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T202134Z&X-Amz-Expires=86400&X-Amz-Signature=d0357f68388920d57c8d06e8934f94b4928868e06c7d007c298ff1f0f4be6e97&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 ## 06. 기술적 의사결정
@@ -181,8 +189,8 @@
 </div>
 </details>
 
-
 ## 07. ERD 설계도
+
 ![image](https://user-images.githubusercontent.com/62071906/222983895-19460fbd-47b7-44fe-b7e7-d277ed805615.png)
 [ERD 원본 확인하기 - ERD Cloud](https://www.erdcloud.com/d/nruo9xdTwK4DNbKnD)
 
