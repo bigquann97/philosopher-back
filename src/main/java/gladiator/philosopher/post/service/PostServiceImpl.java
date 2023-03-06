@@ -4,7 +4,6 @@ import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOU
 
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
 import gladiator.philosopher.account.entity.Account;
-import gladiator.philosopher.account.repository.AccountInfoRepository;
 import gladiator.philosopher.account.service.AccountInfoService;
 import gladiator.philosopher.category.entity.Category;
 import gladiator.philosopher.common.dto.MyPage;

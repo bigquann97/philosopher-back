@@ -150,7 +150,8 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   @Transactional(readOnly = true)
-  public MyPage<UserInfoByAdminResponseDto> searchAccounts(AccountSearchCondition condition, Pageable pageable){
+  public MyPage<UserInfoByAdminResponseDto> searchAccounts(AccountSearchCondition condition,
+      Pageable pageable) {
     return accountRepository.searchAccount(condition, pageable);
   }
 
