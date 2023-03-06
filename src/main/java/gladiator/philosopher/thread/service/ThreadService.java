@@ -45,6 +45,9 @@ public interface ThreadService {
       final Category category
   );
 
-  MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(Long accountId, Pageable pageable);
+  MyPage<SimpleResponseDtoByThread> getRecommendThreadsByAccount(
+      final Long accountId,
+      final Pageable pageable
+  );
 
 }

@@ -56,22 +56,22 @@ class CategoryControllerTest {
     Mockito.verify(categoryService).selectAllCategories();
   }
 
-//  @DisplayName("2. 카테고리 생성")
-//  @Test
-//  void test_2() throws Exception {
-//    // given
-//    CategoryRequestDto dto = new CategoryRequestDto("철학");
-//
-//    mockMvc
-//        .perform(
-//            post("/api/categories")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(om.writeValueAsString(dto)))
-//        .andExpect(
-//            status().isCreated());
-//
-//    Mockito.verify(categoryService).createCategory(any(CategoryRequestDto.class));
-//  }
+  @DisplayName("2. 카테고리 생성")
+  @Test
+  void test_2() throws Exception {
+    // given
+    CategoryRequestDto dto = new CategoryRequestDto("Category");
+
+    mockMvc
+        .perform(
+            post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(dto)))
+        .andExpect(
+            status().isCreated());
+
+    Mockito.verify(categoryService).createCategory(any(CategoryRequestDto.class));
+  }
 
   @DisplayName("3. 카테고리 삭제")
   @Test

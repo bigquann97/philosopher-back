@@ -56,6 +56,7 @@ public class AdminController {
   private final ThreadService threadService;
 
   // 정보 검색
+
   /**
    * 회원 정보 가지고 오기
    *
@@ -64,6 +65,7 @@ public class AdminController {
    * @return
    */
   @GetMapping("/accounts")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<UserInfoByAdminResponseDto> searchAccounts(
       final AccountSearchCondition condition,
       final PageRequest pageRequest
@@ -78,6 +80,7 @@ public class AdminController {
    * @return
    */
   @GetMapping("/reports/posts")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<PostReportResponseDto> getPostsReports(
       final PostReportSearchCondition condition,
       final PageRequest pageRequest
@@ -92,6 +95,7 @@ public class AdminController {
    * @return
    */
   @GetMapping("/reports/threads")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<ThreadReportResponseDto> getThreadsReports(
       final ThreadReportSearchCondition condition,
       final PageRequest pageRequest
@@ -106,6 +110,7 @@ public class AdminController {
    * @return
    */
   @GetMapping("/reports/comments")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<CommentReportResponseDto> getCommentsReports(
       final CommentReportSearchCondition condition,
       final PageRequest pageRequest
@@ -122,6 +127,7 @@ public class AdminController {
    */
   @GetMapping("/thread/archived")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(
       final @RequestParam(required = false) Long category,
       final @RequestParam(required = false) Integer page,
@@ -140,6 +146,7 @@ public class AdminController {
    */
   @GetMapping("thread")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<ThreadsSimpleResponseDtoByAdmin> searchThreads(
       final ThreadSearchCondByAdmin cond,
       final Pageable pageable
@@ -148,13 +155,14 @@ public class AdminController {
   }
 
   // 정보 수정
+
   /**
    * 권한 수정
    *
    * @param id
    */
   @PatchMapping("/modify/account/role/{id}")
-  @PreAuthorize("hasRole('ROLE_MASTER')")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
   public void modifyUserRole(final @PathVariable("id") Long id) {
     adminService.modifyUserRole(accountService.getAccount(id));
@@ -162,27 +170,30 @@ public class AdminController {
 
   /**
    * 게시글 상태 변경 -> 신고 접수 된 게시글에 대해서 삭제 (delete 상태) 하거나, 상태를 변경(blind)
+   *
    * @param id
    * @param requestDtoByAdmin
    * @return
    */
   @PatchMapping("/post/{id}")
-//  @PreAuthorize("hasRole('ROLE_MANAGER')") 확인만 해봤음 -> 잘 동작
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public Long modifyPostStatus(
       final @PathVariable("id") Long id,
       final @RequestBody ModifyPostStatusRequestDtoByAdmin requestDtoByAdmin
-  ){
+  ) {
     Post post = postService.getPostEntity(id);
     return adminService.modifyPostStatus(post, requestDtoByAdmin);
   }
 
   /**
-  * 댓글 상태 변경 -> 신고 접수 된 게시글에 대해서 삭제 (delete 상태) 하거나, 상태를 변경(blind)
+   * 댓글 상태 변경 -> 신고 접수 된 게시글에 대해서 삭제 (delete 상태) 하거나, 상태를 변경(blind)
+   *
    * @param id
    * @param requestDtoByAdmin
    * @return
    */
   @PatchMapping("comment/{id}")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public Long modifyCommentStatus(
       final @PathVariable("id") Long id,
       final @RequestBody ModifyCommentStatusRequestDtoByAdmin requestDtoByAdmin
@@ -193,12 +204,14 @@ public class AdminController {
 
 
   /**
-   *  쓰레드 상태 변경 -> 신고 접수 된 게시글에 대해서 삭제 (delete 상태) 하거나, 상태를 변경(blind)
+   * 쓰레드 상태 변경 -> 신고 접수 된 게시글에 대해서 삭제 (delete 상태) 하거나, 상태를 변경(blind)
+   *
    * @param id
    * @param requestDtoByAdmin
    * @return
    */
   @PutMapping("thread/{id}")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public Long modifyThreadStatus(
       final @PathVariable("id") Long id,
       final @RequestBody ModifyThreadStatusRequestDtoByAdmin requestDtoByAdmin
@@ -210,11 +223,13 @@ public class AdminController {
 
   /**
    * 게시글 카테고리 수정
+   *
    * @param id
    * @param requestDtoByAdmin
    * @return
    */
   @PatchMapping("/category/{id}")
+  @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public Long modifyPostCategory(
       final @PathVariable("id") Long id,
       final @RequestBody ModifyCategoryRequestDtoByAdmin requestDtoByAdmin

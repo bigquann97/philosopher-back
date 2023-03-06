@@ -52,7 +52,7 @@ public class EmailService {
     }
     String code = UUID.randomUUID().toString().substring(0, 7).toUpperCase();
     redisUtil.setDataExpire(VERIFY_KEY_PREFIX + email, code, 60 * 3L); // 3분 인증 시간
-    sendMail(email, emailMessage.VERIFY_HEADER, emailMessage.createVerifyMessage(code));
+    sendMail(email, emailMessage.VERIFY_TITLE, emailMessage.createVerifyMessage(code));
   }
 
   public void verifyEmail(final String email, final String code) {

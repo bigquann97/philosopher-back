@@ -2,6 +2,7 @@ package gladiator.philosopher.comment.entity;
 
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,13 +29,11 @@ public class Mention {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  // 멘션 한 코멘트
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "mentioning_comment_id")
   private Comment mentioningComment;
 
-  // 멘션 당한 코멘트
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "mentioned_comment_id")
   private Comment mentionedComment;
 
@@ -60,5 +59,5 @@ public class Mention {
   public int hashCode() {
     return getClass().hashCode();
   }
-  
+
 }

@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,12 +44,14 @@ public class AuthController {
 
   @DeleteMapping("/sign-out")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void signOut(final @RequestBody TokenRequestDto dto) {
     authService.signOut(dto);
   }
 
   @PostMapping("/re-issue")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public ReissueResponseDto reissue(
       final @RequestBody TokenRequestDto tokenRequestDto,
       final HttpServletResponse response
@@ -83,5 +85,5 @@ public class AuthController {
   ) {
     authService.verifyFindPasswordMail(email, code);
   }
-  
+
 }

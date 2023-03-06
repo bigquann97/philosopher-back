@@ -10,6 +10,7 @@ import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class RecommendController {
 
   @PostMapping("/post/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void createRecommendPost(
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -40,6 +42,7 @@ public class RecommendController {
 
   @DeleteMapping("/post/{postId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deleteRecommendPost(
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -50,6 +53,7 @@ public class RecommendController {
 
   @PostMapping("/thread/{threadId}")
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void createRecommendThread(
       final @PathVariable Long threadId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -60,6 +64,7 @@ public class RecommendController {
 
   @DeleteMapping("/thread/{threadId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deleteRecommendThread(
       final @PathVariable Long threadId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -70,6 +75,7 @@ public class RecommendController {
 
   @PostMapping("/comment/{commentId}")
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void createRecommendComment(
       final @PathVariable Long commentId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -80,6 +86,7 @@ public class RecommendController {
 
   @DeleteMapping("/comment/{commentId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deleteRecommendComment(
       final @PathVariable Long commentId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -87,4 +94,5 @@ public class RecommendController {
     Comment comment = commentService.getCommentEntity(commentId);
     recommendService.deleteRecommendComment(comment, accountDetails.getAccount());
   }
+
 }

@@ -46,6 +46,7 @@ public class ThreadResponseDto {
   public void addOpinions(List<String> opinions) {
     this.opinions = opinions;
   }
+  
 }
 
 /*

@@ -24,7 +24,6 @@ import gladiator.philosopher.report.repository.post.PostReportRepository;
 import gladiator.philosopher.report.repository.thread.ThreadReportRepository;
 import gladiator.philosopher.thread.entity.Thread;
 import gladiator.philosopher.thread.service.ThreadService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -97,6 +96,44 @@ public class ReportServiceImpl implements ReportService {
     }
   }
 
+  /**
+   * 게시글 신고 목록 조회 (사용처 : 어드민)
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<PostReportResponseDto> getPostReports(
+      final PostReportSearchCondition condition,
+      final Pageable pageable
+  ) {
+    return postReportRepository.getPostReports(condition, pageable);
+  }
+
+  /**
+   * 댓글 신고 목록 조회 (사용처 : 어드민)
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<CommentReportResponseDto> getCommentReports(
+      final CommentReportSearchCondition condition,
+      final Pageable pageable
+  ) {
+    return commentReportRepository.getCommentReports(condition, pageable);
+  }
+
+  /**
+   * 쓰레드 신고 목록 조회 (사용처 : 어드민)
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public MyPage<ThreadReportResponseDto> getThreadReports(
+      final ThreadReportSearchCondition condition,
+      final Pageable pageable
+  ) {
+    return threadReportRepository.getThreadReports(condition, pageable);
+  }
+
+  // --- Private Methods ---
+
   private void checkIfReporterAlreadyReportedObject(Object obj, Account reporter) {
     if (obj instanceof Post) {
       Post post = (Post) obj;
@@ -115,32 +152,5 @@ public class ReportServiceImpl implements ReportService {
       }
     }
   }
-
-  /**
-   * 게시글 신고 목록 조회 (사용처 : 어드민)
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public MyPage<PostReportResponseDto> getPostReports(PostReportSearchCondition condition, Pageable pageable) {
-    return postReportRepository.getPostReports(condition, pageable);
-  }
-
-  /**
-   * 댓글 신고 목록 조회 (사용처 : 어드민)
-   */
-  @Override
-  public MyPage<CommentReportResponseDto> getCommentReports(CommentReportSearchCondition condition, Pageable pageable) {
-    return commentReportRepository.getCommentReports(condition, pageable);
-  }
-
-
-   // 완료
-  /**
-   * 쓰레드 신고 목록 조회 (사용처 : 어드민)
-   */
-  @Override
-  public MyPage<ThreadReportResponseDto> getThreadReports(ThreadReportSearchCondition condition, Pageable pageable) {
-    return threadReportRepository.getThreadReports(condition, pageable);
-  }
-
+  
 }

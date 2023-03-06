@@ -15,14 +15,13 @@ import gladiator.philosopher.post.service.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,6 +51,7 @@ public class PostController {
    */
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public Long createPost(
       final @RequestPart(required = false, value = "image") List<MultipartFile> multipartFiles,
       final @RequestPart("dto") PostRequestDto postRequestDto,
@@ -59,7 +59,7 @@ public class PostController {
   ) {
     s3Uploader.checkFileUpload(multipartFiles);
 //    List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-  List<String> urls = s3Uploader.uploadResizerTest(multipartFiles, dirName);
+    List<String> urls = s3Uploader.uploadResizerTest(multipartFiles, dirName);
     Category category = categoryService.getCategoryEntity(postRequestDto.getCategory());
     final Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(),
         category);
@@ -74,6 +74,7 @@ public class PostController {
    */
   @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   private PostResponseDto getPost(@PathVariable("postId") final Long postId) {
     return postService.getPost(postId);
   }
@@ -87,10 +88,11 @@ public class PostController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<PostResponseDtoByQueryDsl> searchPost(
       final PostSearchCondition condition,
       final PageRequest pageRequest) {
-    Pageable pageable  = pageRequest.of();
+    Pageable pageable = pageRequest.of();
     return postService.searchPostByCondition(condition, pageable);
   }
 
@@ -102,6 +104,7 @@ public class PostController {
    */
   @DeleteMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public void deletePost(
       final @PathVariable Long postId,
       final @AuthenticationPrincipal AccountDetails accountDetails
@@ -121,6 +124,7 @@ public class PostController {
    */
   @PutMapping("/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public Long modifyPost(
       final @PathVariable Long postId,
       final @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
@@ -131,7 +135,8 @@ public class PostController {
     List<String> oldUrls = postService.getOldUrls(postId);
     List<String> strings = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
     Category category = categoryService.getCategoryEntity(postModifyRequestDto.getCategoryId());
-    Long post = postService.modifyPost(postId, strings, postModifyRequestDto, accountDetails.getAccount(), category);
+    Long post = postService.modifyPost(postId, strings, postModifyRequestDto,
+        accountDetails.getAccount(), category);
     s3Uploader.DeleteS3Files(oldUrls, dirName);
     return post;
   }
