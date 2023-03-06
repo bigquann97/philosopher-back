@@ -1,4 +1,4 @@
-## 01. 프로젝트 소개
+## 01. 프로젝트 소개 💡
 
 ### 서비스 명: 🏛️ 우리 모두 철학자 🏛️
 
@@ -63,7 +63,7 @@
 
 ---
 
-## 02. 팀원 소개
+## 02. 팀원 소개 👨‍👩‍👦‍ 
 
 |리더|부리더|팀원|팀원|                                      팀원                                      |
 |:---:|:---:|:---:|:---:|:----------------------------------------------------------------------------:|
@@ -72,9 +72,9 @@
 |역할|역할|역할|역할|                                      역할                                      |
 |[Github](https://github.com/jipang9)<br>[Blog](https://www.naver.com)|[Github](https://github.com/bigquann97)<br>[Blog](https://velog.io/@bigquann97)|[Github](https://github.com/h7359841)<br>[Blog](https://www.naver.com)|[Github](https://github.com/dohwapark)<br>[Blog](https://www.naver.com)| [Github](https://github.com/lssy32)<br>[Blog](https://yuniday2.tistory.com/) |
 
-## 03. 기술 스택
+## 03. 기술 스택 🛠️
 
-#### Front-End
+#### Front-End 🔨
 
 <div>
 <img src="https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white">
@@ -82,7 +82,7 @@
 <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat&logo=vue.js&logoColor=white">
 </div>
 
-#### Back-End
+#### Back-End 🔧
 
 <div>
 <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white"/>
@@ -103,7 +103,7 @@
 
 </div>
 
-#### Server
+#### Server 🪚
 
 <div>
 <img src="https://img.shields.io/badge/Amazon_RDS-527FFF?style=flat&logo=amazonrds&logoColor=white"/>
@@ -112,7 +112,7 @@
 <img src="https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black">
 </div>
 
-#### Etc
+#### Etc ⛓️
 
 <div>
 <img src="https://img.shields.io/badge/Github-181717?style=flat&logo=github&logoColor=white">
@@ -122,7 +122,7 @@
 
 ---
 
-## 04. 프로젝트의 핵심 가치
+## 04. 프로젝트의 핵심 가치 💎
 - 
 
 -
@@ -130,37 +130,83 @@
 -
 -
 
-## 05. 프로젝트 MVP 시연
+## 05. 프로젝트 MVP 시연 📺
 
-## 07. 서비스 아키텍쳐
+## 07. 서비스 아키텍쳐 📊
 
 ![Arch](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/090fe6cd-4dc9-4d2b-bc04-595205ab8613/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T202134Z&X-Amz-Expires=86400&X-Amz-Signature=d0357f68388920d57c8d06e8934f94b4928868e06c7d007c298ff1f0f4be6e97&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
-## 06. 기술적 의사결정
+## 06. 기술적 의사결정 ✅
 
 <details>
-<summary> 1. Querydsl 😀</summary>
+<summary> 1. Querydsl 👓 </summary>
 <div markdown="1"> 
-
+<br>
+- **기술적 필요성:**
+1. 검색, 정렬, 필터링 및 통계 확인 등의 동적 쿼리 작성
+2. 지속적 리팩토링을 통한 쿼리 성능 향상 및 최적화
+<br>
+- **해결 방안 리스트업:**
+1. JPQL - if문을 통한 분기 + 문자열 하나라도 잘못될 경우 오류 발생(컴파일 시점에서 파악 불가)
+2. Mybatis, JDBC Template (Query Mapper) - 복잡한 사용성, DB 의존성 
+3. Querydsl - Qtype 의존성 발생, 빈약한 Bean 생성
+<br>
+- **해결 방안에 대한 의사 조율 및 결정:**
+1. 내부적으로 BooleanExpression, OrderSpecifier 등을 통한 동적 쿼리 작성
+2. Java 기반 JPQL의 작성 - 사용성과 가독성 ⇒ 팀적 협업에 도움
+3. Projection 등을 통해 조회를 원하는 컬럼 수를 편하게 줄이기 가능 
+4. 컴파일 시점에서 오류를 잡아줌 + 편리한 최적화
+5. 현재 프로젝트 규모에서는 한계점의 극복이 가능하다고 판단
+**⇒  Querydsl 채택**
+<br>
 </div>
 </details>
 
 <details>
-<summary> 2. Github Actions 😀</summary>
+<summary> 2. Github Actions 💫 </summary>
 <div markdown="1"> 
-
+<br>
+- **기술적 필요성:**
+1. 협업을 진행하면서 팀원간 반복적인 빌드, 테스트 등의 자동화 및 통합적 환경 구축 
+2. 추후 CD 구축을 위한 기반 기술 필요성
+<br>
+- **해결 방안 리스트업:**
+1. Jenkins
+2. Github Actions
+3. Bamboo
+<br>
+- **해결 방안에 대한 의사 조율 및 결정:**
+1. Bamboo - 금전적 비용의 발생 및 레퍼런스 부족
+2. 프로젝트의 규모를 고려한 의사 결정 - Jenkins 사용을 통한 리소스 낭비 발생 가능성
+3. 환경 구성, 호환성 구축 등의 추가적 작업이나 복잡한 절차 없이 현재 협업 환경에 바로 적용 가능
+**⇒ Github Actions 채택**
+<br>
 </div>
 </details>
 
 <details>
-<summary> 3. Redis 😀</summary>
+<summary> 3. Redis 🎈 </summary>
 <div markdown="1"> 
-
+<br>
+- **기술적 필요성:**
+1. JWT 인증/인가 방식 채택으로 인한 Refresh Token 보관 필요성
+2. 서버 리소스 접근을 허용하는 중요한 수단인 만큼 보안성/사용성 고려 필요
+<br>
+- **해결 방안 리스트업:**
+1. RDB에 컬럼 추가
+2. Redis 적용
+<br>
+- **해결 방안에 대한 의사 조율 및 결정:**
+1. 토큰의 탈취 가능성 고려 및 Black-list 구현을 위한 기술의 필요성
+2. TTL 기능의 활용을 통한 토큰에 대한 수명 관리
+3. 유효 기간 코드 기반 이메일 인증 서비스 구축 예정, Redis 채택 가능성이 높음
+**⇒ Redis를 통한 토큰 및 관련 정보 관리 채택**
+<br>
 </div>
 </details>
 
 <details>
-<summary> 4. SSE Emitter 😀</summary>
+<summary> 4. SSE Emitter 🔋 </summary>
 <div markdown="1"> 
 
 </div>
@@ -169,21 +215,21 @@
 ## 06. 트러블 슈팅
 
 <details>
-<summary> 1.  😀</summary>
+<summary> 1.   📈 </summary>
 <div markdown="1"> 
 
 </div>
 </details>
 
 <details>
-<summary> 2.  😀</summary>
+<summary> 2.   💻 </summary>
 <div markdown="1"> 
 
 </div>
 </details>
 
 <details>
-<summary> 3.  😀</summary>
+<summary> 3.  🖼️ </summary>
 <div markdown="1"> 
 
 </div>
