@@ -17,6 +17,7 @@ import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
+import gladiator.philosopher.post.enums.PostStatus;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
@@ -72,6 +73,9 @@ public class PostServiceImpl implements PostService {
   @Transactional(readOnly = true)
   public PostResponseDto getPost(final Long id) {
     Post post = getPostEntity(id);
+    if(post.getStatus().equals(PostStatus.DELETED)){
+      throw new NotFoundException(NOT_FOUND_POST);
+    }
     String accountImageUrl = accountInfoService.selectAccountImageUrl(post.getAccount().getId());
     final long recommendCount = postRecommendRepository.countByPost(post);
     final List<String> url = postImageRepository.getUrl(post.getId());
