@@ -67,10 +67,10 @@
 
 |리더|부리더|팀원|팀원|                                      팀원                                      |
 |:---:|:---:|:---:|:---:|:----------------------------------------------------------------------------:|
-|사진|<img src="https://velog.velcdn.com/images/bigquann97/profile/bc0264b5-b0d6-4436-8572-e2e13daf2676/image.png"  width="100" height="120">|사진|사진|<img src="https://github.com/bigquann97/philosopher-back/blob/readme/image/sylee.jpeg?raw=true"  width="100" height="120">|
+|<img src="https://github.com/bigquann97/philosopher-back/blob/readme/image/jipang.jpg"  width="100" height="120">|<img src="https://velog.velcdn.com/images/bigquann97/profile/bc0264b5-b0d6-4436-8572-e2e13daf2676/image.png"  width="100" height="120">|<img src="https://github.com/bigquann97/philosopher-back/blob/readme/image/miran.png"  width="100" height="120">|<img src="https://velog.velcdn.com/images/bigquann97/profile/bc0264b5-b0d6-4436-8572-e2e13daf2676/image.png"  width="100" height="120">|<img src="https://github.com/bigquann97/philosopher-back/blob/readme/image/sylee.jpeg?raw=true"  width="100" height="120">|
 |김지환|김관호|김미란|박도화|                                     이승윤                                      |
 |역할|역할|역할|역할|                                      역할                                      |
-|[Github](https://github.com/jipang9)<br>[Blog](https://www.naver.com)|[Github](https://github.com/bigquann97)<br>[Blog](https://velog.io/@bigquann97)|[Github](https://github.com/h7359841)<br>[Blog](https://www.naver.com)|[Github](https://github.com/dohwapark)<br>[Blog](https://www.naver.com)| [Github](https://github.com/lssy32)<br>[Blog](https://yuniday2.tistory.com/) |
+|[Github](https://github.com/jipang9)<br>[Blog](https://jipang9-greedy-pot.tistory.com/)|[Github](https://github.com/bigquann97)<br>[Blog](https://velog.io/@bigquann97)|[Github](https://github.com/h7359841)<br>[Blog](https://velog.io/@h7359841)|[Github](https://github.com/dohwapark)<br>[Blog](https://dzzzdee.tistory.com/)| [Github](https://github.com/lssy32)<br>[Blog](https://yuniday2.tistory.com/) |
 
 ## 03. 기술 스택 🛠️
 
