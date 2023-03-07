@@ -473,6 +473,27 @@ public class InitData implements ApplicationRunner {
       Comment comment1 = new Comment(account2, thread, "content", "한다.");
       commentRepository.save(comment1);
     }
+    Comment cm1 = new Comment(account2, thread, "content", "opinion");
+    commentRepository.save(cm1);
+
+    Comment cm2 = new Comment(account2, thread, "content", "opinion");
+    commentRepository.save(cm2);
+
+    Comment cm3 = new Comment(account2, thread, "content", "opinion");
+    commentRepository.save(cm3);
+
+    CommentRecommend commentRecommend1 = new CommentRecommend(account1, cm1);
+    CommentRecommend commentRecommend2 = new CommentRecommend(account2, cm1);
+    CommentRecommend commentRecommend3 = new CommentRecommend(account3, cm1);
+    CommentRecommend commentRecommend4 = new CommentRecommend(account1, cm2);
+    CommentRecommend commentRecommend5 = new CommentRecommend(account2, cm2);
+    CommentRecommend commentRecommend6 = new CommentRecommend(account1, cm3);
+    commentRecommendRepository.save(commentRecommend1);
+    commentRecommendRepository.save(commentRecommend2);
+    commentRecommendRepository.save(commentRecommend3);
+    commentRecommendRepository.save(commentRecommend4);
+    commentRecommendRepository.save(commentRecommend5);
+
     // 신고 관련 init 데이터 ( 쓰레드 신고 )
     ThreadReport threadReport = new ThreadReport("신고입니다", account2, account2, ReportCategory.ABUSE,
         thread3.getId());

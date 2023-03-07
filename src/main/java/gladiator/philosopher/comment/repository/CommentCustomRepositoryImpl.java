@@ -115,7 +115,9 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
             JPAExpressions
                 .select(commentRecommend.countDistinct())
                 .from(commentRecommend)
-                .where(commentRecommend.comment.id.eq(comment.id))
+                .where(commentRecommend.comment.id.eq(comment.id)),
+            comment.opinion,
+            comment.createdDate
         ))
         .from(comment)
         .leftJoin(comment.account, account)
@@ -123,6 +125,7 @@ public class CommentCustomRepositoryImpl extends QuerydslRepositorySupport imple
         .leftJoin(commentRecommend).on(commentRecommend.comment.id.eq(comment.id))
         .where(comment.thread.id.eq(threadId))
         .groupBy(comment.id)
+        .groupBy(accountImage.imageUrl)
         .orderBy(commentRecommend.countDistinct().desc())
         .limit(3)
         .fetch();
