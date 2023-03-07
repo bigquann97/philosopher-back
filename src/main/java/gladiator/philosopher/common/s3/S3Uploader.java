@@ -33,8 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3Uploader {
 
   private final AmazonS3Client amazonS3Client;
+
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
+
   private final static String Extension[] = {"jpg", "jpeg", "png", ""};
 
   /**
@@ -94,8 +96,9 @@ public class S3Uploader {
     } catch (IOException e) {
       throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
-
   }
+
+
 
   public List<String> uploadResizerTest(List<MultipartFile> multipartFiles, String dirName) {
     if (multipartFiles.get(0).getOriginalFilename().equals("")) {
@@ -106,18 +109,27 @@ public class S3Uploader {
       List<String> imageList = new ArrayList<>(); // 리사이징 된 이미지를 저장할 공간
 
       for (MultipartFile multipartFile : multipartFiles) {
+
         String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName(); // s3에 저장될 파일의 이름
         String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/")+1);
-        MultipartFile resizer = resizer(fileName, fileFormat, multipartFile, 890);
+
+        MultipartFile resizer = resizer(fileName, fileFormat, multipartFile, 700);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(resizer.getSize());
         objectMetadata.setContentType(resizer.getContentType());
+
+        try(InputStream inputStream = resizer.getInputStream()){
+          amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+        }catch(IOException e){
+          throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
+        }
         String uploadUrl = putS3(resizer.getInputStream(), fileName, objectMetadata);
         log.info("upfile url is :" + uploadUrl);
         imageList.add(uploadUrl);
       }
       return imageList;
+
     }catch (IOException e) {
       throw new FileException(ExceptionStatus.IMAGE_UPLOAD_FAILED);
     }
@@ -150,8 +162,7 @@ public class S3Uploader {
       ImageIO.write(imageNoAlpha, fileFormat, baos);
       baos.flush();
 
-      return new CustomMultipartFile(fileName, fileFormat, multipartFile.getContentType(),
-          baos.toByteArray());
+      return new CustomMultipartFile(fileName, fileFormat, multipartFile.getContentType(), baos.toByteArray());
     } catch (IOException e) {
       throw new FileException(ExceptionStatus.FAIL_TO_RESIZE_FILE);
     }
@@ -280,6 +291,12 @@ public class S3Uploader {
   public void checkFileUpload(List<MultipartFile> multipartFiles) {
     checkByFileCount(multipartFiles); // 파일 갯수 확인
     checkFilesExtension(multipartFiles); // 파일 확장자 검사
+  }
+
+  public boolean checkFileExist(List<MultipartFile> multipartFiles){
+    if(multipartFiles.get(0).getOriginalFilename().equals(""))
+      return true;
+    else return false;
   }
 
 

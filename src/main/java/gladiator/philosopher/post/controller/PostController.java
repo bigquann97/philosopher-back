@@ -13,6 +13,7 @@ import gladiator.philosopher.post.dto.PostResponseDto;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.service.PostService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,8 +63,7 @@ public class PostController {
 //    List<String> urls = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
     List<String> urls = s3Uploader.uploadResizerTest(multipartFiles, dirName);
     Category category = categoryService.getCategoryEntity(postRequestDto.getCategory());
-    final Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(),
-        category);
+    Long postId = postService.createPost(urls, postRequestDto, accountDetails.getAccount(), category);
     return postId;
   }
 
@@ -130,16 +130,21 @@ public class PostController {
       final @RequestPart("dto") PostModifyRequestDto postModifyRequestDto,
       final @AuthenticationPrincipal AccountDetails accountDetails
   ) {
-    s3Uploader.checkFileUpload(multipartFiles);
-    List<String> oldUrls = postService.getOldUrls(postId);
-    List<String> strings = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
-    Category category = categoryService.getCategoryEntity(postModifyRequestDto.getCategoryId());
-    Long post = postService.modifyPost(postId, strings, postModifyRequestDto,
-        accountDetails.getAccount(), category);
-    s3Uploader.DeleteS3Files(oldUrls, dirName);
-    return post;
+    List<String>url = new ArrayList<>();
+    if(s3Uploader.checkFileExist(multipartFiles)){ // 파일을 업로드 하지 않을때 (""값으로 들어옴 default 값)
+      Category category = categoryService.getCategoryEntity(postModifyRequestDto.getCategoryId());
+      Long post = postService.modifyPost(postId, url, postModifyRequestDto, accountDetails.getAccount(), category);
+      return post;
+    }else{
+      s3Uploader.checkFileUpload(multipartFiles); // 파일을 업로드 할 때, 즉. 이미지가 있다는 말.
+      List<String> strings = s3Uploader.upLoadFileToMulti(multipartFiles, dirName);
+      List<String> oldUrls = postService.getOldUrls(postId);
+      Category category = categoryService.getCategoryEntity(postModifyRequestDto.getCategoryId());
+      Long post = postService.modifyPost(postId, strings, postModifyRequestDto, accountDetails.getAccount(), category);
+      s3Uploader.DeleteS3Files(oldUrls, dirName);
+      return post;
+    }
   }
-
 }
 
 

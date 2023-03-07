@@ -17,7 +17,7 @@ public interface RankRepository extends JpaRepository<Rank, Long> {
   @Query("select r from Rank r where r.nickname=:nickname")
   Rank findbyRank(@Param("nickname")String nickname);
 
-  @Query("select new gladiator.philosopher.rank.dto.UserRankingResponseDto(r.nickname, r.count) from Rank r order by r.count DESC ")
+  @Query("select new gladiator.philosopher.rank.dto.UserRankingResponseDto(r.id, r.nickname, r.count) from Rank r order by r.count DESC ")
   List<UserRankingResponseDto> searchRankByCount(Pageable pageable);
 
   @Query("select r.id from Rank r")
