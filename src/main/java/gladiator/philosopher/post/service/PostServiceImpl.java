@@ -1,5 +1,6 @@
 package gladiator.philosopher.post.service;
 
+import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_APPROACH_POST;
 import static gladiator.philosopher.common.exception.dto.ExceptionStatus.NOT_FOUND_POST;
 
 import gladiator.philosopher.account.dto.PostSimpleResponseDto;
@@ -75,6 +76,8 @@ public class PostServiceImpl implements PostService {
     Post post = getPostEntity(id);
     if(post.getStatus().equals(PostStatus.DELETED)){
       throw new NotFoundException(NOT_FOUND_POST);
+    }else if (post.getStatus().equals(PostStatus.BLINDED)){
+      throw new NotFoundException(NOT_APPROACH_POST);
     }
     String accountImageUrl = accountInfoService.selectAccountImageUrl(post.getAccount().getId());
     final long recommendCount = postRecommendRepository.countByPost(post);
