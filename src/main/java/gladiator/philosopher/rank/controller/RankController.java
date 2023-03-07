@@ -23,7 +23,7 @@ public class RankController {
 
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
-  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+//  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<UserRankingResponseDto> getRankings() {
     return rankService.getNowRankings();
   }

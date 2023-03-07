@@ -27,11 +27,11 @@ public class SecurityConfig {
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisUtil redisUtil;
 
-//  @Bean
-//  public WebSecurityCustomizer webSecurityCustomizer() {
-//    return (web) -> web.ignoring()
-//        .antMatchers("/h2-console/**");
-//  }
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return (web) -> web.ignoring()
+        .antMatchers("/h2-console/**");
+  }
 
   @Bean
   protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -44,6 +44,7 @@ public class SecurityConfig {
         .authorizeRequests()
         .antMatchers("/h2-console/**").permitAll()
         .antMatchers("/api/accounts/**").permitAll()
+        .antMatchers("/api/rank/**").permitAll()
         .and()
         .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         .and()

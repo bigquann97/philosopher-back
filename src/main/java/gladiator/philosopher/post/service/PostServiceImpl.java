@@ -103,19 +103,15 @@ public class PostServiceImpl implements PostService {
       final PostModifyRequestDto postModifyRequestDto,
       final Account account, final Category category) {
     Post post = getPostEntity(postId);
-    log.info(post.getTitle());
     post.isWriter(account);
     String filteredTitle = badWordFiltering.checkAndChange(postModifyRequestDto.getTitle());
     String filteredContent = badWordFiltering.checkAndChange(postModifyRequestDto.getContent());
     post.modifyPost(filteredTitle, filteredContent, category);
     postRepository.saveAndFlush(post);
-    if (urls == null) {
-      return post.getId();
-    } else {
-      saveImages(urls, post);
-      postImageRepository.deleteAllByPostImage(post.getId());
-      return post.getId();
-    }
+    // 기존에 있는 데이터를 먼저 삭제하고, 그 다음 저장해야 한다.
+    postImageRepository.deleteAllByPostImage(post.getId());
+    saveImages(urls,post);
+    return post.getId();
   }
 
   /**

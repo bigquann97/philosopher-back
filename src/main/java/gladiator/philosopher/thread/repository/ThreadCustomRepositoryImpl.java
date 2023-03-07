@@ -46,6 +46,7 @@ import org.springframework.stereotype.Repository;
 public class ThreadCustomRepositoryImpl extends QuerydslRepositorySupport implements
     ThreadCustomRepository {
 
+
   private final JPAQueryFactory jpaQueryFactory;
   private final QThread thread;
   private final QThreadRecommend threadRecommend;
