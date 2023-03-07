@@ -5,7 +5,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -22,20 +21,18 @@ public class ExecutionTimer {
   // 해당 메서드에 대하여 Log를 찍다보니, 성능 테스트로 사용 후 해당 메서드 지워주시면 감사하겠습니다.
   @Around("timer()")
   public Object AssumeExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-
     StopWatch stopWatch = new StopWatch();
+    Object proceed = null;
+    String className = joinPoint.getSignature().getName();
 
-    stopWatch.start();
-    joinPoint.proceed();
-    stopWatch.stop();
+    try {
+      stopWatch.start();
+      proceed = joinPoint.proceed();
+    } finally {
+      stopWatch.stop();
+      log.info("{} elapsed time :: {}", className, stopWatch.getTotalTimeMillis());
+    }
 
-    long totalTimeMillis = stopWatch.getTotalTimeMillis();
-
-    MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-    String methodName = signature.getMethod().getName();
-
-    log.info("실행 메서드: {}, 실행시간 = {}ms", methodName, totalTimeMillis);
-
-    return methodName + " " + totalTimeMillis;
+    return proceed;
   }
 }

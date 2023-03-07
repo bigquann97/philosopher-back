@@ -27,7 +27,7 @@ public class ScheduleTasks {
   @Scheduled(cron = "1 0 0 1/1 * ?")
   @Transactional
   public void cronExpression() {
-    log.info("Scheduler 동작 - 진행 중인 쓰레드 총 검사");
+    log.info("Redis 탐색 및 종료 시점 지난 쓰레드 ID 체크");
     Map<String, String> data = redisUtil.getAllHashData(THREAD_TIME_LIST_KEY);
     data.forEach((id, time) -> {
       LocalDateTime endDate = LocalDateTime.parse(time);
