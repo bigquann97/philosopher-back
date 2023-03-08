@@ -17,7 +17,6 @@ import gladiator.philosopher.post.dto.PostSearchCondition;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.entity.PostImage;
 import gladiator.philosopher.post.entity.PostOpinion;
-import gladiator.philosopher.post.enums.PostStatus;
 import gladiator.philosopher.post.repository.PostImageRepository;
 import gladiator.philosopher.post.repository.PostOpinionRepository;
 import gladiator.philosopher.post.repository.PostRepository;
@@ -73,7 +72,7 @@ public class PostServiceImpl implements PostService {
   @Transactional(readOnly = true)
   public PostResponseDto getPost(final Long id) {
     Post post = getPostEntity(id);
-    if(post.getStatus().equals(PostStatus.DELETED)){
+    if (post.isBlinded() || post.isDeleted()) {
       throw new NotFoundException(NOT_FOUND_POST);
     }
     String accountImageUrl = accountInfoService.selectAccountImageUrl(post.getAccount().getId());
@@ -114,7 +113,7 @@ public class PostServiceImpl implements PostService {
     postRepository.saveAndFlush(post);
     // 기존에 있는 데이터를 먼저 삭제하고, 그 다음 저장해야 한다.
     postImageRepository.deleteAllByPostImage(post.getId());
-    saveImages(urls,post);
+    saveImages(urls, post);
     return post.getId();
   }
 

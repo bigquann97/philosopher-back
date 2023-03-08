@@ -49,7 +49,7 @@ public class Post extends BaseEntity {
 
   @Builder
   public Post(Account account, String title, String content,
-       Category category) {
+      Category category) {
     this.account = account;
     this.title = title;
     this.content = content;
@@ -96,16 +96,18 @@ public class Post extends BaseEntity {
     this.status = PostStatus.DELETED;
   }
 
-  public Post modifyCategory(Category category){
+  public Post modifyCategory(Category category) {
     this.category = category;
     return this;
   }
 
-  public Post ModifyStatusByAdmin(PostStatus postStatus){
+  public Post ModifyStatusByAdmin(PostStatus postStatus) {
     this.status = postStatus;
     return this;
   }
 
 
-
+  public boolean isDeleted() {
+    return this.status == PostStatus.DELETED;
+  }
 }
