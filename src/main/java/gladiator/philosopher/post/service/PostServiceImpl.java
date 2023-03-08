@@ -74,12 +74,13 @@ public class PostServiceImpl implements PostService {
     Post post = getPostEntity(id);
     if (post.isBlinded() || post.isDeleted()) {
       throw new NotFoundException(NOT_FOUND_POST);
+    } else {
+      String accountImageUrl = accountInfoService.selectAccountImageUrl(post.getAccount().getId());
+      final long recommendCount = postRecommendRepository.countByPost(post);
+      final List<String> url = postImageRepository.getUrl(post.getId());
+      final List<String> options = postOpinionRepository.getOptions(post.getId());
+      return new PostResponseDto(post, recommendCount, url, options, accountImageUrl);
     }
-    String accountImageUrl = accountInfoService.selectAccountImageUrl(post.getAccount().getId());
-    final long recommendCount = postRecommendRepository.countByPost(post);
-    final List<String> url = postImageRepository.getUrl(post.getId());
-    final List<String> options = postOpinionRepository.getOptions(post.getId());
-    return new PostResponseDto(post, recommendCount, url, options, accountImageUrl);
   }
 
   @Override
