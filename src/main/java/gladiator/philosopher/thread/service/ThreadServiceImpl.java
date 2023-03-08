@@ -117,6 +117,7 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional(readOnly = true)
   public ThreadResponseDto selectArchivedThread(final Long threadId) {
+
     Thread thread = getThreadEntity(threadId);
     if (thread.isBlinded() || thread.isDeleted()) {
       throw new NotFoundException(NOT_FOUND_THREAD);
