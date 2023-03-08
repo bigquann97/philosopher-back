@@ -2,8 +2,8 @@ package gladiator.philosopher.account.dto.login;
 
 import gladiator.philosopher.account.entity.Account;
 import gladiator.philosopher.account.enums.Gender;
-import gladiator.philosopher.account.enums.UserStatus;
 import gladiator.philosopher.account.enums.UserRole;
+import gladiator.philosopher.account.enums.UserStatus;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -23,7 +23,7 @@ public class SignUpRequestDto {
   @Email
   private final String email;
 
-  @Size(min = 8, max = 15, message = "비밀번호는 8에서 15자 사이 입니다.")
+  @Size(min = 8, max = 15, message = "비밀번호는 8에서 15자 사이여야하며, 특수문자가 포함되어야합니다.")
   @Pattern(regexp = "[a-zA-Z0-9`~!@#$%^&*()_=+|{};:,.<>/?]*$", message = "비밀번호 형식이 일치하지 않습니다.")
   private final String password;
 
