@@ -102,9 +102,12 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public Long modifyPost(final Long postId, final List<String> urls,
+  public Long modifyPost(
+      final Long postId, final List<String> urls,
       final PostModifyRequestDto postModifyRequestDto,
-      final Account account, final Category category) {
+      final Account account,
+      final Category category
+  ) {
     Post post = getPostEntity(postId);
     post.isWriter(account);
     String filteredTitle = badWordFiltering.checkAndChange(postModifyRequestDto.getTitle());
@@ -117,12 +120,6 @@ public class PostServiceImpl implements PostService {
     return post.getId();
   }
 
-  /**
-   * 의견 저장 -> 사용처 : createPost
-   *
-   * @param postRequestDto
-   * @param post
-   */
   private void saveOpinions(final PostRequestDto postRequestDto, final Post post) {
     List<PostOpinion> opinions = postRequestDto.getOpinions().stream()
         .map(x -> new PostOpinion(post, x)).collect(Collectors.toList());
