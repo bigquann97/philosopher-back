@@ -12,6 +12,7 @@ public enum ExceptionStatus {
   UNSUPPORTED_IMAGE_TYPE(400, "지원하지 않는 이미지 형식"),
   EXCEEDED_INPUT_DATAS(400, " 최대 5개의 유형만 설정 할 수 있습니다."),
   TO_MUCH_FILES(400, " 이미지는 최대 3개만 업로드 할 수 있습니다."),
+  NOT_APPROACH_POST(404, "게시물에 접근할 수 없습니다."),
 
   // 404 ->  NOT _ FOUND : 잘못된 리소스 접근 (ex. 존재하지 않는 값)
   NOT_FOUND_POST(404, "게시물이 존재하지 않습니다."),
