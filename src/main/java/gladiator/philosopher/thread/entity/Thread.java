@@ -113,4 +113,7 @@ public class Thread extends BaseEntity {
     return getClass().hashCode();
   }
 
+  public boolean isDeleted() {
+    return this.status == ThreadStatus.DELETED;
+  }
 }

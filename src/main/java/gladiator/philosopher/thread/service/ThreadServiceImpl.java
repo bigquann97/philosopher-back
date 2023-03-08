@@ -100,6 +100,10 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional(readOnly = true)
   public ThreadResponseDto selectThread(final Long threadId) {
+    Thread thread = getThreadEntity(threadId);
+    if (thread.isBlinded() || thread.isDeleted()) {
+      throw new NotFoundException(NOT_FOUND_THREAD);
+    }
     return threadRepository.selectThread(threadId)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_POST));
   }
@@ -113,6 +117,10 @@ public class ThreadServiceImpl implements ThreadService {
   @Override
   @Transactional(readOnly = true)
   public ThreadResponseDto selectArchivedThread(final Long threadId) {
+    Thread thread = getThreadEntity(threadId);
+    if (thread.isBlinded() || thread.isDeleted()) {
+      throw new NotFoundException(NOT_FOUND_THREAD);
+    }
     return threadRepository.selectThread(threadId)
         .orElseThrow(() -> new NotFoundException(NOT_FOUND_THREAD));
   }

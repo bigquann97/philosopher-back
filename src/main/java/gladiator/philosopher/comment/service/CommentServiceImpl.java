@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
     Comment comment = getCommentEntity(commentId);
     checkIfAccountIsWriter(comment, account);
     mentionService.deleteMentions(comment);
-    String filteredContent = badWordFiltering.checkAndChange(comment.getContent());
+    String filteredContent = badWordFiltering.checkAndChange(dto.getContent());
     comment.modifyComment(filteredContent, dto.getOpinion());
     mentionService.mentionComment(comment);
     commentRepository.save(comment);
@@ -105,7 +105,8 @@ public class CommentServiceImpl implements CommentService {
       final Long accountId,
       final Pageable pageable
   ) {
-    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(accountId, pageable);
+    Page<CommentSimpleResponseDto> commentsByAccount = commentRepository.getCommentsByAccount(
+        accountId, pageable);
     return new MyPage<>(commentsByAccount);
   }
 
