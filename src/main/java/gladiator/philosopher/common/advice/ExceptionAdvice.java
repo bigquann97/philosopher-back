@@ -10,6 +10,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -65,7 +66,15 @@ public class ExceptionAdvice {
   protected ErrorDto IoStreamException(IOException ex) {
     ex.printStackTrace();
     log.error(ex.getMessage());
-    return new ErrorDto(500, "IOException");
+    return new ErrorDto(500, "서버 관리자에게 문의해주세요");
+  }
+
+  @ExceptionHandler({MethodArgumentNotValidException.class})
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ErrorDto IoStreamException(MethodArgumentNotValidException ex) {
+    ex.printStackTrace();
+    log.error(ex.getMessage());
+    return new ErrorDto(400, ex.getMessage());
   }
 
 }
