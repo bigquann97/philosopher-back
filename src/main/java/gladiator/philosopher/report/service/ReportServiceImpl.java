@@ -11,7 +11,6 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.exception.DuplicatedException;
 import gladiator.philosopher.post.entity.Post;
 import gladiator.philosopher.post.service.PostService;
-import gladiator.philosopher.recommend.repository.CommentRecommendRepository;
 import gladiator.philosopher.report.dto.CommentReportResponseDto;
 import gladiator.philosopher.report.dto.CommentReportSearchCondition;
 import gladiator.philosopher.report.dto.PostReportResponseDto;
@@ -33,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-  private final static int COUNT_FOR_AUTO_BLIND = 1;
+  private final static int COUNT_FOR_AUTO_BLIND = 10;
   private final PostReportRepository postReportRepository;
   private final ThreadReportRepository threadReportRepository;
   private final CommentReportRepository commentReportRepository;
@@ -41,7 +40,6 @@ public class ReportServiceImpl implements ReportService {
   private final ThreadService threadService;
   private final PostService postService;
   private final CommentService commentService;
-  private final CommentRecommendRepository commentRecommendRepository;
 
   @Override
   @Transactional
@@ -152,5 +150,5 @@ public class ReportServiceImpl implements ReportService {
       }
     }
   }
-  
+
 }
