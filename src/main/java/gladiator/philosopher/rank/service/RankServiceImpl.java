@@ -1,9 +1,15 @@
 package gladiator.philosopher.rank.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import gladiator.philosopher.rank.dto.UserRankingResponseDto;
+import gladiator.philosopher.rank.entity.Philosopher;
 import gladiator.philosopher.rank.entity.Rank;
 import gladiator.philosopher.rank.repository.RankRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,9 +40,16 @@ public class RankServiceImpl implements RankService {
   @Override
   @Transactional(readOnly = true)
   public List<UserRankingResponseDto> getNowRankings() {
+
+    List<Philosopher> list = Arrays.asList(Philosopher.values());
     PageRequest pageRequest = PageRequest.of(0, 5);
     List<UserRankingResponseDto> userRankingResponseDtos = rankRepository.searchRankByCount(
         pageRequest);
+    int i=0;
+    for (UserRankingResponseDto userRankingResponseDto : userRankingResponseDtos) {
+      userRankingResponseDto.setPhilosopher(list.get(i));
+      i = i+1;
+    }
     return userRankingResponseDtos;
   }
 

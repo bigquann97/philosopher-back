@@ -26,6 +26,8 @@ public class Rank extends BaseEntity {
 
   private Long count = 0L;
 
+  private Philosopher philosopher;
+
   public Rank updateCount() {
     this.count++;
     return this;

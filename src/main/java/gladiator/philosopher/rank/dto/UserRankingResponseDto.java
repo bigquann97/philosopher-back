@@ -1,17 +1,21 @@
 package gladiator.philosopher.rank.dto;
 
+import gladiator.philosopher.rank.entity.Philosopher;
 import lombok.Getter;
 
 @Getter
 public class UserRankingResponseDto {
 
-  private Long id;
   private String nickname;
   private Long count;
+  private Philosopher philosopher;
 
-  public UserRankingResponseDto(Long id, String nickname, Long count) {
-    this.id = id;
+  public UserRankingResponseDto( String nickname, Long count) {
     this.nickname = nickname;
     this.count = count;
   }
+  public void setPhilosopher(Philosopher philosopher){
+    this.philosopher = philosopher;
+  }
+
 }
