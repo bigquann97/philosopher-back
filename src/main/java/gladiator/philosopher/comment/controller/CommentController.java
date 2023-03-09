@@ -35,7 +35,6 @@ public class CommentController {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/thread/{threadId}")
-  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public MyPage<CommentResponseDto> selectCommentsWithPaging(
       final @PathVariable Long threadId,
       final @RequestParam(required = false, defaultValue = "1") int page
@@ -78,14 +77,12 @@ public class CommentController {
 
   @GetMapping("/stat/{threadId}")
   @ResponseStatus(HttpStatus.OK)
-  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<CommentOpinionStatsDto> selectStats(final @PathVariable Long threadId) {
     return commentService.selectStatistics(threadId);
   }
 
   @GetMapping("/favorite/{threadId}")
   @ResponseStatus(HttpStatus.OK)
-  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<FavCommentResponseDto> selectFavComments(final @PathVariable Long threadId) {
     return commentService.selectFavComments(threadId);
   }
