@@ -13,6 +13,7 @@ import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.common.entity.PageRequest;
 import gladiator.philosopher.common.s3.S3Uploader;
 import gladiator.philosopher.common.security.AccountDetails;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,12 +45,14 @@ public class AccountController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public UserInfoResponseDto getMyInfo(final @AuthenticationPrincipal AccountDetails accountDetails) {
+  public UserInfoResponseDto getMyInfo(
+      final @AuthenticationPrincipal AccountDetails accountDetails) {
     return accountService.getMyInfo(accountDetails.getAccount());
   }
 
   /**
    * 내가 쓴 댓글 가지고 오기
+   *
    * @param accountDetails
    * @param pageRequest
    * @return
@@ -101,6 +104,7 @@ public class AccountController {
 
   /**
    * 내가 좋아요 누른 쓰레드 가지고 오기
+   *
    * @param accountDetails
    * @param pageRequest
    * @return
@@ -112,11 +116,13 @@ public class AccountController {
       final PageRequest pageRequest
   ) {
     Pageable pageable = pageRequest.of();
-    return accountService.getRecommendThreadsByAccount(accountDetails.getAccount().getId(), pageable);
+    return accountService.getRecommendThreadsByAccount(accountDetails.getAccount().getId(),
+        pageable);
   }
 
   /**
    * 내가 좋아요 누른 댓글 가지고 오기
+   *
    * @param accountDetails
    * @param pageRequest
    * @return
@@ -128,7 +134,8 @@ public class AccountController {
       final PageRequest pageRequest
   ) {
     Pageable pageable = pageRequest.of();
-    return accountService.getRecommendCommentsByAccount(accountDetails.getAccount().getId(), pageable);
+    return accountService.getRecommendCommentsByAccount(accountDetails.getAccount().getId(),
+        pageable);
   }
 
   /**
@@ -142,9 +149,10 @@ public class AccountController {
   @ResponseStatus(HttpStatus.CREATED)
   public Long modifyAccountPassword(
       final @AuthenticationPrincipal AccountDetails accountDetails,
-      final @RequestBody ModifyAccountPasswordRequestDto infoRequestDto
+      final @RequestBody @Valid ModifyAccountPasswordRequestDto infoRequestDto
   ) {
-    return accountService.modifyAccountPassword(accountDetails.getAccount(), infoRequestDto.getPassword());
+    return accountService.modifyAccountPassword(accountDetails.getAccount(),
+        infoRequestDto.getPassword());
   }
 
   /**
@@ -158,7 +166,7 @@ public class AccountController {
   @ResponseStatus(HttpStatus.CREATED)
   public Long modifyAccountNickname(
       final @AuthenticationPrincipal AccountDetails accountDetails,
-      final @RequestBody ModifyAccountNicknameRequestDto infoRequestDto
+      final @RequestBody @Valid ModifyAccountNicknameRequestDto infoRequestDto
   ) {
     return accountService.modifyAccountNickname(accountDetails.getAccount(),
         infoRequestDto.getNickname());

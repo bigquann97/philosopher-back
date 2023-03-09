@@ -25,7 +25,7 @@ public class RankServiceImpl implements RankService {
     } else {
       Rank rank = Rank.builder()
           .nickname(nickname)
-          .count(0L)
+          .count(1L)
           .build();
       rankRepository.save(rank);
     }

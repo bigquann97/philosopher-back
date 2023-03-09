@@ -74,7 +74,7 @@ public class ExceptionAdvice {
   protected ErrorDto IoStreamException(MethodArgumentNotValidException ex) {
     ex.printStackTrace();
     log.error(ex.getMessage());
-    return new ErrorDto(400, ex.getMessage());
+    return new ErrorDto(400, ex.getFieldError().getDefaultMessage());
   }
 
 }
