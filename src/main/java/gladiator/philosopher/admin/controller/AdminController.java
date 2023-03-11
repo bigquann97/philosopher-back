@@ -56,7 +56,6 @@ public class AdminController {
   private final ThreadService threadService;
 
   // 정보 검색
-
   /**
    * 회원 정보 가지고 오기
    *

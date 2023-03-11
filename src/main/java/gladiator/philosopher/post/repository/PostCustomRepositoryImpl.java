@@ -14,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import gladiator.philosopher.common.dto.MyPage;
 import gladiator.philosopher.post.dto.PostResponseDtoByQueryDsl;
 import gladiator.philosopher.post.dto.PostSearchCondition;
+import gladiator.philosopher.post.enums.PostStatus;
 import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
