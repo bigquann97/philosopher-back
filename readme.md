@@ -12,7 +12,7 @@
 
 “**이러한 문제점을 완화하고 새로운 방식의 커뮤니티의 제작”**
 
-["우리 모두 철학자" 사이트 접속하기](http://the-gladiators.s3-website.ap-northeast-2.amazonaws.com/main)
+["우리 모두 철학자" 사이트 접속하기](http://the-gladiators.s3-website.ap-northeast-2.amazonaws.com/main) <br>
 ["우리 모두 철학자" 프론트엔드 코드 확인하기](https://github.com/bigquann97/philosopher-front)
 
 <details>
