@@ -25,6 +25,11 @@ public class ThreadController {
 
   private final ThreadService threadService;
 
+  /**
+   * 쓰레드 단건 조회
+   * @param threadId
+   * @return
+   */
   @GetMapping("/{threadId}")
   @ResponseStatus(HttpStatus.OK)
   public ThreadResponseDto selectThread(
@@ -33,6 +38,14 @@ public class ThreadController {
     return threadService.selectThread(threadId);
   }
 
+  /**
+   * 현재 활성화 된 쓰레드 다건 조회
+   * @param category
+   * @param page
+   * @param sort
+   * @param word
+   * @return
+   */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public MyPage<ThreadSimpleResponseDto> selectActiveThreads(
@@ -44,6 +57,11 @@ public class ThreadController {
     return threadService.selectActiveThreads(ThreadSearchCond.of(page, sort, word, category));
   }
 
+  /**
+   * 아카이브 된 쓰레드 단건 조회 ( 종료된 쓰레드 )
+   * @param threadId
+   * @return
+   */
   @GetMapping("/archived/{threadId}")
   @ResponseStatus(HttpStatus.OK)
   public ThreadResponseDto selectArchivedThread(
@@ -52,6 +70,14 @@ public class ThreadController {
     return threadService.selectArchivedThread(threadId);
   }
 
+  /**
+   * 아카이브된 쓰레드 다건 조회 ( 종료된 쓰레드 )
+   * @param category
+   * @param page
+   * @param sort
+   * @param word
+   * @return
+   */
   @GetMapping("/archived")
   @ResponseStatus(HttpStatus.OK)
   public MyPage<ThreadSimpleResponseDto> selectArchivedThreads(

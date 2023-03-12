@@ -27,6 +27,7 @@ public class NotificationController {
 
   private final NotificationService notificationService;
 
+
   @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -41,6 +42,12 @@ public class NotificationController {
     return notificationService.subscribe(accountDetails.getAccount(), lastEventId);
   }
 
+  /**
+   * 내 알림 조회
+   * @param page
+   * @param accountDetails
+   * @return
+   */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -52,6 +59,11 @@ public class NotificationController {
     return notificationService.getMyNotifications(newPage, accountDetails.getAccount());
   }
 
+  /**
+   * 알림 삭제
+   * @param notificationId
+   * @param accountDetails
+   */
   @DeleteMapping("/{notificationId}")
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

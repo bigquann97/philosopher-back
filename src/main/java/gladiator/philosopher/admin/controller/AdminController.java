@@ -55,7 +55,6 @@ public class AdminController {
   private final CategoryService categoryService;
   private final ThreadService threadService;
 
-  // 정보 검색
   /**
    * 회원 정보 가지고 오기
    *
@@ -152,8 +151,6 @@ public class AdminController {
   ) {
     return adminService.searchByThreadsAdmin(cond, pageable);
   }
-
-  // 정보 수정
 
   /**
    * 권한 수정

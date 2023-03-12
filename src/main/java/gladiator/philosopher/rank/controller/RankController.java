@@ -20,14 +20,19 @@ public class RankController {
 
   private final RankService rankService;
 
-
+  /**
+   * Top 5 랭킹 조회
+   * @return
+   */
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
-//  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
   public List<UserRankingResponseDto> getRankings() {
     return rankService.getNowRankings();
   }
 
+  /**
+   * 랭킹 삭제
+   */
   @DeleteMapping
   @ResponseStatus(HttpStatus.OK)
   public void deleteTodayRanks() {

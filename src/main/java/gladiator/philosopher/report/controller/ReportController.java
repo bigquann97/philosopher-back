@@ -22,6 +22,12 @@ public class ReportController {
 
   private final ReportService reportService;
 
+  /**
+   * 게시글 신고
+   * @param id
+   * @param dto
+   * @param accountDetails
+   */
   @PostMapping("/post")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -33,6 +39,12 @@ public class ReportController {
     reportService.reportPost(id, dto, accountDetails.getAccount());
   }
 
+  /**
+   * 댓글 신고
+   * @param id
+   * @param dto
+   * @param accountDetails
+   */
   @PostMapping("/comment")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -44,6 +56,12 @@ public class ReportController {
     reportService.reportComment(id, dto, accountDetails.getAccount());
   }
 
+  /**
+   * 쓰레드 신고
+   * @param id
+   * @param dto
+   * @param accountDetails
+   */
   @PostMapping("/thread")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

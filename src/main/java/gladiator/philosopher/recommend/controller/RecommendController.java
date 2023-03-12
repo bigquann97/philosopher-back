@@ -29,6 +29,11 @@ public class RecommendController {
   private final ThreadService threadService;
   private final CommentService commentService;
 
+  /**
+   * 게시글 추천
+   * @param postId
+   * @param accountDetails
+   */
   @PostMapping("/post/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -40,6 +45,11 @@ public class RecommendController {
     recommendService.createRecommendPost(post, accountDetails.getAccount());
   }
 
+  /**
+   * 게시글 추천 취소
+   * @param postId
+   * @param accountDetails
+   */
   @DeleteMapping("/post/{postId}")
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -51,6 +61,11 @@ public class RecommendController {
     recommendService.deleteRecommendPost(post, accountDetails.getAccount());
   }
 
+  /**
+   * 쓰레드 추천
+   * @param threadId
+   * @param accountDetails
+   */
   @PostMapping("/thread/{threadId}")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -62,6 +77,11 @@ public class RecommendController {
     recommendService.createRecommendThread(thread, accountDetails.getAccount());
   }
 
+  /**
+   * 쓰레드 추천 취소
+   * @param threadId
+   * @param accountDetails
+   */
   @DeleteMapping("/thread/{threadId}")
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -73,6 +93,11 @@ public class RecommendController {
     recommendService.deleteRecommendThread(thread, accountDetails.getAccount());
   }
 
+  /**
+   * 댓글 추천
+   * @param commentId
+   * @param accountDetails
+   */
   @PostMapping("/comment/{commentId}")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -84,6 +109,11 @@ public class RecommendController {
     recommendService.createRecommendComment(comment, accountDetails.getAccount());
   }
 
+  /**
+   * 댓글 추천 취소
+   * @param commentId
+   * @param accountDetails
+   */
   @DeleteMapping("/comment/{commentId}")
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
