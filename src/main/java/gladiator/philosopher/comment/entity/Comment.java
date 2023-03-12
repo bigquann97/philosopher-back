@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AccessLevel;
@@ -39,6 +40,7 @@ public class Comment extends BaseEntity {
   private String content;
 
   @Column(nullable = false)
+  @Lob
   private String opinion;
 
   @Enumerated(EnumType.STRING)
