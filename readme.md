@@ -17,6 +17,8 @@
 ["우리 모두 철학자" 원페이지 노션 확인하기](https://radical-route-999.notion.site/8cc586e7170343c8806c312f3da97131) <br>
 ["우리 모두 철학자" 회의록 노션 확인하기](https://puzzled-bee-d4c.notion.site/847736be8f8a4775866b67b6dc484d4b?v=3736681424c34f6983dc166ff533347f) <br>
 ["우리 모두 철학자" 그라운드룰 확인하기](https://coherent-eclipse-711.notion.site/Ground-Rule-57dbbe48c09242edb2c263bf6a55e257) <br>
+["우리 모두 철학자" Wiki(구현 명세서) 확인하기](https://github.com/bigquann97/philosopher-back/wiki) <br>
+
 <details>
 <summary> 프로젝트에 대한 더 자세한 소개가 보고싶다면? 😀</summary>
 <div markdown="1"> 
