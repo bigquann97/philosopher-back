@@ -140,11 +140,11 @@
 - [발표 영상 Youtube](https://www.youtube.com)
 - [MVP 시연 영상 Youtube](https://www.youtube.com)
 
-## 07. 서비스 아키텍쳐 📊
+## 06. 서비스 아키텍쳐 📊
 
 <img src="image/ServiceArchitecture.png">
 
-## 06. 기술적 의사결정 ✅
+## 07. 기술적 의사결정 ✅
 
 <details>
 <summary> 1. Querydsl 👓 </summary>
@@ -328,7 +328,7 @@
 </div>
 </details>
 
-## 06. 트러블 슈팅
+## 08. 트러블 슈팅
 
 <details>
 <summary> 1. 멘션 조회 성능 📈 </summary>
@@ -538,11 +538,11 @@
 </div>
 </details>
 
-## 07. ERD 설계도
+## 09. ERD 설계도
 
 ![image](https://user-images.githubusercontent.com/62071906/222983895-19460fbd-47b7-44fe-b7e7-d277ed805615.png)
 [ERD 원본 확인하기 - ERD Cloud](https://www.erdcloud.com/d/nruo9xdTwK4DNbKnD)
 
-## 08. API 설계도
+## 10. API 설계도
 
 [API 스펙 원본 확인하기 - Google Spreadsheet](https://docs.google.com/spreadsheets/d/14_rE71JfKZD7DUaTCJmSuh-ol-pqmgdyEybgZavywR0/edit?usp=sharing)
