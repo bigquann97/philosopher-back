@@ -14,6 +14,8 @@
 
 ["우리 모두 철학자" 사이트 접속하기](http://the-gladiators.s3-website.ap-northeast-2.amazonaws.com/main) <br>
 ["우리 모두 철학자" 프론트엔드 코드 확인하기](https://github.com/bigquann97/philosopher-front)
+["우리 모두 철학자" 원페이지 노션 확인하기](https://radical-route-999.notion.site/8cc586e7170343c8806c312f3da97131)
+["우리 모두 철학자" 그라운드룰 확인하기](https://coherent-eclipse-711.notion.site/Ground-Rule-57dbbe48c09242edb2c263bf6a55e257)
 
 <details>
 <summary> 프로젝트에 대한 더 자세한 소개가 보고싶다면? 😀</summary>
