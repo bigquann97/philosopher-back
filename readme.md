@@ -131,10 +131,11 @@
 - Redis / Docker 등의 기술 사용 및 실력 기르기를 목표로 삼았습니다.
 - 문서화, 시각화, 정리 등을 통한 의사소통 장애를 극복하고자 했습니다.
 
-## 05. 프로젝트 PPT 및 발표 링크 📺
+## 05. 프로젝트 PPT, 발표 링크, MVP 시연 영상 📺
 
 - [발표 자료 PPT](https://docs.google.com/presentation/d/1HwKDdvIMr0uJqJ9uKLcJXGcT-bQR_K-R/edit?usp=sharing&ouid=107322356350634651146&rtpof=true&sd=true)
 - [발표 영상 Youtube](https://www.youtube.com)
+- [MVP 시연 영상 Youtube](https://www.youtube.com)
 
 ## 07. 서비스 아키텍쳐 📊
 
