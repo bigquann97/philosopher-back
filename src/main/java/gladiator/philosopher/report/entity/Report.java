@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import lombok.AccessLevel;
@@ -28,6 +29,7 @@ public abstract class Report {
   @Column(name = "report_id", nullable = false)
   private Long id;
 
+  @Lob
   protected String content;
 
   @Enumerated(EnumType.STRING)
