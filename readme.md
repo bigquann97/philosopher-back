@@ -311,9 +311,13 @@
     2. AOP - 단일 요청에 대한 메서드 속도 측정 (Elapsed Time)
         - 756 ms => 97 ms 로 87.1% 의 성능 개선
 
-<img src="image/jmeter.png">
-<img src="image/aop.png">
+<br> 
 
+- jmeter <br>
+  <img src="image/jmeter.png"> <br>
+
+- aop <br>
+  <img src="image/aop.png"> <br>
 
 </div>
 </details>
