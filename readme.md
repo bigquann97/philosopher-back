@@ -12,6 +12,9 @@
 
 “**이러한 문제점을 완화하고 새로운 방식의 커뮤니티의 제작”**
 
+["우리 모두 철학자" 사이트 접속하기](http://the-gladiators.s3-website.ap-northeast-2.amazonaws.com/main)
+
+
 <details>
 <summary> 프로젝트에 대한 더 자세한 소개가 보고싶다면? 😀</summary>
 <div markdown="1"> 
