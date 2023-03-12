@@ -137,7 +137,7 @@
 
 ## 07. 서비스 아키텍쳐 📊
 
-![Arch](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/090fe6cd-4dc9-4d2b-bc04-595205ab8613/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230305%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230305T202134Z&X-Amz-Expires=86400&X-Amz-Signature=d0357f68388920d57c8d06e8934f94b4928868e06c7d007c298ff1f0f4be6e97&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+<img src="image/ServiceArchitecture.png">
 
 ## 06. 기술적 의사결정 ✅
 
@@ -237,12 +237,84 @@
    **⇒ Redis를 통한 토큰 및 관련 정보 관리 채택**
 
 <br>
+
 </div>
 </details>
 
 <details>
 <summary> 4. SSE Emitter 🔋 </summary>
 <div markdown="1"> 
+
+<br>
+
+- **기술적 필요성:**
+
+1. 댓글, 쓰레드화 알림 시 통신 방식에 대한 고민
+2. 비연결성(Connectionless)의 특성을 가진 HTTP 특성상, 알림을 줄 수 있는 통신 방식 고려 필요
+
+<br>
+
+- **해결 방안 리스트업:**
+
+1. Polling
+2. Long Polling
+3. Web Socket
+4. Server-Sent-Event
+
+<br>
+
+- **해결 방안에 대한 의사 조율 및 결정:**
+
+1. 실시간성이 떨어지며, 상태 변경에 대한 연결 요청이 추가 발생하는 **Polling, Long Polling**
+
+3. 서버에서 클라이언트로 단방향 통신, HTTP 프로토콜만으로 사용 가능해 가벼운 **SSE**
+
+3. 서버 <=> 클라이언트 간 양바향 통신, 최초 연결시에만 Header 정보 전달, <br>
+   \+ 연결에 불필요한 비용 제거 가능한 **Web Socket** <br>
+   **<tab> ⇒ Server-Sent-Event 채택**
+
+<br>
+
+
+</div>
+</details>
+
+<details>
+<summary> 5. Image Resize - Marvin Library </summary>
+<div markdown="1"> 
+
+<br>
+
+- **기술적 필요성:**
+
+1. 페이징 렌더링 속도의 개선 필요
+2. 한정된 DB 용량으로 인한 이미지 사이즈 압축 필요 (AWS 프리티어)
+3. 이미지 크기의 일관성 필요
+
+<br>
+
+- **해결 방안 리스트업:**
+
+1. java-image-scaling
+2. Marvin
+3. AWS CloudFront & Lambda@Edge
+
+<br>
+
+- **해결 방안에 대한 의사 조율 및 결정:**
+
+1. 자바 내부 라이브러리에 구현된 이미지 리사이징 기술 java-image-scaling<br>
+   (Width 기준 원본 비율로 높이가 정해짐)
+
+2. 다른 라이브러리 대비 적은 시간이 소요되며 간편한 사용성을 가진 Marvin
+
+3. 이미지 업로드/다운로드 전략 선택이 가능한 AWS 리사이징
+
+4. 적은 시간 소요 + 원본 보존율 + 추가 코드 작성 및 관리 포인트 발생이 적은 Marvin <br>
+   **⇒ Marvin Library 채택**
+
+<br>
+
 
 </div>
 </details>
@@ -315,6 +387,8 @@
 
 - jmeter <br>
   <img src="image/jmeter.png"> <br>
+
+<br>
 
 - aop <br>
   <img src="image/aop.png"> <br>
