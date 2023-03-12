@@ -257,59 +257,59 @@
 
 - **문제의 발견:**
 
-1. 더미데이터 추가를 통한 어플리케이션 전체 흐름 점검
+    1. 더미데이터 추가를 통한 어플리케이션 전체 흐름 점검
 
-    - 쓰레드 더미데이터 생성
-    - 댓글 더미데이터 생성
-    - 한 페이지 내 20,000 개의 멘션 생성
+        - 쓰레드 더미데이터 생성
+        - 댓글 더미데이터 생성
+        - 한 페이지 내 20,000 개의 멘션 생성
 
-2. AOP 적용을 통한 병목 발생 지점 파악 및 점검
+    2. AOP 적용을 통한 병목 발생 지점 파악 및 점검
 
-    - 메서드별 수행 속도 측정
-    - 멘션 더미데이터 생성한 지점에서 800 ms 이상의 성능 저하 발생 확인
+        - 메서드별 수행 속도 측정
+        - 멘션 더미데이터 생성한 지점에서 800 ms 이상의 성능 저하 발생 확인
 
-3. API 호출시, 쿼리 발생 확인
-    - hibernate >> show sql 을 통한 발생 쿼리 확인
+    3. API 호출시, 쿼리 발생 확인
+        - hibernate >> show sql 을 통한 발생 쿼리 확인
 
 <br>
 
 - **문제 해결 과정:**
 
-0. Jmeter 적용 - 부하 테스트 진행
+    1. Jmeter 적용 - 부하 테스트 진행
 
-1. 쿼리 분석
+    1. 쿼리 분석
 
-    - Lazy Loading 및
-    - 최초 N + 1 문제 발생 해결
+        - N + 1 쿼리 발생 구간 확인 및 Lazy Loading, Join 수정
+        - 최초 N + 1 문제 발생 해결
 
-2. Querydsl 적용
+    2. Querydsl 적용
 
-    - 가독성 높은 코드의 작성
-    - join 등 쿼리 작성
+        - 가독성 높은 코드의 작성
+        - join 등 쿼리 작성
 
-3. Projections 적용
+    3. Projections 적용
 
-    - 필요한 요소만 select
-    - select 문 최소화
+        - 필요한 요소만 select
+        - select 문 최소화
 
-4. Batch Size 적용
+    4. Batch Size 적용
 
-    - MentionedList, MentioningList 등 OneToMany 요소 호출시 문제 발생
-    - Batch Size 적용을 통한 in query 개수 정의
+        - MentionedList, MentioningList 등 OneToMany 요소 호출시 문제 발생
+        - Batch Size 적용을 통한 in query 개수 정의
 
-5. Batch Size 최적 단위 파악
+    5. Batch Size 최적 단위 파악
 
-    - 20, 50, 100, 200 순서로 속도 측정
+        - 20, 50, 100, 200 순서로 속도 측정
 
 <br>
 
 - **트러블 슈팅 결과:**
 
-1. 20,000 개의 멘션 상황 - 1000 Threads, in 1 second, 3 requests 부하 상황 가정
-    - 81,609 ms => 17,615 ms 로 79.4% 의 성능 개선
+    1. 20,000 개의 멘션 상황 - 1000 Threads, in 1 second, 3 requests 부하 상황 가정
+        - 81,609 ms => 17,615 ms 로 79.4% 의 성능 개선
 
-2. AOP - 단일 요청에 대한 메서드 속도 측정 (Elapsed Time)
-    - 756 ms => 97 ms 로 87.1% 의 성능 개선
+    2. AOP - 단일 요청에 대한 메서드 속도 측정 (Elapsed Time)
+        - 756 ms => 97 ms 로 87.1% 의 성능 개선
 
 <img src="image/jmeter.png">
 <img src="image/aop.png">
@@ -320,14 +320,133 @@
 
 <details>
 <summary> 2. 쓰레드 종료 시점 - 스케줄링 및 쿼리 최적화 💻 </summary>
-<div markdown="1"> 
 
+<br>
+
+- **문제의 발견:**
+
+    1. 흐름 문제
+
+        - 쓰레드화 된 후, 24시간 이후를 쓰레드 종료시점으로 책정
+        - 1초마다 쿼리를 날려도 데이터 정보가 어긋나는 현상 발생
+        - 매 30초 마다 쿼리를 날리는 것으로 결정했지만, 데이터 정확도 위반
+
+    2. 논리 문제
+
+        - 쓰레드 종료 쿼리(상태 변경 쿼리) 날릴 시, Thread 테이블 내 모든 대상을 조회
+        - 모든 대상 조회 후, 모든 대상 별 쓰레드 종료 시점 지났는지 확인하는 로직 발생
+
+    3. 코드 문제
+        - 스케쥴러 코드: 30초마다 쿼리 발생
+        - Redis: 미적용
+
+<br>
+
+- **문제 해결 과정:**
+
+    1. 흐름 최적화
+
+        - 쓰레드화 된 이후, 하루 뒤 자정을 쓰레드 종료시점을 책정
+        - 자정에만 쿼리가 발생하도록 어플리케이션 흐름 조정
+
+    1. 논리 최적화
+
+        - 테이블 내 모든 컬럼 대상이 아닌, 해당 시점이 지난 쓰레드 ID 값에 대해서만 쿼리 발생 목표
+        - 새로운 데이터를 담을 공간 필요
+        - Redis 를 통한 문제 해결 (다양한 데이터 형태 담기)
+
+    1. 코드 최적화
+
+        - 위의 내용을 적용한 코드 작성
+        - Scheduler: 30초마다 쿼리 => 매 자정마다 쿼리
+        - Redis: 쓰레드화 될 때 마다, ID/종료시간(key/value) 을 redis에 저장
+
+<br>
+
+- **트러블 슈팅 결과:**
+
+    1. 매 30초마다 쿼리 발생 (30초 마다 쿼리 함에도 데이터 정확도 위반)
+        - => 자정에만 쿼리 발생
+
+    2. Thread 테이블 내 모든 데이터 대상 상태 조회 및 변경 쿼리 발생
+        - => 마감 시간이 지난 쓰레드 ID에 대해서만 상태 변경 쿼리 발생
+
+    3. Scheduler 및 Redis 코드 문제
+        - => 해당 로직에 Redis 적용 및 Scheduler 코드 최적화
+
+<br>
+
+- Redis Code <br>
+
+<img src="image/redis.png">
+<img src="image/redisCode.png">
+
+<br>
+
+- Scheduler Before <br>
+
+<img src="image/schedulerBefore.png">
+
+<br>
+
+- Scheduler After <br>
+
+<img src="image/schedulerAfter.jpg">
+
+<br>
+
+<div markdown="1">
 </div>
 </details>
 
 <details>
 <summary> 3. 이미지 용량과 성능 🖼️ </summary>
-<div markdown="1"> 
+<div markdown="1">
+
+<br>
+
+- **문제의 발견:**
+
+    1. 사진이 있는 페이지 로딩시 눈에 띄는 지연 현상 발생
+    2. 이미지 파일의 크기가 불규칙적
+    3. 한정된 리소스 자원 - AWS 프리티어
+    4. 페이지 렌더링 속도리 개선 필요성
+
+<br>
+
+- **문제 해결 과정:**
+
+    1. S3 버킷 내 이미지 업로드 용량 확인
+
+        - 평균 2 ~ 3 MB 용량의 사진 업로드 발생
+
+    1. 크롬 개발자 도구를 통한 이미지 로딩 속도 측정
+
+        - 350 ms ~ 450 ms의 평균 이미지 업로드 속도 발생
+
+    1. Marvin 라이브러리 적용
+
+        - 기술적 의사 결정을 통한 Marvin 라이브러리 채택
+        - 어플리케이션 코드 내 이미지 리사이징 코드 작성
+
+<br>
+
+- **트러블 슈팅 결과:**
+
+    1. S3 버킷 내 저장된 이미지 용량 감소
+        - => 2.2 MB, JPEG 사진 => 55.2 KB로 크기 압축 및 개선
+
+    2. 페이지 렌더링 시, 이미지 로딩 속도 개선
+        - => 395 ms => 106 ms 로 전송 속도 73.1% 개선
+
+<br>
+
+- Redis Code <br>
+
+<img src="image/imageRendering.png">
+<img src="image/imageSize.png">
+
+<br>
 
 </div>
 </details>
