@@ -563,6 +563,39 @@
 </div>
 </details>
 
+<details>
+<summary> 4. XSS 공격 방어 ☂️ </summary>
+<div markdown="1">
+
+<br>
+
+- **문제의 발견:**
+
+    1. XSS (Cross Site Scripting) 공격 발생시, script 문은 Vue, HTML5 정책으로 방어
+    2. 하지만, 이 외의 XSS 공격에 대해서는 방어 불가
+    3. v-html 태그에 XSS 공격 취약점 존재
+
+<br>
+
+- **문제 해결 과정:**
+
+    1. 프론트 단에서 Vue 태그인 v-html 태그의 변경 필요
+
+    2. Vue 라이브러리인 Dompurify 적용
+
+    3. v-html 태그를 v-dompurify-html로 변경
+
+<br>
+
+- **트러블 슈팅 결과:**
+
+    1. XSS 공격에 대한 방어 성공
+
+<br>
+
+</div>
+</details>
+
 ## 09. ERD 설계도
 
 ![image](https://user-images.githubusercontent.com/62071906/222983895-19460fbd-47b7-44fe-b7e7-d277ed805615.png)
