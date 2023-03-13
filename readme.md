@@ -141,7 +141,29 @@
 
 - [발표 자료 PPT](https://docs.google.com/presentation/d/1HwKDdvIMr0uJqJ9uKLcJXGcT-bQR_K-R/edit?usp=sharing&ouid=107322356350634651146&rtpof=true&sd=true)
 - [발표 영상 Youtube](https://www.youtube.com)
-- [MVP 시연 영상 Youtube](https://www.youtube.com)
+
+- MVP 시연 영상 <br>
+
+    - 이메일 인증 <br>
+      <img src="image/1.gif" width="300">
+
+    - 마이 페이지 기능 <br>
+      <img src="image/2.gif" width="300">
+
+    - 게시글 탭 <br>
+      <img src="image/3.gif" width="300">
+
+    - 쓰레드 탭 <br>
+      <img src="image/4.gif" width="300">
+
+    - 아카이브 탭 <br>
+      <img src="image/5.gif" width="300">
+
+    - 랭킹 탭 <br>
+      <img src="image/6.gif" width="300">
+
+    - 어드민 페이지 <br>
+      <img src="image/7.gif" width="300">
 
 ## 06. 서비스 아키텍쳐 📊
 
