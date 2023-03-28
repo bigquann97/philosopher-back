@@ -19,13 +19,13 @@ class MentionServiceTest {
     String str6 = "3";
     String str7 = "";
 
-    Set<Long> longs = parseAllHashtagNums(str);
-    Set<Long> longs2 = parseAllHashtagNums(str2);
-    Set<Long> longs3 = parseAllHashtagNums(str3);
-    Set<Long> longs4 = parseAllHashtagNums(str4);
-    Set<Long> longs5 = parseAllHashtagNums(str5);
-    Set<Long> longs6 = parseAllHashtagNums(str6);
-    Set<Long> longs7 = parseAllHashtagNums(str7);
+    Set<Long> longs = extractNumbersAfterHash(str);
+    Set<Long> longs2 = extractNumbersAfterHash(str2);
+    Set<Long> longs3 = extractNumbersAfterHash(str3);
+    Set<Long> longs4 = extractNumbersAfterHash(str4);
+    Set<Long> longs5 = extractNumbersAfterHash(str5);
+    Set<Long> longs6 = extractNumbersAfterHash(str6);
+    Set<Long> longs7 = extractNumbersAfterHash(str7);
 
     Assertions.assertThat(longs).containsAll(Set.of(33L, 12L, 67L, 1L, 88L, 6L));
     Assertions.assertThat(longs2).isEmpty();
@@ -36,34 +36,32 @@ class MentionServiceTest {
     Assertions.assertThat(longs7).isEmpty();
   }
 
-  private Set<Long> parseAllHashtagNums(String body) {
-    Set<Long> hashtagNums = new LinkedHashSet<>();
+  private Set<Long> extractNumbersAfterHash(String input) {
+    Set<Long> numbersAfterHash = new LinkedHashSet<>();
+    int pointer = 0;
 
-    while (body.contains("#")) {
-      Long num;
-      int sharpIdx = body.indexOf("#");
-      int pointer = sharpIdx + 1;
-
-      while (pointer < body.length() && body.charAt(pointer) >= 48 && body.charAt(pointer) <= 57) {
+    while (pointer < input.length()) {
+      if (input.charAt(pointer) == '#') {
+        pointer++;
+        int start = pointer;
+        while (pointer < input.length() && Character.isDigit(input.charAt(pointer))) {
+          pointer++;
+        }
+        if (start < pointer) {
+          String numberString = input.substring(start, pointer);
+          try {
+            long number = Long.parseLong(numberString);
+            numbersAfterHash.add(number);
+          } catch (NumberFormatException e) {
+            // Ignoring the exception, as we don't need to handle non-numeric strings
+          }
+        }
+      } else {
         pointer++;
       }
-
-      String numStr = body.substring(sharpIdx + 1, pointer);
-
-      try {
-        num = Long.parseLong(numStr);
-      } catch (NumberFormatException e) {
-        num = null;
-      }
-
-      if (num != null) {
-        hashtagNums.add(num);
-      }
-
-      body = body.substring(pointer);
     }
 
-    return hashtagNums;
+    return numbersAfterHash;
   }
 
 }

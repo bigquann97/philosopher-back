@@ -29,7 +29,7 @@ import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
-@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
   @Id

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class NotificationRequestDto {
 
   private String redirectUrl;
@@ -20,5 +20,5 @@ public class NotificationRequestDto {
     this.content = content;
     this.account = account;
   }
-  
+
 }
